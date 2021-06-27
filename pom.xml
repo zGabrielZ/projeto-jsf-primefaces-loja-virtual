@@ -1,0 +1,116 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.gabrielferreira</groupId>
+  <artifactId>Projeto-Loja</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  <name>Projeto-Loja</name>
+  <description>Projeto-Loja</description>
+  
+  <properties>
+	<project.build.sourceEnconding>UTF-8</project.build.sourceEnconding>
+   </properties>
+   
+     <dependencies>
+     
+     	<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<version>6.1</version>
+			<scope>compile</scope>
+		</dependency>
+	
+		<dependency>
+  			<groupId>org.glassfish</groupId>
+  			<artifactId>javax.faces</artifactId>
+  			<version>2.2.10</version>
+  			<scope>compile</scope>  		
+  		</dependency>  
+    
+    	<dependency>
+  	 		<groupId>org.jboss.weld.servlet</groupId>
+   			<artifactId>weld-servlet</artifactId>
+   			<version>2.3.1.Final</version>
+  		</dependency>
+  		<dependency>
+   			<groupId>org.jboss</groupId>
+   			<artifactId>jandex</artifactId>
+   			<version>2.1.1.Final</version>
+   			<scope>compile</scope>
+  		</dependency>
+  		
+  		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.3.2.Final</version>
+			<scope>compile</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>5.2.4.Final</version>
+			<scope>compile</scope>	
+		</dependency>
+		
+		<dependency>
+			<groupId>mysql</groupId>
+    		<artifactId>mysql-connector-java</artifactId>
+    		<version>8.0.12</version>
+		</dependency>
+		
+		<dependency>
+    		<groupId>org.apache.commons</groupId>
+    		<artifactId>commons-lang3</artifactId>
+    		<version>3.12.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.20</version>
+		</dependency>
+		
+		<dependency>
+    		<groupId>org.omnifaces</groupId>
+    		<artifactId>omnifaces</artifactId>
+    		<version>2.6.2</version>
+		</dependency>
+		
+		<dependency>
+        	<groupId>javax.servlet</groupId>
+        	<artifactId>javax.servlet-api</artifactId>
+        	<version>3.0.1</version>
+        	<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.16.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.11</version>
+		</dependency>
+		
+    
+    </dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+  
+</project>
