@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui">
+
+	<ui:composition template="/layout/cadastro/Cadastrar.xhtml" >
+	
+	<ui:define name="titulo">
+			<h1>Cadastro de cliente</h1>
+		
+			<div id="btnVoltar" style="margin-bottom:10px; margin-top: 10px;" >
+				<h:form id="frmBtnConsultaCliente">
+					<p:commandButton value="Ir para consulta de clientes" ajax="false" />
+				</h:form>
+			</div>
+		
+		</ui:define>
+		
+		<ui:define name="conteudo" >
+
+		<div id="cadastroCliente">
+			<h:form id="cadastroClienteForm">
+			
+			<p:messages id="msg" autoUpdate="true"/>
+			
+				<div align="center">
+					<h:panelGroup id="pnlCadastroCliente">
+						<h:panelGrid columns="3" style="text-align: center">
+							<p:outputLabel for="nome" value="Nome: " />
+							<p:inputText value="#{clienteController.cliente.nome}"
+								label="Nome" id="nome" required="true" 
+								requiredMessage="Nome é obrigatório" size="15" maxlength="150" />
+							<p:message for="nome" />
+
+							<p:outputLabel for="email" value="E-mail: " />
+							<p:inputText value="#{clienteController.cliente.email}"
+								label="Email" id="email" size="15" maxlength="15" 
+								required="true" requiredMessage="E-mail é obrigatório" />
+							<p:message for="email" />
+
+							<p:outputLabel for="cpf" value="CPF: " />
+							<p:inputMask value="#{clienteController.cliente.cpf}" label="CPF"
+								id="cpf" mask="999.999.999-99" size="11" maxlength="11" 
+								required="true" requiredMessage="CPF é obrigatório" />
+							<p:message for="cpf" />
+
+							<p:outputLabel for="data" value="Data de nascimento: " />
+							<p:inputText value="#{clienteController.cliente.dataNascimento}"
+								label="Data de nascimento" id="data" required="true"
+								requiredMessage="É obrigatório inserir a data de nascimento"
+								converter="dataNascimentoConverter">
+							</p:inputText>
+							<p:message for="data" />
+
+								<p:outputLabel for="saldo" value="Deseja incluir saldo ? " />
+								<p:selectBooleanCheckbox id="saldo"
+									value="#{clienteController.desejoSaldo}">
+									<p:ajax process="@this"
+										oncomplete="PF('adicionarSaldo').show()"
+										update=":frmCadastroSaldo"></p:ajax>
+								</p:selectBooleanCheckbox>
+						</h:panelGrid>
+
+						<div align="center" style="padding-top: 10px;">
+							<p:commandButton id="btnCadastrar" value="Cadastrar Cliente"
+								action="#{clienteController.inserirOuAtualizarCliente}"
+								ajax="false" process="@this" update="@form"></p:commandButton>
+						</div>
+
+						<div align="center" style="padding-top: 10px;">
+							<p:commandButton id="btnLimpar" value="Limpar formulário"
+								immediate="true" action="#{clienteController.limparFormularioCliente}"
+								ajax="false" process="@this" update="@form"></p:commandButton>
+						</div>
+
+					</h:panelGroup>
+				</div>
+			</h:form>
+		</div>
+		
+		<div id="cadastroSaldo" align="center" >
+			<p:dialog modal="true" id="alunoDialog" height="400" width="800" widgetVar="adicionarSaldo" resizable="false">
+				<h:form id="frmCadastroSaldo">
+					<h:panelGrid id="pnlCadastroSaldo" columns="3"
+						style="margin-top:30px;text-align: center;">
+						<p:outputLabel for="deposito" value="Depósito: " />
+						<p:inputText value="#{clienteController.saldo.deposito}"
+							label="Depósito" id="deposito" required="true"
+							requiredMessage="É obrigatório inserir o depósito" size="20"
+							maxlength="150" />
+						<p:message for="deposito" />
+
+						<p:outputLabel for="dataDeposito" value="Data do depósito: " />
+						<p:inputText value="#{clienteController.saldo.dataDeposito}"
+							label="Data do depósito" id="dataDeposito"
+							required="true"
+							requiredMessage="É obrigatório inserir a data do depósito"
+							converter="dataDepositoConverter">
+						</p:inputText>
+						<p:message for="dataDeposito" />
+						<p style="margin-left: 125px;">Formato : DD/MM/YYYY HH:MM:SS</p>
+					</h:panelGrid>
+
+					<div style="padding-top: 10px;">
+						<p:commandButton value="Adicionar saldos" action="#{clienteController.addSaldo}"
+							update="pnlCadastroSaldo dataTableSaldos" process="alunoDialog"
+							oncomplete="PF('adicionarSaldo').show()">
+						</p:commandButton>
+					</div>
+					
+					<div style="width: 600px;margin-top: 10px;"  >
+
+						<p:dataTable id="dataTableSaldos"
+							value="#{clienteController.saldos}" var="saldo"
+							style="padding-top:20px;" rows="5" paginator="true"
+							paginatorPosition="bottom"
+							emptyMessage="Sua consulta não retornou registros."
+							rowsPerPageTemplate="5, 10, 25, 50, 100"
+							paginatorAlwaysVisible="false">
+
+							<p:column style="width:50px;">
+								<f:facet name="header">Depósito</f:facet>
+								<h:outputText value="#{saldo.deposito}" >
+									<f:convertNumber currencySymbol="R$" type="currency" />
+								</h:outputText>
+							</p:column>
+
+							<p:column style="width:100px;">
+								<f:facet name="header">Data do depósito</f:facet>
+								<h:outputText value="#{saldo.dataDeposito}" converter="dataDepositoConverter">
+								</h:outputText>
+							</p:column>
+
+						</p:dataTable>
+					</div>
+
+				</h:form>
+			</p:dialog>
+		</div>
+		
+	</ui:define>
+	
+	</ui:composition>
+</html>
