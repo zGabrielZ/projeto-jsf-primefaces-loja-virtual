@@ -68,7 +68,9 @@ public class Cliente implements Serializable{
 	public BigDecimal getSaldoTotal() {
 		BigDecimal valor = new BigDecimal("0.0");
 		for(Saldo saldo : saldos) {
-			valor = saldo.getDeposito().add(saldo.getDeposito());
+			if(saldo != null){
+				valor = saldo.getDeposito().add(saldo.getDeposito());
+			}
 		}
 		return valor;
 	}

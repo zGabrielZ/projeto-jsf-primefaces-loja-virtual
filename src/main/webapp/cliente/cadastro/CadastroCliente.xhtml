@@ -15,7 +15,8 @@
 		
 			<div id="btnVoltar" style="margin-bottom:10px; margin-top: 10px;" >
 				<h:form id="frmBtnConsultaCliente">
-					<p:commandButton value="Ir para consulta de clientes" ajax="false" />
+					<p:commandButton value="Ir para consulta de clientes"
+					actionListener="#{navegacaoController.consultaCliente}" ajax="false" />
 				</h:form>
 			</div>
 		

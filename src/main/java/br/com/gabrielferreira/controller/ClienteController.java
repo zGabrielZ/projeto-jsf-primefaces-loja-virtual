@@ -16,6 +16,7 @@ import javax.inject.Named;
 
 import br.com.gabrielferreira.entidade.Cliente;
 import br.com.gabrielferreira.entidade.Saldo;
+import br.com.gabrielferreira.entidade.search.ClienteSearch;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.service.ClienteService;
 import br.com.gabrielferreira.utils.FacesMessages;
@@ -50,12 +51,25 @@ public class ClienteController implements Serializable{
 	@Setter
 	private List<Saldo> saldos;
 	
+	@Getter
+	@Setter
+	private List<Cliente> clientes;
+	
+	@Getter
+	@Setter
+	private ClienteSearch clienteSearch;
+	
 	@PostConstruct
 	public void inicializar() {
+		clienteSearch = new ClienteSearch();
 		cliente = new Cliente();
 		saldo = new Saldo();
 		saldos = new ArrayList<Saldo>();
 		desejoSaldo = false;
+	}
+	
+	public void consultarCliente() {
+		clientes = clienteService.getFiltrar(clienteSearch);
 	}
 	
 	public void addSaldo() {
@@ -85,6 +99,10 @@ public class ClienteController implements Serializable{
 	
 	public void atualizarCliente(Cliente cliente) {
 		
+	}
+	
+	public void limparPesquisa() {
+		clienteSearch = new ClienteSearch();
 	}
 	
 	public void limparFormularioCliente() {

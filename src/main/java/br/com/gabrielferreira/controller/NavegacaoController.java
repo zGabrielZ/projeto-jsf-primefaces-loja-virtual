@@ -20,6 +20,16 @@ public class NavegacaoController implements Serializable{
 		return FacesContext.getCurrentInstance().getExternalContext();
 	}
 	
+	public void consultaCliente() {
+	    ExternalContext externalContext = getExternalContext();
+	    try {
+	          externalContext.redirect(externalContext.getRequestContextPath()
+	                + "/cliente/consulta/ConsultaCliente.xhtml");
+	    } catch (IOException e) {
+	          e.printStackTrace();
+	    }
+	}
+	
 	public void cadastrarCliente() {
 	    ExternalContext externalContext = getExternalContext();
 	    try {
