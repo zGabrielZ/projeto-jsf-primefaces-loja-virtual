@@ -24,6 +24,9 @@
 		<ui:define name="conteudo" >
 
 		<div id="cadastroCliente">
+		
+			<p>Formato da data de nascimento : DD/MM/YYYY</p>
+		
 			<h:form id="cadastroClienteForm">
 			
 			<p:messages id="msg" autoUpdate="true"/>
@@ -39,7 +42,7 @@
 
 							<p:outputLabel for="email" value="E-mail: " />
 							<p:inputText value="#{clienteController.cliente.email}"
-								label="Email" id="email" size="15" maxlength="15" 
+								label="Email" id="email" size="15" maxlength="150" 
 								required="true" requiredMessage="E-mail é obrigatório" />
 							<p:message for="email" />
 
@@ -53,17 +56,16 @@
 							<p:inputText value="#{clienteController.cliente.dataNascimento}"
 								label="Data de nascimento" id="data" required="true"
 								requiredMessage="É obrigatório inserir a data de nascimento"
-								converter="dataNascimentoConverter">
+								converter="dataNascimentoConverter" validator="#{verificarDataNascimento.validate}">
 							</p:inputText>
 							<p:message for="data" />
 
-								<p:outputLabel for="saldo" value="Deseja incluir saldo ? " />
-								<p:selectBooleanCheckbox id="saldo"
-									value="#{clienteController.desejoSaldo}">
-									<p:ajax process="@this"
-										oncomplete="PF('adicionarSaldo').show()"
-										update=":frmCadastroSaldo"></p:ajax>
-								</p:selectBooleanCheckbox>
+							<p:outputLabel for="saldo" value="Deseja incluir saldo ? " />
+							<p:selectBooleanCheckbox id="saldo"
+								value="#{clienteController.desejoSaldo}">
+								<p:ajax process="@this" oncomplete="PF('adicionarSaldo').show()"
+									update=":frmCadastroSaldo"></p:ajax>
+							</p:selectBooleanCheckbox>
 						</h:panelGrid>
 
 						<div align="center" style="padding-top: 10px;">
