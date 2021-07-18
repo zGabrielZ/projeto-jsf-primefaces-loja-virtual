@@ -59,6 +59,10 @@ public class ClienteController implements Serializable{
 	@Setter
 	private ClienteSearch clienteSearch;
 	
+	@Getter
+	@Setter
+	private Saldo saldoSelecionado;
+	
 	@PostConstruct
 	public void inicializar() {
 		clienteSearch = new ClienteSearch();
@@ -70,6 +74,10 @@ public class ClienteController implements Serializable{
 	
 	public void consultarCliente() {
 		clientes = clienteService.getFiltrar(clienteSearch);
+	}
+	
+	public void removerSaldo() {
+		saldos.remove(saldoSelecionado);
 	}
 	
 	public void addSaldo() {

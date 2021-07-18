@@ -27,6 +27,7 @@
 		<div id="cadastroCliente">
 		
 			<p>Formato da data de nascimento : DD/MM/YYYY</p>
+			<p>Formato da data do depósito : DD/MM/YYYY HH:MM:SS</p>
 		
 			<h:form id="cadastroClienteForm">
 			
@@ -93,20 +94,16 @@
 						style="margin-top:30px;text-align: center;">
 						<p:outputLabel for="deposito" value="Depósito: " />
 						<p:inputText value="#{clienteController.saldo.deposito}"
-							label="Depósito" id="deposito" required="true"
-							requiredMessage="É obrigatório inserir o depósito" size="20"
+							label="Depósito" id="deposito" size="20" required="true" requiredMessage="É necessário inserir o depósito"
 							maxlength="150" />
 						<p:message for="deposito" />
 
 						<p:outputLabel for="dataDeposito" value="Data do depósito: " />
 						<p:inputText value="#{clienteController.saldo.dataDeposito}"
-							label="Data do depósito" id="dataDeposito"
-							required="true"
-							requiredMessage="É obrigatório inserir a data do depósito"
+							label="Data do depósito" id="dataDeposito" required="true" requiredMessage="É necessário inserir a data do depósito"
 							converter="dataDepositoConverter">
 						</p:inputText>
 						<p:message for="dataDeposito" />
-						<p style="margin-left: 125px;">Formato : DD/MM/YYYY HH:MM:SS</p>
 					</h:panelGrid>
 
 					<div style="padding-top: 10px;">
@@ -139,7 +136,18 @@
 								</h:outputText>
 							</p:column>
 
+							<p:column style="width:50px;">
+								<f:facet name="header">Deletar</f:facet>
+								<p:commandButton icon="fa fa-trash" title="Excluir este saldo"
+									action="#{clienteController.removerSaldo}"
+									update="dataTableSaldos" process="@this">			
+									<f:setPropertyActionListener value="#{saldo}"
+										target="#{clienteController.saldoSelecionado}"></f:setPropertyActionListener>
+								</p:commandButton>
+							</p:column>
+
 						</p:dataTable>
+
 					</div>
 
 				</h:form>
