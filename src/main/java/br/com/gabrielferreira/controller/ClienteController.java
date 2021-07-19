@@ -99,6 +99,8 @@ public class ClienteController implements Serializable{
 	public void inserirCliente(Cliente cliente) {
 		try {
 			clienteService.inserir(cliente,saldos);
+			FacesMessages.adicionarMensagem("cadastroCliente:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
+					null);
 		} catch (RegraDeNegocioException e) {
 			FacesMessages.adicionarMensagem("cadastroClienteForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
 					null);

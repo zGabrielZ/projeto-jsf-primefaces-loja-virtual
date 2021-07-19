@@ -1,11 +1,10 @@
 package br.com.gabrielferreira.repositorio;
 
 import java.io.Serializable;
-
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import br.com.gabrielferreira.entidade.Saldo;
 
+import br.com.gabrielferreira.entidade.Saldo;
 public class SaldoRepositorio implements Serializable{
 
 	/**
@@ -21,6 +20,5 @@ public class SaldoRepositorio implements Serializable{
 	public void inserir(Saldo saldo) {
 		entityManager.persist(saldo);
 	}
-	
 
 }

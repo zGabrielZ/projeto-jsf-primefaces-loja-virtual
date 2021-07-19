@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -59,7 +60,7 @@ public class Cliente implements Serializable{
 	@Column(name = "data_nascimento")
 	private LocalDate dataNascimento;
 	
-	@OneToMany(mappedBy = "cliente",fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "cliente",fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
 	private List<Saldo> saldos = new ArrayList<Saldo>();
 	
 	@OneToMany(mappedBy = "cliente",fetch = FetchType.LAZY)
@@ -68,9 +69,7 @@ public class Cliente implements Serializable{
 	public BigDecimal getSaldoTotal() {
 		BigDecimal valor = new BigDecimal("0.0");
 		for(Saldo saldo : saldos) {
-			if(saldo != null){
-				valor = saldo.getDeposito().add(saldo.getDeposito());
-			}
+			valor = valor.add(saldo.getDeposito());
 		}
 		return valor;
 	}

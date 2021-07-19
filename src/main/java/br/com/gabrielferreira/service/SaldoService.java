@@ -1,6 +1,7 @@
 package br.com.gabrielferreira.service;
 
 import java.io.Serializable;
+
 import javax.inject.Inject;
 
 import br.com.gabrielferreira.entidade.Saldo;
