@@ -47,6 +47,11 @@ public class ClienteService implements Serializable {
 	}
 	
 	@Transacional
+	public void removerCliente(Cliente cliente) {
+		clienteRepositorio.remover(cliente);
+	}
+	
+	@Transacional
 	public void atualizarClienteSaldo(Cliente cliente) {
 		clienteRepositorio.atualizar(cliente);
 	}

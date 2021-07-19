@@ -63,6 +63,10 @@ public class ClienteController implements Serializable{
 	@Setter
 	private Saldo saldoSelecionado;
 	
+	@Getter
+	@Setter
+	private Cliente clienteSelecionado;
+	
 	@PostConstruct
 	public void inicializar() {
 		clienteSearch = new ClienteSearch();
@@ -109,6 +113,19 @@ public class ClienteController implements Serializable{
 	
 	public void atualizarCliente(Cliente cliente) {
 		
+	}
+	
+	public void excluirCliente() {
+		try {
+			Cliente cliente = clienteSelecionado;			
+			clienteService.removerCliente(cliente);
+			consultarCliente();
+			FacesMessages.adicionarMensagem("consultaClientesForm:msg", FacesMessage.SEVERITY_INFO, "Removido com sucesso !",
+					null);
+		} catch (Exception e) {
+			FacesMessages.adicionarMensagem("consultaClientesForm:msg", FacesMessage.SEVERITY_ERROR, "Não é possível excluir, pois tem entidades relacionada !",
+					"Não é possível excluir !");
+		}
 	}
 	
 	public void limparPesquisa() {

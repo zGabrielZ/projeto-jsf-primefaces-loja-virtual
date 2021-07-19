@@ -78,8 +78,31 @@
 						<f:convertNumber currencySymbol="R$" type="currency"  />
 					</h:outputText>
 				</p:column>
+				
+				<p:column style="width:60px;" >
+					<f:facet name="header">Deletar</f:facet>										
+					<p:commandButton onclick="PF('meuDialogo').show();"
+						icon="fa fa-trash" title="Excluir este cliente" >
+						<f:setPropertyActionListener value="#{cliente}"
+							target="#{clienteController.clienteSelecionado}"></f:setPropertyActionListener>
+					</p:commandButton> 
+				</p:column>
 
 			</p:dataTable>
+			
+			<p:confirmDialog header="Exclusão de clientes"
+				message="Tem certeza que deseja excluir este cliente ?"
+				widgetVar="meuDialogo" resizable="false" modal="true"
+				minimizable="true" maximizable="true">
+
+				<p:commandButton value="Sim"
+					action="#{clienteController.excluirCliente}"
+					update="dataTableClientes" ajax="false" process="@form"
+					onclick="meuDialogo.hide()" />
+				<p:commandButton value="Nao" update="dataTableClientes"
+					ajax="false" process="@form" onclick="meuDialogo.hide()" />
+
+			</p:confirmDialog>
 
 		</h:form>
 		
