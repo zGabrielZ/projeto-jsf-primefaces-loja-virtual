@@ -62,7 +62,7 @@
 					<h:outputText value="#{cliente.cpf}" />
 				</p:column>
 
-				<p:column style="width:130px;" >
+				<p:column style="width:150px;" >
 					<f:facet name="header">E-mail</f:facet>
 					<h:outputText value="#{cliente.email}" />
 				</p:column>
@@ -72,14 +72,28 @@
 					<h:outputText value="#{cliente.dataNascimento}" converter="dataNascimentoConverter" />
 				</p:column>
 				
-				<p:column style="width:100px;" >
-					<f:facet name="header">Saldo</f:facet>
+				<p:column style="width:100px;">
+					<f:facet name="header">Detalhe</f:facet>
+					<p:commandButton title="Detalhe do cliente" icon="fa fa-search-plus"
+					action="#{clienteController.selecionarClienteDetalhe(cliente)}" ></p:commandButton>
+				</p:column>
+				
+				<p:column style="width:100px;">
+					<f:facet name="header">Add Saldo</f:facet>
+					<p:commandButton title="Adicionar Saldo" icon="fa fa-credit-card"
+						process="@this" action="#{clienteController.selecionarClienteSaldo(cliente)}" >
+					</p:commandButton>
+					<p:commandButton title="Consultar Saldos" action="#{clienteController.selecionarClienteConsultaSaldo(cliente)}" icon="fa fa-search-plus" ></p:commandButton>
+				</p:column>
+				
+				<p:column style="width:80px;" >
+					<f:facet name="header">Status Saldo</f:facet>
 					<h:outputText value="#{cliente.saldoTotal}"  >
 						<f:convertNumber currencySymbol="R$" type="currency"  />
 					</h:outputText>
 				</p:column>
 				
-				<p:column style="width:60px;" >
+				<p:column style="width:50px;" >
 					<f:facet name="header">Deletar</f:facet>										
 					<p:commandButton onclick="PF('meuDialogo').show();"
 						icon="fa fa-trash" title="Excluir este cliente" >

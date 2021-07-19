@@ -56,6 +56,10 @@ public class ClienteService implements Serializable {
 		clienteRepositorio.atualizar(cliente);
 	}
 	
+	public Cliente getDetalhe(Integer id) {
+		return clienteRepositorio.procurarPorId(id);
+	}
+	
 	public List<Cliente> getFiltrar(ClienteSearch clienteSearch){
 		List<Cliente> clientes = clienteRepositorio.filtrar(clienteSearch);
 		return clientes;

@@ -132,6 +132,20 @@ public class ClienteController implements Serializable{
 		clienteSearch = new ClienteSearch();
 	}
 	
+	public String selecionarClienteSaldo(Cliente cliente) {
+		this.cliente = cliente;
+		return "/saldo/cadastro/CadastroSaldo?faces-redirect=true&codigo="+this.cliente.getId();
+	}
+	
+	public String selecionarClienteConsultaSaldo(Cliente cliente) {
+		this.cliente = cliente;
+		return "/saldo/consulta/ConsultaSaldo?faces-redirect=true&codigo="+this.cliente.getId();
+	}
+	public String selecionarClienteDetalhe(Cliente cliente) {
+		this.cliente = cliente;
+		return "/cliente/detalhe/DetalheCliente?faces-redirect=true&codigo="+this.cliente.getId();
+	}
+	
 	public void limparFormularioCliente() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		UIViewRoot uiViewRoot = facesContext.getViewRoot();
