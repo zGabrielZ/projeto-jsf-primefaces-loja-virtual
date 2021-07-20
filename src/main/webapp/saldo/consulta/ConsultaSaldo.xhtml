@@ -36,8 +36,31 @@
 						converter="dataDepositoConverter">
 					</h:outputText>
 				</p:column>
+				
+				<p:column style="width:50px;" >
+					<f:facet name="header">Deletar</f:facet>										
+					<p:commandButton onclick="PF('meuDialogo').show();"
+						icon="fa fa-trash" title="Excluir este saldo" >
+						<f:setPropertyActionListener value="#{saldo}"
+							target="#{saldoController.saldoSelecionado}"></f:setPropertyActionListener>
+					</p:commandButton> 
+				</p:column>
 
 			</p:dataTable>
+			
+			<p:confirmDialog header="Exclusão de saldos"
+				message="Tem certeza que deseja excluir este saldo ?"
+				widgetVar="meuDialogo" resizable="false" modal="true"
+				minimizable="true" maximizable="true">
+
+				<p:commandButton value="Sim"
+					action="#{saldoController.excluirSaldo}"
+					update="dataTableSaldos" ajax="false" process="@form"
+					onclick="meuDialogo.hide()" />
+				<p:commandButton value="Nao" update="dataTableSaldos"
+					ajax="false" process="@form" onclick="meuDialogo.hide()" />
+
+			</p:confirmDialog>
 
 		</o:form>
 		

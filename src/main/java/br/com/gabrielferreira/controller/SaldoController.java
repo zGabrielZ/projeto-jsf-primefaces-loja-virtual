@@ -46,6 +46,10 @@ public class SaldoController implements Serializable{
 	@Setter
 	private Cliente cliente;
 	
+	@Getter
+	@Setter
+	private Saldo saldoSelecionado;
+	
 	@PostConstruct
 	public void inicializar() {
 		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
@@ -70,6 +74,19 @@ public class SaldoController implements Serializable{
 		saldoService.inserirSaldoAndCliente(saldo, cliente);
 		FacesMessages.adicionarMensagem("cadastroSaldoForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
 				null);
+	}
+	
+	public void excluirSaldo() {
+		try {
+			Saldo saldo = saldoSelecionado;			
+			saldoService.removerSaldo(saldo);
+			inicializar();
+			FacesMessages.adicionarMensagem("consultaSaldosForm:msg", FacesMessage.SEVERITY_INFO, "Removido com sucesso !",
+					null);
+		} catch (Exception e) {
+			FacesMessages.adicionarMensagem("consultaSaldosForm:msg", FacesMessage.SEVERITY_ERROR, "Não é possível excluir, pois tem entidades relacionada !",
+					"Não é possível excluir !");
+		}
 	}
 
 }

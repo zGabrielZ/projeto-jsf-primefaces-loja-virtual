@@ -39,6 +39,11 @@ public class SaldoService implements Serializable {
 		
 	}
 	
+	@Transacional
+	public void removerSaldo(Saldo saldo) {
+		saldoRepositorio.remover(saldo);
+	}
+	
 	public List<Saldo> getSaldosByCliente(Integer id){
 		return saldoRepositorio.getSaldosByCliente(id);
 	}

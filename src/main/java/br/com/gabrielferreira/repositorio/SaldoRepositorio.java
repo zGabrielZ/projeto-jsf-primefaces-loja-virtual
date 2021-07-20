@@ -32,5 +32,14 @@ public class SaldoRepositorio implements Serializable{
 		List<Saldo> saldos = query.getResultList();
 		return saldos;
 	}
+	
+	public void remover(Saldo saldo) {
+		saldo = procurarPorId(saldo.getId());
+		entityManager.remove(saldo);
+	}
+	
+	public Saldo procurarPorId(Integer id) {
+		return entityManager.find(Saldo.class, id);
+	}
 
 }

@@ -104,5 +104,16 @@ public class ClienteRepositorio implements Serializable{
 		return !clientes.isEmpty()?true:false;
 	}
 	
+	public boolean verificarEmailAtualizado(String email, Integer id) {
+		String jpql = "SELECT c FROM Cliente c where c.email = :email and c.id <> :id";
+		TypedQuery<Cliente> query = entityManager.createQuery(jpql,Cliente.class);
+		query.setParameter("email", email);
+		query.setParameter("id", id);
+		
+		List<Cliente> clientes = query.getResultList();
+		
+		return !clientes.isEmpty()?true:false;
+	}
+	
 
 }

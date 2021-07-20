@@ -62,17 +62,17 @@
 					<h:outputText value="#{cliente.cpf}" />
 				</p:column>
 
-				<p:column style="width:150px;" >
+				<p:column style="width:200px;" >
 					<f:facet name="header">E-mail</f:facet>
 					<h:outputText value="#{cliente.email}" />
 				</p:column>
 				
-				<p:column style="width:150px;">
+				<p:column style="width:130px;">
 					<f:facet name="header">Data de nascimento</f:facet>
 					<h:outputText value="#{cliente.dataNascimento}" converter="dataNascimentoConverter" />
 				</p:column>
 				
-				<p:column style="width:100px;">
+				<p:column style="width:80px;">
 					<f:facet name="header">Detalhe</f:facet>
 					<p:commandButton title="Detalhe do cliente" icon="fa fa-search-plus"
 					action="#{clienteController.selecionarClienteDetalhe(cliente)}" ></p:commandButton>
@@ -84,6 +84,13 @@
 						process="@this" action="#{clienteController.selecionarClienteSaldo(cliente)}" >
 					</p:commandButton>
 					<p:commandButton title="Consultar Saldos" action="#{clienteController.selecionarClienteConsultaSaldo(cliente)}" icon="fa fa-search-plus" ></p:commandButton>
+				</p:column>
+				
+				<p:column style="width:60px;">
+					<f:facet name="header">Atualizar</f:facet>
+					<p:commandButton title="Atualizar Cliente" icon="fa fa-edit"
+						process="@this" action="#{clienteController.selecionarClienteAtualizar(cliente)}" >
+					</p:commandButton>
 				</p:column>
 				
 				<p:column style="width:80px;" >

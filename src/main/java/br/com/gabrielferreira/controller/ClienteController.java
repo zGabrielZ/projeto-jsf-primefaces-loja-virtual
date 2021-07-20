@@ -3,6 +3,7 @@ package br.com.gabrielferreira.controller;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -34,6 +35,9 @@ public class ClienteController implements Serializable{
 	
 	@Inject
 	private ClienteService clienteService;
+	
+	@Inject
+	private NavegacaoController navegacaoController;
 	
 	@Getter
 	@Setter
@@ -112,7 +116,16 @@ public class ClienteController implements Serializable{
 	}
 	
 	public void atualizarCliente(Cliente cliente) {
-		
+		try {
+			clienteService.atualizarCliente(cliente);
+			FacesMessages.adicionarMensagem("consultaClientesForm:msg", FacesMessage.SEVERITY_INFO, "Atualizado com sucesso !",
+					null);
+			FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+			navegacaoController.consultaCliente();
+		} catch (RegraDeNegocioException e) {
+			FacesMessages.adicionarMensagem("atualizarClienteForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
+					null);
+		}
 	}
 	
 	public void excluirCliente() {
@@ -141,9 +154,21 @@ public class ClienteController implements Serializable{
 		this.cliente = cliente;
 		return "/saldo/consulta/ConsultaSaldo?faces-redirect=true&codigo="+this.cliente.getId();
 	}
+	
 	public String selecionarClienteDetalhe(Cliente cliente) {
 		this.cliente = cliente;
 		return "/cliente/detalhe/DetalheCliente?faces-redirect=true&codigo="+this.cliente.getId();
+	}
+	
+	public String selecionarClienteAtualizar(Cliente cliente) {
+		this.cliente = cliente;
+		return "/cliente/atualizar/AtualizarCliente?faces-redirect=true&codigo="+this.cliente.getId();
+	}
+	
+	public void carregarDadosCliente() {
+		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		String id = params.get("codigo");
+		cliente = clienteService.getDetalhe(Integer.parseInt(id));
 	}
 	
 	public void limparFormularioCliente() {

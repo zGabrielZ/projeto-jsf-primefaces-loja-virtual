@@ -47,6 +47,12 @@ public class ClienteService implements Serializable {
 	}
 	
 	@Transacional
+	public void atualizarCliente(Cliente cliente) throws RegraDeNegocioException {
+		verificarEmailClienteAtualizado(cliente.getEmail(), cliente.getId());
+		clienteRepositorio.atualizar(cliente);
+	}
+	
+	@Transacional
 	public void removerCliente(Cliente cliente) {
 		clienteRepositorio.remover(cliente);
 	}
@@ -74,6 +80,12 @@ public class ClienteService implements Serializable {
 	public void verificarEmailCliente(String email) throws RegraDeNegocioException {
 		if(clienteRepositorio.verificarEmail(email)) {
 			throw new RegraDeNegocioException("Não é possível cadastrar este e-mail " + email + ", pois já está cadastrado.");
+		}
+	}
+	
+	public void verificarEmailClienteAtualizado(String email, Integer id) throws RegraDeNegocioException {
+		if(clienteRepositorio.verificarEmailAtualizado(email, id)) {
+			throw new RegraDeNegocioException("Não é possível atualizar este e-mail " + email + ", pois já está cadastrado.");
 		}
 	}
 	

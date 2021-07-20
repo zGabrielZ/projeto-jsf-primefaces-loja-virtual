@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui">
+	
+	<f:metadata>
+		<f:viewParam id="codigo" name="codigo" value="#{clienteController.cliente.id}"/>
+		<f:event listener="#{clienteController.carregarDadosCliente}" type="preRenderView"></f:event>
+	</f:metadata>
+	
+	<ui:composition template="/layout/cadastro/Cadastrar.xhtml" >
+
+		<ui:define name="titulo">
+			<h1>Atualizar cliente</h1>
+		
+			<div id="btnVoltar" style="margin-bottom:10px; margin-top: 10px;" >
+				<h:form id="frmBtnConsultaCliente">
+					<p:commandButton value="Ir para consulta de clientes" ajax="false" actionListener="#{navegacaoController.consultaCliente}" />
+				</h:form>
+			</div>
+		
+		</ui:define>
+		
+		<ui:define name="conteudo" >
+		<o:form id="atualizarClienteForm" includeRequestParams="true" acceptcharset="ISO-8859-1" >
+		
+			<p:messages id="msg" autoUpdate="true"/>
+				
+			<p:inputText id="codigo" value="#{clienteController.cliente.id}" label="Código" type="hidden"></p:inputText>
+
+			<div align="center">
+				<h:panelGrid columns="3" style="text-align: center">
+					
+					<p:outputLabel for="nome" value="Nome: " />
+					<p:inputText value="#{clienteController.cliente.nome}" label="Nome"
+						id="nome" required="true" requiredMessage="Nome é obrigatório"
+						size="15" maxlength="150" />
+					<p:message for="nome" />
+
+					<p:outputLabel for="email" value="E-mail: " />
+					<p:inputText value="#{clienteController.cliente.email}"
+						label="Email" id="email" size="15" maxlength="150" required="true"
+						requiredMessage="E-mail é obrigatório" />
+					<p:message for="email" />
+
+				</h:panelGrid>
+			</div>
+
+			<div align="center" style="padding-top:10px;" >
+					<p:commandButton value="Atualizar Cliente" action="#{clienteController.inserirOuAtualizarCliente}"
+						ajax="false" process="@form"></p:commandButton>
+			</div>
+
+		</o:form>
+
+	</ui:define>
+	
+	</ui:composition>
+</html>
