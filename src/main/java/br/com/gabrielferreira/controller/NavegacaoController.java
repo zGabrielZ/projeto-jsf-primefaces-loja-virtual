@@ -40,6 +40,26 @@ public class NavegacaoController implements Serializable{
 	    }
 	}
 	
+	public void cadastrarClienteLoteTxt() {
+	    ExternalContext externalContext = getExternalContext();
+	    try {
+	          externalContext.redirect(externalContext.getRequestContextPath()
+	                + "/cliente/lote/CadastroClienteLoteTxt.xhtml");
+	    } catch (IOException e) {
+	          e.printStackTrace();
+	    }
+	}
+	
+	public void cadastrarClienteLoteExcel() {
+	    ExternalContext externalContext = getExternalContext();
+	    try {
+	          externalContext.redirect(externalContext.getRequestContextPath()
+	                + "/cliente/lote/CadastroClienteLoteExcel.xhtml");
+	    } catch (IOException e) {
+	          e.printStackTrace();
+	    }
+	}
+	
 	public void home() {
 	    ExternalContext externalContext = getExternalContext();
 	    try {

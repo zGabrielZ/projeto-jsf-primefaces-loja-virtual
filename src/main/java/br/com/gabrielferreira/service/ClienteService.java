@@ -47,6 +47,13 @@ public class ClienteService implements Serializable {
 	}
 	
 	@Transacional
+	public void inserirClienteLote(List<Cliente> clientes) {
+		for(Cliente cliente : clientes) {
+			clienteRepositorio.inserir(cliente);
+		}
+	}
+	
+	@Transacional
 	public void atualizarCliente(Cliente cliente) throws RegraDeNegocioException {
 		verificarEmailClienteAtualizado(cliente.getEmail(), cliente.getId());
 		clienteRepositorio.atualizar(cliente);

@@ -24,8 +24,12 @@
 							action="#{navegacaoController.consultaCliente}" />
 						<p:menuitem value="Cadastro"
 							action="#{navegacaoController.cadastrarCliente}" />
-						<p:menuitem value="Cadastro de clientes em lote"
-							 />
+						<p:submenu label="Cliente em lote">
+							<p:menuitem value="Via Excel"
+								action="#{navegacaoController.cadastrarClienteLoteExcel}" />
+							<p:menuitem value="Via Txt"
+								action="#{navegacaoController.cadastrarClienteLoteTxt}" />
+						</p:submenu>
 					</p:submenu>
 				</p:submenu>
 			</p:menubar>
