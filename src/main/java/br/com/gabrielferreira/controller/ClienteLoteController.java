@@ -6,10 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -46,6 +49,8 @@ public class ClienteLoteController implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	
 	@Inject
 	private ArquivoUploadService arquivoUploadService;
 	
@@ -53,7 +58,10 @@ public class ClienteLoteController implements Serializable{
 	private ClienteService clienteService;
 	
 	@Setter
-	private StreamedContent arquivo;
+	private StreamedContent modeloArquivoExcel;
+	
+	@Setter
+	private StreamedContent modeloArquivoTxt;
 	
 	@Getter
 	@Setter
@@ -73,6 +81,7 @@ public class ClienteLoteController implements Serializable{
 		clientes = new ArrayList<>();
 	}
 
+	// Primeira implementação do upload arquivo excel
 	public void uploadArquivoExcel() throws IOException {
 	
 		// Caso o tipo do arquivo for xlsx
@@ -91,13 +100,57 @@ public class ClienteLoteController implements Serializable{
 		
 	}
 	
-	public void cadastrarClientes() throws RegraDeNegocioException {
+	// Primeira implementação do upload arquivo txt
+	public void uploadArquivoTxt() throws IOException {
+		// Caso o tipo do arquivo for txt 
+		if(arquivoUploadExcelTxt.getContentType().equals("text/plain") && clientes.isEmpty()) {
+			
+			byte[] arquivoByte = toByteArrays(arquivoUploadExcelTxt.getInputStream());
+			arquivoUpload.setArquivo(arquivoByte);
+			arquivoUpload.setTipoArquivo(TipoArquivo.TXT);
+			verificarArquivoTxt(arquivoUploadExcelTxt);
+			
+		} else {
+			FacesMessages.adicionarMensagem("cadastroClienteLoteTxtForm:msg", FacesMessage.SEVERITY_ERROR, "Não é possível inserir em lote !",
+					null);
+		}
+	}
+	
+	public void cadastrarClientesExcel() throws RegraDeNegocioException {
 		arquivoUploadService.inserirExcel(arquivoUpload);
 		clienteService.inserirClienteLote(clientes);
 		arquivoUpload = new ArquivoUpload();
 		clientes = new ArrayList<>();
 		FacesMessages.adicionarMensagem("cadastroClienteLoteExcelForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrados com sucesso !",
 				null);
+	}
+	
+	public void cadastrarClientesTxt() throws RegraDeNegocioException {
+		arquivoUploadService.inserirTxt(arquivoUpload);
+		clienteService.inserirClienteLote(clientes);
+		arquivoUpload = new ArquivoUpload();
+		clientes = new ArrayList<>();
+		FacesMessages.adicionarMensagem("cadastroClienteLoteTxtForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrados com sucesso !",
+				null);
+	}
+	
+	private void verificarArquivoTxt(Part arquivoUploadExcelTxt) throws IOException {
+		Scanner scanner = new Scanner(arquivoUploadExcelTxt.getInputStream());
+		while (scanner.hasNext()) {
+			String linha = scanner.nextLine();
+			
+			if(linha != null && !linha.isEmpty()) {
+				String[] delimitador = linha.split("\\;");
+				Cliente cliente = new Cliente();
+				cliente.setNome(delimitador[0]);
+				cliente.setEmail(delimitador[1]);
+				cliente.setCpf(delimitador[2]);
+				cliente.setDataNascimento(LocalDate.parse(delimitador[3], dtf));
+				clientes.add(cliente);
+			}
+		}
+		
+		scanner.close();
 	}
 	
 	private void verficarArquivoExcel(Part arquivoUploadExcelTxt) throws IOException {
@@ -153,8 +206,17 @@ public class ClienteLoteController implements Serializable{
 		
 		String caminhoTipo = facesContext.getExternalContext().getRealPath("/resources/modelo-excel/modelo-cliente.xlsx");
 		InputStream inputStream = new FileInputStream(caminhoTipo);
-		arquivo = new DefaultStreamedContent(inputStream, "application/xlsx","modelo-cliente.xlsx");
-		return arquivo;
+		modeloArquivoExcel = new DefaultStreamedContent(inputStream, "application/xlsx","modelo-cliente.xlsx");
+		return modeloArquivoExcel;
+	}
+	
+	public StreamedContent getModeloArquivoTxt() throws FileNotFoundException {
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		
+		String caminhoTipo = facesContext.getExternalContext().getRealPath("/resources/modelo-txt/modelo-cliente.txt");
+		InputStream inputStream = new FileInputStream(caminhoTipo);
+		modeloArquivoTxt = new DefaultStreamedContent(inputStream, "application/txt","modelo-cliente.txt");
+		return modeloArquivoTxt;
 	}
 	
 	public byte[] toByteArrays(InputStream inputStream) throws IOException{

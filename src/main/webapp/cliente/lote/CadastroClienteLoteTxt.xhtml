@@ -22,13 +22,13 @@
 				<div align="center">
 					<p:commandButton id="btnCadastrar" value="Download modelo" 
 						ajax="false" process="@this" update="@form">
-						<p:fileDownload value="#{clienteLoteController.modeloArquivoExcel}"></p:fileDownload>	
+						<p:fileDownload value="#{clienteLoteController.modeloArquivoTxt}"></p:fileDownload>	
 					</p:commandButton>
 				</div>
 			</h:form>
 		
 
-			<h:form id="cadastroClienteLoteExcelForm" enctype="multipart/form-data" >
+			<h:form id="cadastroClienteLoteTxtForm" enctype="multipart/form-data" >
 
 				<p:messages id="msg" autoUpdate="true" />
 
@@ -45,7 +45,7 @@
 						
 						<div align="center" style="padding-top: 10px;">
 							<p:commandButton id="btnCadastrar" value="Inserir clientes"
-								action="#{clienteLoteController.uploadArquivoExcel}"
+								action="#{clienteLoteController.uploadArquivoTxt}"
 								ajax="false" process="@this" update="@form"></p:commandButton>
 						</div>
 						
@@ -98,7 +98,7 @@
 					</h:panelGrid>
 
 					<p:commandButton id="btnCadastrar" value="Cadastrar Clientes" rendered="#{not empty clienteLoteController.clientes}"
-					action="#{clienteLoteController.cadastrarClientesExcel}"
+					action="#{clienteLoteController.cadastrarClientesTxt}"
 					ajax="false" process="@this" update="@form"></p:commandButton>
 				
 				</div>
