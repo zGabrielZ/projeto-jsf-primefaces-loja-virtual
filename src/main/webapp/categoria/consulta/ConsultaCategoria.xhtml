@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/layout/consulta/Consulta.xhtml" >
+	
+	<f:metadata>
+		<f:viewAction action="#{categoriaController.consultarCategoria}"></f:viewAction>
+	</f:metadata>
+
+	<ui:define name="titulo">
+			<h1>Consulta de categorias</h1>
+		</ui:define>
+		
+		<ui:define name="consulta">
+			<p:panelGrid>
+				<h:form id="frmConsulta" >
+					
+					<h:panelGrid columns="4" >
+						<p:outputLabel style="margin-left:500px;" for="nome" value="Nome:" />
+						<p:inputText style="margin-left:40px;"  id="nome" value="#{categoriaController.categoriaSearch.nome}" maxlength="150" 
+						size="15" ></p:inputText>
+																		
+						<p:outputLabel/>
+						<p:commandButton id="consultar" value="Consultar" ajax="false" 
+							process="@form" action="#{categoriaController.consultarCategoria}" />
+						
+					</h:panelGrid>
+				</h:form>
+			</p:panelGrid>
+		</ui:define>
+		
+		<ui:define name="conteudo" >
+			
+			<h:form id="consultaCategoriasForm" >
+			<p:messages id="msg" autoUpdate="true"  />
+			<p:dataTable id="dataTableCategorias" value="#{categoriaController.categorias}" 
+				var="categoria" style="padding-top:20px;" rows="5" paginator="true" paginatorPosition="bottom"
+				emptyMessage="Sua consulta não retornou registros." rowsPerPageTemplate="5, 10, 25, 50, 100"
+				paginatorAlwaysVisible="false" >
+								
+				<p:column style="width:150px;" >
+					<f:facet name="header">Nome</f:facet>
+					<h:outputText value="#{categoria.nome}" />
+				</p:column>
+				
+				<p:column style="width:60px;">
+					<f:facet name="header">Atualizar</f:facet>
+					<p:commandButton title="Atualizar Produto" icon="fa fa-edit"
+						process="@this" >
+					</p:commandButton>
+				</p:column>
+
+				<p:column style="width:100px;">
+					<f:facet name="header">Add Produto</f:facet>
+					<p:commandButton title="Adicionar Produto" icon="fa fa-credit-card"
+						process="@this" >
+					</p:commandButton>
+					<p:commandButton title="Consultar Produtos" icon="fa fa-search-plus" ></p:commandButton>
+				</p:column>
+		
+			</p:dataTable>
+
+		</h:form>
+		
+		</ui:define> 
+		
+		<ui:define name="conteudo-2">
+			<h:form id="btnCadastro" >
+				<div id="btnCadastroCliente" style="margin-top: 30px;" >
+					<p:commandButton value="Ir para o cadastro de categoria" ajax="false" 
+						/>
+				</div>
+				<div id="btnLimparPesquisa" style="margin-top: 10px;" >
+					<p:commandButton value="Limpar pesquisa" ajax="false" actionListener="#{categoriaController.limparFormularioCategoria}" />
+				</div>	
+			</h:form>
+		</ui:define>
+		
+	</ui:composition>
+</html>
