@@ -51,9 +51,8 @@
 				
 				<p:column style="width:60px;">
 					<f:facet name="header">Atualizar</f:facet>
-					<p:commandButton title="Atualizar Produto" icon="fa fa-edit"
-						process="@this" >
-					</p:commandButton>
+					<p:commandButton title="Atualizar Categoria" icon="fa fa-edit"
+						process="@this" action="#{categoriaController.selecionarCategoriaAtualizar(categoria)}" />
 				</p:column>
 
 				<p:column style="width:100px;">
@@ -74,7 +73,7 @@
 			<h:form id="btnCadastro" >
 				<div id="btnCadastroCliente" style="margin-top: 30px;" >
 					<p:commandButton value="Ir para o cadastro de categoria" ajax="false" 
-						/>
+					  actionListener="#{navegacaoController.cadastrarCategoria}"	/>
 				</div>
 				<div id="btnLimparPesquisa" style="margin-top: 10px;" >
 					<p:commandButton value="Limpar pesquisa" ajax="false" actionListener="#{categoriaController.limparFormularioCategoria}" />

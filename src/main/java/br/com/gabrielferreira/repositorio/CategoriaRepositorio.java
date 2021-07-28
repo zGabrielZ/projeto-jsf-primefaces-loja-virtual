@@ -58,6 +58,18 @@ public class CategoriaRepositorio implements Serializable{
 		return predicates;
 	}
 	
+	public void inserir(Categoria categoria) {
+		entityManager.persist(categoria);
+	}
+	
+	public void atualizar(Categoria categoria) {
+		entityManager.merge(categoria);
+	}
+	
+	public Categoria procurarPorIdCategoria(Integer id) {
+		return entityManager.find(Categoria.class, id);
+	}
+	
 	public List<Categoria> procurarPorId(Integer id) {
 		String jpql = "SELECT c FROM Categoria c JOIN FETCH c.produtos p where c.id = :id";
 		TypedQuery<Categoria> query = entityManager.createQuery(jpql,Categoria.class);
