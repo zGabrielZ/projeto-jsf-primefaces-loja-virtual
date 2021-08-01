@@ -38,6 +38,10 @@ public class CategoriaService implements Serializable {
 		return categoriaRepositorio.procurarPorId(id);
 	}
 	
+	public List<Categoria> listaCategorias(){
+		return categoriaRepositorio.listaCategorias();
+	}
+	
 	public Categoria procurarPorIdCategoria(Integer id) {
 		return categoriaRepositorio.procurarPorIdCategoria(id);
 	}

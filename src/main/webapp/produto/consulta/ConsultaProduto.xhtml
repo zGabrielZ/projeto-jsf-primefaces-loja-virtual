@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/layout/consulta/Consulta.xhtml" >
+	
+	<f:metadata>
+		<f:viewAction action="#{produtoController.consultarProduto}"></f:viewAction>
+	</f:metadata>
+
+	<ui:define name="titulo">
+			<h1>Consulta de produtos cadastrados</h1>
+		</ui:define>
+		
+		<ui:define name="consulta">
+			<p:panelGrid>
+				<h:form id="frmConsulta" >
+					
+					<h:panelGrid columns="8" >
+						<p:outputLabel style="margin-left:150px;" for="nome" value="Nome:" />
+						<p:inputText style="margin-left:40px;"  id="nome" value="#{produtoController.produtoSearch.nome}" maxlength="150" 
+						size="15" ></p:inputText>
+
+						<p:outputLabel style="margin-left:40px;" for="estoque" value="Estoque:" />
+						<p:inputText style="margin-left:40px;" value="#{produtoController.produtoSearch.estoque}"
+							id="estoque" maxlength="150" size="15" />
+							
+						<p:outputLabel style="margin-left:40px;"  for="data" value="Data da produção:" />
+						<p:inputText style="margin-left:40px;" maxlength="150" size="15" 
+							id="data" value="#{produtoController.produtoSearch.dataProducao}" converter="dataProducaoConverter" />
+												
+						<p:outputLabel/>
+						<p:commandButton id="consultar" value="Consultar" ajax="false" 
+							process="@form" action="#{produtoController.consultarProduto}" />
+						
+					</h:panelGrid>
+				</h:form>
+			</p:panelGrid>
+		</ui:define>
+		
+		<ui:define name="conteudo" >
+			<h:form id="consultaProdutosForm" >
+			<p:messages id="msg" autoUpdate="true"  />
+			<p:dataTable id="dataTableProdutos" value="#{produtoController.produtos}" 
+				var="produto" style="padding-top:20px;" rows="5" paginator="true" paginatorPosition="bottom"
+				emptyMessage="Sua consulta não retornou registros." rowsPerPageTemplate="5, 10, 25, 50, 100"
+				paginatorAlwaysVisible="false" >
+								
+				<p:column style="width:150px;" >
+					<f:facet name="header">Nome</f:facet>
+					<h:outputText value="#{produto.nome}" />
+				</p:column>
+				
+				<p:column style="width:80px;" >
+					<f:facet name="header">Valor</f:facet>
+					<h:outputText value="#{produto.valor}"  >
+						<f:convertNumber currencySymbol="R$" type="currency"  />
+					</h:outputText>
+				</p:column>
+
+				<p:column style="width:130px;" >
+					<f:facet name="header">Estoque</f:facet>
+					<h:outputText value="#{produto.estoque}" />
+				</p:column>
+				
+				<p:column style="width:130px;">
+					<f:facet name="header">Data da produção</f:facet>
+					<h:outputText value="#{produto.dataProducao}" converter="dataProducaoConverter" />
+				</p:column>
+				
+				<p:column style="width:150px;" >
+					<f:facet name="header">Categoria</f:facet>
+					<h:outputText value="#{produto.categoria.nome}" />
+				</p:column>
+				
+				<p:column style="width:80px;">
+					<f:facet name="header">Detalhe</f:facet>
+					<p:commandButton title="Detalhe do produto" icon="fa fa-search-plus"
+					 action="#{produtoController.selecionarProdutoDetalhe(produto)}" ></p:commandButton>
+				</p:column>
+				
+				<p:column style="width:60px;">
+					<f:facet name="header">Atualizar</f:facet>
+					<p:commandButton title="Atualizar Produto" icon="fa fa-edit"
+						process="@this" action="#{produtoController.selecionarProdutoAtualizar(produto)}" >
+					</p:commandButton>
+				</p:column>
+				
+				<p:column style="width:50px;" >
+					<f:facet name="header">Deletar</f:facet>										
+					<p:commandButton onclick="PF('meuDialogo').show();"
+						icon="fa fa-trash" title="Excluir este produto" >
+						<f:setPropertyActionListener value="#{produto}"
+							target="#{produtoController.produtoSelecionado}"></f:setPropertyActionListener>
+					</p:commandButton> 
+				</p:column>
+
+			</p:dataTable>
+			
+			<p:confirmDialog header="Exclusão de produtos"
+				message="Tem certeza que deseja excluir este produto ?"
+				widgetVar="meuDialogo" resizable="false" modal="true"
+				minimizable="true" maximizable="true">
+
+				<p:commandButton value="Sim" action="#{produtoController.excluirProduto}"
+					update="dataTableProdutos" ajax="false" process="@form"
+					onclick="meuDialogo.hide()" />
+				<p:commandButton value="Não" update="dataTableProdutos"
+					ajax="false" process="@form" onclick="meuDialogo.hide()" />
+
+			</p:confirmDialog>
+
+		</h:form>
+		
+		</ui:define> 
+		
+		<ui:define name="conteudo-2">
+			<h:form id="btnCadastro" >
+				<div id="btnCadastroProduto" style="margin-top: 30px;" >
+					<p:commandButton value="Ir para o cadastro do produto" ajax="false" 
+						actionListener="#{navegacaoController.cadastroProduto}"  />
+				</div>
+				<div id="btnLimparPesquisa" style="margin-top: 10px;" >
+					<p:commandButton value="Limpar pesquisa" ajax="false" actionListener="#{produtoController.limparFormularioProdutoPesquisa}"  />
+				</div>	
+			</h:form>
+		</ui:define>
+		
+	</ui:composition>
+</html>

@@ -11,8 +11,8 @@ import javax.faces.convert.FacesConverter;
 
 import br.com.gabrielferreira.utils.FacesMessages;
 
-@FacesConverter("dataNascimentoConverter")
-public class DataNascimentoConverter implements Converter{
+@FacesConverter("dataProducaoConverter")
+public class DataProducaoConverter implements Converter{
 
 	private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	
@@ -25,7 +25,7 @@ public class DataNascimentoConverter implements Converter{
 			try {
 				data = LocalDate.parse(value, dtf);
 			} catch (Exception e) {
-				FacesMessages.adicionarMensagem("cadastroClienteForm:dataNascimento", FacesMessage.SEVERITY_ERROR,"Data incorreta (Formato : DD/MM/YYYY) !", null);
+				FacesMessages.adicionarMensagem("cadastroProdutoForm:data", FacesMessage.SEVERITY_ERROR,"Data incorreta (Formato : DD/MM/YYYY) !", null);
 			}
 		}
 		

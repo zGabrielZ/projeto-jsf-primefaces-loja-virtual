@@ -78,5 +78,12 @@ public class CategoriaRepositorio implements Serializable{
 		List<Categoria> categorias = query.getResultList();
 		return categorias;
 	}
+	
+	public List<Categoria> listaCategorias(){
+		String jpql = "SELECT c FROM Categoria c";
+		TypedQuery<Categoria> query = entityManager.createQuery(jpql,Categoria.class);
+		List<Categoria> categorias = query.getResultList();
+		return categorias;
+	}
 
 }

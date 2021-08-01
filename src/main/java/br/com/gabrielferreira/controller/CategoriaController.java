@@ -96,6 +96,10 @@ public class CategoriaController implements Serializable{
 		return "/categoria/cadastro/CadastroCategoria?faces-redirect=true&codigo="+this.categoria.getId();
 	}
 	
+	public List<Categoria> getListaCategorias(){
+		return categoriaService.listaCategorias();
+	}
+	
 	public void limparFormularioCategoria() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		UIViewRoot uiViewRoot = facesContext.getViewRoot();

@@ -42,6 +42,15 @@
 					</p:submenu>
 				</p:submenu>
 				
+				<p:submenu label="Produto" icon="fa fa-pencil" >
+					<p:submenu label="Novo" icon="fa fa-pencil">
+						<p:menuitem value="Consulta"
+							action="#{navegacaoController.consultaProduto}"></p:menuitem>
+						<p:menuitem value="Cadastro"
+							action="#{navegacaoController.cadastroProduto}"></p:menuitem>
+					</p:submenu>
+				</p:submenu>
+				
 			</p:menubar>
 		</h:form>
 	</div>
