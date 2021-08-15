@@ -5,10 +5,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import br.com.gabrielferreira.entidade.Cliente;
 import br.com.gabrielferreira.entidade.Saldo;
-import br.com.gabrielferreira.repositorio.ClienteRepositorio;
+import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.repositorio.SaldoRepositorio;
+import br.com.gabrielferreira.repositorio.UsuarioRepositorio;
 import br.com.gabrielferreira.utils.Transacional;
 
 public class SaldoService implements Serializable {
@@ -19,7 +19,7 @@ public class SaldoService implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Inject
-	private ClienteRepositorio clienteRepositorio;
+	private UsuarioRepositorio usuarioRepositorio;
 	
 	@Inject
 	private SaldoRepositorio saldoRepositorio;
@@ -30,12 +30,17 @@ public class SaldoService implements Serializable {
 	}
 	
 	@Transacional
-	public void inserirSaldoAndCliente(Saldo saldo, Cliente cliente) {
-		saldo.setCliente(cliente);
+	public void atualizar(Saldo saldo) {
+		saldoRepositorio.atualizar(saldo);
+	}
+	
+	@Transacional
+	public void inserirSaldoAndUsuario(Saldo saldo, Usuario usuario) {
+		saldo.setUsuario(usuario);
 		saldoRepositorio.inserir(saldo);
 		
-		cliente.getSaldos().add(saldo);
-		clienteRepositorio.atualizar(cliente);
+		usuario.getSaldos().add(saldo);
+		usuarioRepositorio.atualizar(usuario);
 		
 	}
 	
@@ -44,8 +49,13 @@ public class SaldoService implements Serializable {
 		saldoRepositorio.remover(saldo);
 	}
 	
-	public List<Saldo> getSaldosByCliente(Integer id){
-		return saldoRepositorio.getSaldosByCliente(id);
+	public List<Saldo> getSaldosByUsuario(Integer id){
+		return saldoRepositorio.getSaldosByUsuario(id);
 	}
+	
+	public Saldo getDetalhe(Integer id) {
+		return saldoRepositorio.procurarPorId(id);
+	}
+
 
 }

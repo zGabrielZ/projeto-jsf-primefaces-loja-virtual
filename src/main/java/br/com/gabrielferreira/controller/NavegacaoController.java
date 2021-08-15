@@ -60,41 +60,41 @@ public class NavegacaoController implements Serializable{
 	    }
 	}
 	
-	public void consultaCliente() {
+	public void consultaUsuario() {
 	    ExternalContext externalContext = getExternalContext();
 	    try {
 	          externalContext.redirect(externalContext.getRequestContextPath()
-	                + "/cliente/consulta/ConsultaCliente.xhtml");
+	                + "/usuario/consulta/ConsultaUsuario.xhtml");
 	    } catch (IOException e) {
 	          e.printStackTrace();
 	    }
 	}
 	
-	public void cadastrarCliente() {
+	public void cadastrarUsuario() {
 	    ExternalContext externalContext = getExternalContext();
 	    try {
 	          externalContext.redirect(externalContext.getRequestContextPath()
-	                + "/cliente/cadastro/CadastroCliente.xhtml");
+	                + "/usuario/cadastro/CadastroUsuario.xhtml");
 	    } catch (IOException e) {
 	          e.printStackTrace();
 	    }
 	}
 	
-	public void cadastrarClienteLoteTxt() {
+	public void cadastrarUsuarioLoteTxt() {
 	    ExternalContext externalContext = getExternalContext();
 	    try {
 	          externalContext.redirect(externalContext.getRequestContextPath()
-	                + "/cliente/lote/CadastroClienteLoteTxt.xhtml");
+	                + "/usuario/lote/CadastroUsuarioLoteTxt.xhtml");
 	    } catch (IOException e) {
 	          e.printStackTrace();
 	    }
 	}
 	
-	public void cadastrarClienteLoteExcel() {
+	public void cadastrareUsuarioLoteExcel() {
 	    ExternalContext externalContext = getExternalContext();
 	    try {
 	          externalContext.redirect(externalContext.getRequestContextPath()
-	                + "/cliente/lote/CadastroClienteLoteExcel.xhtml");
+	                + "/usuario/lote/CadastroUsuarioLoteExcel.xhtml");
 	    } catch (IOException e) {
 	          e.printStackTrace();
 	    }

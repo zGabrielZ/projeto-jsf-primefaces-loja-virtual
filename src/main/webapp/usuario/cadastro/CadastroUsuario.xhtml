@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui">
+	
+	<f:metadata>
+		<f:viewParam id="codigo" name="codigo" value="#{usuarioController.usuario.id}"/>
+		<f:event listener="#{usuarioController.carregarDados}" type="preRenderView"></f:event>
+	</f:metadata>
+
+	<ui:composition template="/layout/cadastro/Cadastrar.xhtml" >
+	
+	<ui:define name="titulo">
+			<h1>#{usuarioController.tituloCadastroUsuario}</h1>
+		
+			<div id="btnVoltar" style="margin-bottom:10px; margin-top: 10px;" >
+				<h:form id="frmBtnConsultaUsuario">
+					<p:commandButton value="Ir para consulta de usuários"
+					actionListener="#{navegacaoController.consultaUsuario}" ajax="false" />
+				</h:form>
+			</div>
+		
+		</ui:define>
+		
+		<ui:define name="conteudo" >
+
+		<div id="cadastroUsuario">
+		
+			<p>Formato da data de nascimento : DD/MM/YYYY</p>
+		
+			<o:form id="cadastroUsuarioForm" includeRequestParams="true"
+			 acceptcharset="UTF-8">
+			
+			<p:messages id="msg"/>
+			
+				<div align="center">
+					<h:panelGroup id="pnlCadastroUsuario">
+						
+						<p:inputText id="codigo" value="#{usuarioController.usuario.id}"
+								label="Código" type="hidden"></p:inputText>
+						
+						<h:panelGrid columns="2" style="text-align: center">
+							<p:outputLabel for="nome" value="Nome: " />
+							<p:inputText value="#{usuarioController.usuario.nome}"
+								label="Nome" id="nome" required="true" 
+								requiredMessage="Nome é obrigatório" size="15" maxlength="150" />
+
+							<p:outputLabel for="email" value="E-mail: " />
+							<p:inputText value="#{usuarioController.usuario.email}"
+								label="Email" id="email" size="15" maxlength="150" 
+								required="true" requiredMessage="E-mail é obrigatório" validator="#{verificarEmail.validate}"/>
+
+							<p:outputLabel for="cpf" value="CPF: " />
+							<p:inputMask value="#{usuarioController.usuario.cpf}" label="CPF"
+								id="cpf" mask="999.999.999-99" size="9" maxlength="11" 
+								required="true" requiredMessage="CPF é obrigatório" validator="#{verificarCpf.validate}" />
+
+							<p:outputLabel for="data" value="Data de nascimento: " />
+							<p:inputMask value="#{usuarioController.usuario.dataNascimento}" mask="99/99/9999" size="6"
+								label="Data de nascimento" id="data" required="true"
+								requiredMessage="Data de nascimento é obrigatório"
+								converter="dataNascimentoConverter" validator="#{verificarLocalDate.validate}">
+							</p:inputMask>
+							
+							<p:outputLabel for="perfil" value="Perfil: "></p:outputLabel>
+							<p:selectOneMenu id="perfil"
+								value="#{usuarioController.usuario.perfil}" label="Perfil"
+								converter="#{perfilConverter}" required="true"
+								requiredMessage="Perfil é obrigatório">
+								<f:selectItem itemLabel="Selecione" />
+								<f:selectItems value="#{perfilController.perfils}"
+									var="perfil"
+									itemLabel="#{perfil.descricao}" itemValue="#{perfil}" />
+							</p:selectOneMenu>
+
+							<h:panelGroup
+								rendered="#{usuarioController.saldoNaoAtualizar == false}">
+								<p:outputLabel
+									for="saldo" value="Deseja incluir saldo ? " />
+								<p:selectBooleanCheckbox
+									id="saldo" value="#{usuarioController.desejoSaldo}">
+									<p:ajax process="@this"
+										oncomplete="PF('adicionarSaldo').show()"
+										update=":frmCadastroSaldo"></p:ajax>
+								</p:selectBooleanCheckbox>
+							</h:panelGroup>
+						</h:panelGrid>
+
+						<div align="center" style="padding-top: 10px;">
+							<p:commandButton id="btnCadastrar" value="#{usuarioController.tituloCadastroUsuario}"
+								action="#{usuarioController.inserirOuAtualizarUsuario}"
+								ajax="false" process="@this" update="@form"></p:commandButton>
+						</div>
+
+						<div align="center" style="padding-top: 10px;">
+							<p:commandButton rendered="#{usuarioController.tituloCadastroUsuario eq 'Cadastro de Usuário'}" id="btnLimpar" value="Limpar formulário"
+								immediate="true" action="#{usuarioController.limparFormularioUsuario}"
+								ajax="false" process="@this" update="@form"></p:commandButton>
+						</div>
+
+					</h:panelGroup>
+				</div>
+			</o:form>
+		</div>
+		
+		<div id="cadastroSaldo" align="center" >
+			<p:dialog modal="true" id="saldoDialog" height="400" width="800" widgetVar="adicionarSaldo" resizable="false">
+				<o:form id="frmCadastroSaldo" includeRequestParams="true"
+				 acceptcharset="UTF-8">
+				 
+				 	<p:messages id="msgSaldo" autoUpdate="true"/>
+				 
+				 	<p>Formato da data do depósito : DD/MM/YYYY HH:MM:SS</p>
+				 
+					<h:panelGrid id="pnlCadastroSaldo" columns="2"
+						style="margin-top:30px;text-align: center;">
+						<p:outputLabel for="deposito" value="Depósito: " />
+						<p:inputText value="#{usuarioController.saldo.deposito}"
+							label="Depósito" id="deposito" size="20" required="true" requiredMessage="É necessário inserir o depósito"
+							maxlength="15" >
+							<f:convertNumber currencySymbol="R$"  pattern="#,##0.00"></f:convertNumber>
+							<f:validateLongRange minimum="0" ></f:validateLongRange>
+							<p:ajax update="deposito" process="deposito" event="change" />	
+						</p:inputText>
+
+						<p:outputLabel for="dataDeposito" value="Data do depósito: " />
+						<p:inputMask value="#{usuarioController.saldo.dataDeposito}"
+							label="Data do depósito" id="dataDeposito" required="true" 
+							requiredMessage="É necessário inserir a data do depósito"
+							mask="99/99/9999 99:99:99" validator="#{verificarLocalDateTime.validate}"
+							converter="dataDepositoConverter">
+						</p:inputMask>
+					</h:panelGrid>
+
+					<div style="padding-top: 10px;">
+						<p:commandButton value="Adicionar saldos" action="#{usuarioController.addSaldo}"
+							update="pnlCadastroSaldo dataTableSaldos" process="saldoDialog"
+							oncomplete="PF('adicionarSaldo').show()">
+						</p:commandButton>
+					</div>
+					
+					<div style="width: 600px;margin-top: 10px;"  >
+
+						<p:dataTable id="dataTableSaldos"
+							value="#{usuarioController.saldos}" var="saldo"
+							style="padding-top:20px;" rows="5" paginator="true"
+							paginatorPosition="bottom"
+							emptyMessage="Sua consulta não retornou registros."
+							rowsPerPageTemplate="5, 10, 25, 50, 100"
+							paginatorAlwaysVisible="false">
+
+							<p:column style="width:50px;">
+								<f:facet name="header">Depósito</f:facet>
+								<h:outputText value="#{saldo.deposito}" >
+									<f:convertNumber currencySymbol="R$" type="currency" />
+								</h:outputText>
+							</p:column>
+
+							<p:column style="width:100px;">
+								<f:facet name="header">Data do depósito</f:facet>
+								<h:outputText value="#{saldo.dataDeposito}" converter="dataDepositoConverter">
+								</h:outputText>
+							</p:column>
+
+							<p:column style="width:50px;">
+								<f:facet name="header">Deletar</f:facet>
+								<p:commandButton icon="fa fa-trash" title="Excluir este saldo"
+									action="#{usuarioController.removerSaldo}"
+									update="dataTableSaldos" process="@this">			
+									<f:setPropertyActionListener value="#{saldo}"
+										target="#{usuarioController.saldoSelecionado}"></f:setPropertyActionListener>
+								</p:commandButton>
+							</p:column>
+
+						</p:dataTable>
+
+					</div>
+
+				</o:form>
+			</p:dialog>
+		</div>
+		
+	</ui:define>
+	
+	</ui:composition>
+</html>

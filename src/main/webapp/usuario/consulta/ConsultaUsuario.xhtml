@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/layout/consulta/Consulta.xhtml" >
+	
+	<f:metadata>
+		<f:viewAction action="#{usuarioController.consultarUsuario}"></f:viewAction>
+	</f:metadata>
+
+	<ui:define name="titulo">
+			<h1>Consulta de usuários cadastrados</h1>
+		</ui:define>
+		
+		<ui:define name="consulta">
+			<p:panelGrid>
+				<h:form id="frmConsulta" >
+					
+					<h:panelGrid columns="8" >
+						<p:outputLabel style="margin-left:150px;" for="nome" value="Nome:" />
+						<p:inputText style="margin-left:40px;"  id="nome" value="#{usuarioController.usuarioSearch.nome}" maxlength="150" 
+						size="15" ></p:inputText>
+
+						<p:outputLabel style="margin-left:40px;" for="cpf" value="CPF:" />
+						<p:inputMask style="margin-left:40px;" value="#{usuarioController.usuarioSearch.cpf}"
+							id="cpf" mask="999.999.999-99" size="10"
+							maxlength="14" />
+							
+						<p:outputLabel style="margin-left:40px;"  for="email" value="E-mail:" />
+						<p:inputText style="margin-left:40px;" maxlength="150" size="15" 
+							id="email" value="#{usuarioController.usuarioSearch.email}" />
+												
+						<p:outputLabel/>
+						<p:commandButton id="consultar" value="Consultar" ajax="false" 
+							process="@form" action="#{usuarioController.consultarUsuario}" />
+						
+					</h:panelGrid>
+				</h:form>
+			</p:panelGrid>
+		</ui:define>
+		
+		<ui:define name="conteudo" >
+			<h:form id="consultaUsuariosForm" >
+			<p:messages id="msg" autoUpdate="true"  />
+			<p:dataTable id="dataTableUsuarios" value="#{usuarioController.usuarios}" 
+				var="usuario" style="padding-top:20px;" rows="5" paginator="true" paginatorPosition="bottom"
+				emptyMessage="Sua consulta não retornou registros." rowsPerPageTemplate="5, 10, 25, 50, 100"
+				paginatorAlwaysVisible="false" >
+								
+				<p:column style="width:150px;" >
+					<f:facet name="header">Nome</f:facet>
+					<h:outputText value="#{usuario.nome}" />
+				</p:column>
+
+				<p:column style="width:130px;" >
+					<f:facet name="header">CPF</f:facet>
+					<h:outputText value="#{usuario.cpf}" />
+				</p:column>
+
+				<p:column style="width:200px;" >
+					<f:facet name="header">E-mail</f:facet>
+					<h:outputText value="#{usuario.email}" />
+				</p:column>
+				
+				<p:column style="width:110px;" >
+					<f:facet name="header">Perfil</f:facet>
+					<h:outputText value="#{usuario.perfil.descricao}" />
+				</p:column>
+				
+				<p:column style="width:80px;">
+					<f:facet name="header">Detalhe</f:facet>
+					<p:commandButton title="Detalhe do usuário" icon="fa fa-search-plus"
+					action="#{usuarioController.selecionarUsuarioDetalhe(usuario)}" ></p:commandButton>
+				</p:column>
+				
+				<p:column style="width:100px;">
+					<f:facet name="header">Add Saldo</f:facet>
+					<p:commandButton title="Adicionar Saldo" icon="fa fa-credit-card"
+						process="@this" action="#{usuarioController.selecionarUsuarioSaldo(usuario)}" >
+					</p:commandButton>
+					<p:commandButton title="Consultar Saldos" action="#{usuarioController.selecionarUsuarioConsultaSaldo(usuario)}" icon="fa fa-search-plus" ></p:commandButton>
+				</p:column>
+				
+				<p:column style="width:75px;">
+					<f:facet name="header">Atualizar</f:facet>
+					<p:commandButton title="Atualizar Usuário" icon="fa fa-edit"
+						process="@this" action="#{usuarioController.selecionarUsuarioAtualizar(usuario)}" >
+					</p:commandButton>
+				</p:column>
+				
+				<p:column style="width:90px;" >
+					<f:facet name="header">Saldo</f:facet>
+					<h:outputText value="#{usuario.saldoTotal}"  >
+						<f:convertNumber currencySymbol="R$" type="currency"  />
+					</h:outputText>
+				</p:column>
+				
+				<p:column style="width:60px;" >
+					<f:facet name="header">Deletar</f:facet>										
+					<p:commandButton onclick="PF('meuDialogo').show();"
+						icon="fa fa-trash" title="Excluir este usuário" >
+						<f:setPropertyActionListener value="#{usuario}"
+							target="#{usuarioController.usuarioSelecionado}"></f:setPropertyActionListener>
+					</p:commandButton> 
+				</p:column>
+
+			</p:dataTable>
+			
+			<p:confirmDialog header="Exclusão de usuários"
+				message="Tem certeza que deseja excluir este usuário ?"
+				widgetVar="meuDialogo" resizable="false" modal="true"
+				minimizable="true" maximizable="true">
+
+				<p:commandButton value="Sim"
+					action="#{usuarioController.excluirUsuario}"
+					update="dataTableUsuarios" ajax="false" process="@form"
+					onclick="meuDialogo.hide()" />
+				<p:commandButton value="Nao" update="dataTableUsuarios"
+					ajax="false" process="@form" onclick="meuDialogo.hide()" />
+
+			</p:confirmDialog>
+
+		</h:form>
+		
+		</ui:define> 
+		
+		<ui:define name="conteudo-2">
+			<h:form id="btnCadastro" >
+				<div id="btnCadastroCliente" style="margin-top: 30px;" >
+					<p:commandButton value="Ir para o cadastro do usuário" ajax="false" 
+						actionListener="#{navegacaoController.cadastrarUsuario}"  />
+				</div>
+				<div id="btnLimparPesquisa" style="margin-top: 10px;" >
+					<p:commandButton value="Limpar pesquisa" ajax="false" actionListener="#{usuarioController.limparPesquisa}"  />
+				</div>	
+			</h:form>
+		</ui:define>
+		
+	</ui:composition>
+</html>

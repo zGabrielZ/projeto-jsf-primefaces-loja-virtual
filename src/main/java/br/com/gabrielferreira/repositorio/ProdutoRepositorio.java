@@ -89,5 +89,26 @@ public class ProdutoRepositorio implements Serializable{
 		return entityManager.find(Produto.class, id);
 	}
 	
+	public boolean verificarNomeProduto(String nome) {
+		String jpql = "SELECT p FROM Produto p where p.nome = :nome";
+		TypedQuery<Produto> query = entityManager.createQuery(jpql,Produto.class);
+		query.setParameter("nome", nome);
+		
+		List<Produto> produtos = query.getResultList();
+		
+		return !produtos.isEmpty()?true:false;
+	}
+	
+	public boolean verificarNomeProdutoAtualizado(String nome, Integer id) {
+		String jpql = "SELECT p FROM Produto p where p.nome = :nome and p.id <> :id";
+		TypedQuery<Produto> query = entityManager.createQuery(jpql,Produto.class);
+		query.setParameter("nome", nome);
+		query.setParameter("id", id);
+		
+		List<Produto> produtos = query.getResultList();
+		
+		return !produtos.isEmpty()?true:false;
+	}
+	
 
 }

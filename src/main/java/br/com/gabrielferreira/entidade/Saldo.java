@@ -27,7 +27,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@ToString(exclude = {"cliente"})
+@ToString(exclude = {"usuario"})
 public class Saldo implements Serializable{
 
 	/**
@@ -47,7 +47,7 @@ public class Saldo implements Serializable{
 	private LocalDateTime dataDeposito;
 	
 	@ManyToOne
-	@JoinColumn(name = "cliente_id")
-	private Cliente cliente;
+	@JoinColumn(name = "usuario_id")
+	private Usuario usuario;
 
 }

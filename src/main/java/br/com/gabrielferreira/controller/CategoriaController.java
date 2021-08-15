@@ -16,6 +16,7 @@ import javax.inject.Named;
 
 import br.com.gabrielferreira.entidade.Categoria;
 import br.com.gabrielferreira.entidade.search.CategoriaSearch;
+import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.service.CategoriaService;
 import br.com.gabrielferreira.utils.FacesMessages;
 import lombok.Getter;
@@ -38,6 +39,10 @@ public class CategoriaController implements Serializable{
 	
 	@Getter
 	@Setter
+	private String tituloCadastroCategoria;
+	
+	@Getter
+	@Setter
 	private List<Categoria> categorias;
 	
 	@Getter
@@ -50,6 +55,7 @@ public class CategoriaController implements Serializable{
 	
 	@PostConstruct
 	public void inicializar() {
+		tituloCadastroCategoria = "Cadastro de categoria";
 		categoriaSearch = new CategoriaSearch();
 		categorias = new ArrayList<Categoria>();
 		categoria = new Categoria();
@@ -62,25 +68,40 @@ public class CategoriaController implements Serializable{
 	public void inserirOuAtualizarCategoria() {
 		
 		if(categoria.getId() == null) {
-			inserirCategoria(categoria);
-			categoria = new Categoria();
+			boolean inserir = inserirCategoria(categoria);
+			if(inserir) {
+				categoria = new Categoria();
+			}
 		} else {
 			atualizarCategoria(categoria);
 		}
 	}
 	
-	public void inserirCategoria(Categoria categoria) {
-		categoriaService.inserir(categoria);
-		FacesMessages.adicionarMensagem("cadastroCategoriaForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
-				null);
+	public boolean inserirCategoria(Categoria categoria) {
+		boolean inserir = true;
+		try {
+			categoriaService.inserir(categoria);
+			FacesMessages.adicionarMensagem("cadastroCategoriaForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
+					null);
+		} catch (RegraDeNegocioException e) {
+			FacesMessages.adicionarMensagem("cadastroCategoriaForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
+					null);
+			inserir = false;
+		}
+		return inserir;
 	}
 	
 	public void atualizarCategoria(Categoria categoria) {
-		categoriaService.atualizar(categoria);
-		FacesMessages.adicionarMensagem("cadastroCategoriaForm:msg", FacesMessage.SEVERITY_INFO, "Atualizado com sucesso !",
-				null);
-		FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-		navegacaoController.consultaCategoria();
+		try {
+			categoriaService.atualizar(categoria);
+			FacesMessages.adicionarMensagem("cadastroCategoriaForm:msg", FacesMessage.SEVERITY_INFO, "Atualizado com sucesso !",
+					null);
+			FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+			navegacaoController.consultaCategoria();
+		} catch (Exception e) {
+			FacesMessages.adicionarMensagem("cadastroCategoriaForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
+					null);
+		}
 	}
 	
 	public void carregar() {
@@ -88,6 +109,7 @@ public class CategoriaController implements Serializable{
 		String id = params.get("codigo");
 		if(id != null) {
 			categoria = categoriaService.procurarPorIdCategoria(Integer.parseInt(id));
+			tituloCadastroCategoria = "Atualizar categoria";
 		}
 	}
 	

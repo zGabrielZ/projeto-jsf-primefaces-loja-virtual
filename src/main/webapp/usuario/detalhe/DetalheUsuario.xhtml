@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/layout/cadastro/Cadastrar.xhtml" >
+
+	<ui:define name="titulo">
+			<h1>Detalhe do usuário : #{usuarioDetalheController.usuario.nome}</h1>
+		
+			<div id="btnVoltar" style="margin-bottom:10px; margin-top: 10px;" >
+				<input type="button" value="Voltar" id="voltar" onclick="return window.history.back()" />
+			</div>
+		
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h:form id="detalheUsuarioForm">
+
+			<div align="center">
+				<h:panelGrid columns="2" style="text-align: center">
+					<p:outputLabel for="cpf" value="CPF: " />
+					<h:outputText label="CPF" value="#{usuarioDetalheController.usuario.cpf}"
+						id="cpf" size="11" maxlength="14"
+						/>
+
+					<p:outputLabel for="email" value="E-mail: " />
+					<h:outputText value="#{usuarioDetalheController.usuario.email}"
+						label="E-mail" id="email">
+					</h:outputText>
+					
+					<p:outputLabel for="perfil" value="Perfil: " />
+					<h:outputText value="#{usuarioDetalheController.usuario.perfil.descricao}"
+						label="Perfil" id="perfil">
+					</h:outputText>
+					
+
+					<p:outputLabel for="data" value="Data de nascimento: " />
+					<h:outputText label="Data de nascimento" id="data" 
+					value="#{usuarioDetalheController.usuario.dataNascimento}" converter="dataNascimentoConverter" />
+
+
+				</h:panelGrid>
+			</div>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+</html>

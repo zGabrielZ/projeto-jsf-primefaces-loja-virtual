@@ -18,17 +18,17 @@
 				<p:menuitem label="Home" icon="fa fa-home" title="Home" action="#{navegacaoController.home}" >
 				</p:menuitem>
 
-				<p:submenu label="Cliente" icon="fa fa-pencil">
+				<p:submenu label="Usuário" icon="fa fa-pencil">
 					<p:submenu label="Novo" icon="fa fa-pencil">
 						<p:menuitem value="Consulta"
-							action="#{navegacaoController.consultaCliente}" />
+							action="#{navegacaoController.consultaUsuario}" />
 						<p:menuitem value="Cadastro"
-							action="#{navegacaoController.cadastrarCliente}" />
-						<p:submenu label="Cliente em lote">
+							action="#{navegacaoController.cadastrarUsuario}" />
+						<p:submenu label="Usuário em lote">
 							<p:menuitem value="Via Excel"
-								action="#{navegacaoController.cadastrarClienteLoteExcel}" />
+								action="#{navegacaoController.cadastrareUsuarioLoteExcel}" />
 							<p:menuitem value="Via Txt"
-								action="#{navegacaoController.cadastrarClienteLoteTxt}" />
+								action="#{navegacaoController.cadastrarUsuarioLoteTxt}" />
 						</p:submenu>
 					</p:submenu>
 				</p:submenu>

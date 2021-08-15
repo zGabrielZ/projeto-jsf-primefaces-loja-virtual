@@ -16,7 +16,7 @@
 	<ui:composition template="/layout/cadastro/Cadastrar.xhtml" >
 	
 	<ui:define name="titulo">
-			<h1>Cadastro de categoria</h1>
+			<h1>#{categoriaController.tituloCadastroCategoria}</h1>
 		
 			<div id="btnVoltar" style="margin-bottom:10px; margin-top: 10px;" >
 				<h:form id="frmBtnConsultaCliente">
@@ -47,18 +47,17 @@
 							<p:inputText value="#{categoriaController.categoria.nome}"
 								label="Nome" id="nome" required="true" 
 								requiredMessage="Nome é obrigatório" size="15" maxlength="150" />
-							<p:message for="nome" />
 							
 						</h:panelGrid>
 
 						<div align="center" style="padding-top: 10px;">
-							<p:commandButton id="btnCadastrar" value="Cadastrar Categoria"
+							<p:commandButton id="btnCadastrar" value="#{categoriaController.tituloCadastroCategoria}"
 								action="#{categoriaController.inserirOuAtualizarCategoria}"
 								ajax="false" process="@this" update="@form"></p:commandButton>
 						</div>
 
 						<div align="center" style="padding-top: 10px;">
-							<p:commandButton id="btnLimpar" value="Limpar formulário"
+							<p:commandButton id="btnLimpar" value="Limpar formulário" rendered="#{categoriaController.tituloCadastroCategoria eq 'Cadastro de categoria'}"
 								immediate="true" action="#{categoriaController.limparFormularioCategoriaCadastro}"
 								ajax="false" process="@this" update="@form"></p:commandButton>
 						</div>

@@ -1,5 +1,6 @@
 package br.com.gabrielferreira.exceptions;
 
+
 public class RegraDeNegocioException extends Exception{
 
 	/**

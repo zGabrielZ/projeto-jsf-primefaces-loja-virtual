@@ -17,6 +17,7 @@ import javax.inject.Named;
 
 import br.com.gabrielferreira.entidade.Produto;
 import br.com.gabrielferreira.entidade.search.ProdutoSearch;
+import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.service.ProdutoService;
 import br.com.gabrielferreira.utils.FacesMessages;
 import lombok.Getter;
@@ -39,6 +40,10 @@ public class ProdutoController implements Serializable{
 	
 	@Getter
 	@Setter
+	private String tituloCadastroProduto;
+	
+	@Getter
+	@Setter
 	private Produto produto;
 	
 	@Getter
@@ -55,6 +60,7 @@ public class ProdutoController implements Serializable{
 	
 	@PostConstruct
 	public void iniciarlizar() {
+		tituloCadastroProduto = "Cadastro Produto";
 		produto = new Produto();
 		produtoSearch = new ProdutoSearch();
 		produtos = new ArrayList<Produto>();
@@ -66,25 +72,40 @@ public class ProdutoController implements Serializable{
 	
 	public void inserirOuAtualizarProduto() {
 		if(produto.getId() == null) {
-			inserirProduto(produto);
-			produto = new Produto();
+			boolean inserir = inserirProduto(produto);
+			if(inserir) {
+				produto = new Produto();
+			}
 		} else {
 			atualizarProduto(produto);
 		}
 	}
 	
-	public void inserirProduto(Produto produto) {
-		produtoService.inserir(produto);
-		FacesMessages.adicionarMensagem("cadastroProdutoForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
-				null);
+	public boolean inserirProduto(Produto produto) {
+		boolean inserir = true;
+		try {
+			produtoService.inserir(produto);
+			FacesMessages.adicionarMensagem("cadastroProdutoForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
+					null);
+		} catch (RegraDeNegocioException e) {
+			FacesMessages.adicionarMensagem("cadastroProdutoForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
+					null);
+			inserir = false;
+		}
+		return inserir;
 	}
 	
 	public void atualizarProduto(Produto produto) {
-		produtoService.atualizar(produto);
-		FacesMessages.adicionarMensagem("cadastroProdutoForm:msg", FacesMessage.SEVERITY_INFO, "Atualizado com sucesso !",
-				null);
-		FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-		navegacaoController.consultaProduto();
+		try {
+			produtoService.atualizar(produto);
+			FacesMessages.adicionarMensagem("cadastroProdutoForm:msg", FacesMessage.SEVERITY_INFO, "Atualizado com sucesso !",
+					null);
+			FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+			navegacaoController.consultaProduto();
+		} catch (RegraDeNegocioException e) {
+			FacesMessages.adicionarMensagem("cadastroProdutoForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
+					null);
+		}
 	}
 	
 	public void excluirProduto() {
@@ -104,6 +125,7 @@ public class ProdutoController implements Serializable{
 		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		String id = params.get("codigo");
 		if(id != null) {
+			tituloCadastroProduto = "Atualizar Produto";
 			produto = produtoService.procurarPorId(Integer.parseInt(id));
 		}
 	}

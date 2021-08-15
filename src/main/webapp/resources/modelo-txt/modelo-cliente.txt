@@ -1,5 +1,0 @@
-José da Silva;jose@gmail.com;306.968.280-49;28/10/2000
-Mariana Souza Martins;mari890@gmail.com;629.587.400-21;17/04/2001
-Maria Silva;maria1278@gmail.com;635.912.840-33;13/07/1998
-Eduardo Pereira;dudu07@gmail.com;709.890.720-02;14/08/1992
-Gustavo Gomes;gomesgustavo@gmail.com;925.709.860-54;12/04/1994

@@ -24,10 +24,14 @@ public class SaldoRepositorio implements Serializable{
 		entityManager.persist(saldo);
 	}
 	
-	public List<Saldo> getSaldosByCliente(Integer idCliente) {
-		String jpql = "SELECT s FROM Saldo s JOIN FETCH s.cliente c where c.id = :idCliente";
+	public void atualizar(Saldo saldo) {
+		entityManager.merge(saldo);
+	}
+	
+	public List<Saldo> getSaldosByUsuario(Integer idCliente) {
+		String jpql = "SELECT s FROM Saldo s JOIN FETCH s.usuario u where u.id = :idUsuario";
 		TypedQuery<Saldo> query = entityManager.createQuery(jpql,Saldo.class);
-		query.setParameter("idCliente", idCliente);
+		query.setParameter("idUsuario", idCliente);
 		
 		List<Saldo> saldos = query.getResultList();
 		return saldos;

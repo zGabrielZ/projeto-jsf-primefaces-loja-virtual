@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import br.com.gabrielferreira.entidade.Categoria;
 import br.com.gabrielferreira.entidade.Produto;
 import br.com.gabrielferreira.entidade.search.ProdutoSearch;
+import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.repositorio.CategoriaRepositorio;
 import br.com.gabrielferreira.repositorio.ProdutoRepositorio;
 import br.com.gabrielferreira.utils.Transacional;
@@ -26,7 +27,8 @@ public class ProdutoService implements Serializable{
 	private CategoriaRepositorio categoriaRepositorio;
 	
 	@Transacional
-	public void inserir(Produto produto) {
+	public void inserir(Produto produto) throws RegraDeNegocioException {
+		verificarNomeProduto(produto.getNome());
 		produtoRepositorio.inserir(produto);
 		Categoria categoria = categoriaRepositorio.procurarPorIdCategoria(produto.getCategoria().getId());
 		categoria.getProdutos().add(produto);
@@ -34,7 +36,8 @@ public class ProdutoService implements Serializable{
 	}
 	
 	@Transacional
-	public void atualizar(Produto produto) {
+	public void atualizar(Produto produto) throws RegraDeNegocioException {
+		verificarNomeProdutoAtualizado(produto.getNome(), produto.getId());
 		produtoRepositorio.atualizar(produto);
 	}
 	
@@ -49,6 +52,18 @@ public class ProdutoService implements Serializable{
 	
 	public List<Produto> getFiltrar(ProdutoSearch produtoSearch){
 		return produtoRepositorio.filtrar(produtoSearch);
+	}
+	
+	public void verificarNomeProduto(String nome) throws RegraDeNegocioException {
+		if(produtoRepositorio.verificarNomeProduto(nome)) {
+			throw new RegraDeNegocioException("Não é possível inserir este nome, pois já está cadastrado.");
+		}
+	}
+	
+	public void verificarNomeProdutoAtualizado(String nome, Integer id) throws RegraDeNegocioException {
+		if(produtoRepositorio.verificarNomeProdutoAtualizado(nome, id)) {
+			throw new RegraDeNegocioException("Não é possível atualizar este nome, pois já está cadastrado.");
+		}
 	}
  
 }

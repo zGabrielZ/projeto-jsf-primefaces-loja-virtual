@@ -30,7 +30,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@ToString(exclude = {"cliente","parcelas","itens"})
+@ToString(exclude = {"usuario","parcelas","itens"})
 public class Pedido implements Serializable{
 
 	/**
@@ -48,7 +48,7 @@ public class Pedido implements Serializable{
 	
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
-	private Cliente cliente;
+	private Usuario usuario;
 	
 	@OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY)
 	private List<Parcela> parcelas = new ArrayList<Parcela>();

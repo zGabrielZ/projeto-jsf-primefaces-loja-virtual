@@ -85,5 +85,26 @@ public class CategoriaRepositorio implements Serializable{
 		List<Categoria> categorias = query.getResultList();
 		return categorias;
 	}
+	
+	public boolean verificarNomeCategoria(String nome) {
+		String jpql = "SELECT c FROM Categoria c where c.nome = :nome";
+		TypedQuery<Categoria> query = entityManager.createQuery(jpql,Categoria.class);
+		query.setParameter("nome", nome);
+		
+		List<Categoria> categorias = query.getResultList();
+		
+		return !categorias.isEmpty()?true:false;
+	}
+	
+	public boolean verificarNomeCategoriaAtualizado(String nome, Integer id) {
+		String jpql = "SELECT c FROM Categoria c where c.nome = :nome and c.id <> :id";
+		TypedQuery<Categoria> query = entityManager.createQuery(jpql,Categoria.class);
+		query.setParameter("nome", nome);
+		query.setParameter("id", id);
+		
+		List<Categoria> categorias = query.getResultList();
+		
+		return !categorias.isEmpty()?true:false;
+	}
 
 }

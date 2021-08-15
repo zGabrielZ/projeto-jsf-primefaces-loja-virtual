@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import br.com.gabrielferreira.entidade.Categoria;
 import br.com.gabrielferreira.entidade.search.CategoriaSearch;
+import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.repositorio.CategoriaRepositorio;
 import br.com.gabrielferreira.utils.Transacional;
 
@@ -21,12 +22,14 @@ public class CategoriaService implements Serializable {
 	private CategoriaRepositorio categoriaRepositorio;
 	
 	@Transacional
-	public void inserir(Categoria categoria) {
+	public void inserir(Categoria categoria) throws RegraDeNegocioException {
+		verificarNomeCategoria(categoria.getNome());
 		categoriaRepositorio.inserir(categoria);
 	}
 	
 	@Transacional
-	public void atualizar(Categoria categoria) {
+	public void atualizar(Categoria categoria) throws RegraDeNegocioException {
+		verificarNomeCategoriaAtualizado(categoria.getNome(), categoria.getId());
 		categoriaRepositorio.atualizar(categoria);
 	}
 	
@@ -44,6 +47,18 @@ public class CategoriaService implements Serializable {
 	
 	public Categoria procurarPorIdCategoria(Integer id) {
 		return categoriaRepositorio.procurarPorIdCategoria(id);
+	}
+	
+	public void verificarNomeCategoria(String nome) throws RegraDeNegocioException {
+		if(categoriaRepositorio.verificarNomeCategoria(nome)) {
+			throw new RegraDeNegocioException("Não é possível inserir este nome, pois já está cadastrado.");
+		}
+	}
+	
+	public void verificarNomeCategoriaAtualizado(String nome, Integer id) throws RegraDeNegocioException {
+		if(categoriaRepositorio.verificarNomeCategoriaAtualizado(nome, id)) {
+			throw new RegraDeNegocioException("Não é possível atualizar este nome, pois já está cadastrado.");
+		}
 	}
 
 }

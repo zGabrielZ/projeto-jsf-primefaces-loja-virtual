@@ -3,12 +3,13 @@
 	<persistence-unit name="Projeto-Loja">
 		<class>br.com.gabrielferreira.entidade.ArquivoUpload</class>
 		<class>br.com.gabrielferreira.entidade.Categoria</class>
-		<class>br.com.gabrielferreira.entidade.Cliente</class>
 		<class>br.com.gabrielferreira.entidade.Itens</class>
 		<class>br.com.gabrielferreira.entidade.Parcela</class>
 		<class>br.com.gabrielferreira.entidade.Pedido</class>
+		<class>br.com.gabrielferreira.entidade.Perfil</class>
 		<class>br.com.gabrielferreira.entidade.Produto</class>
 		<class>br.com.gabrielferreira.entidade.Saldo</class>
+		<class>br.com.gabrielferreira.entidade.Usuario</class>
 		
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/cadastro_loja_jsf?useTimezone=true&amp;serverTimezone=America/Sao_Paulo" />

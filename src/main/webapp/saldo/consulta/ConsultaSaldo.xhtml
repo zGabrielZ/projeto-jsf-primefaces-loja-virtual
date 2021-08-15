@@ -37,6 +37,13 @@
 					</h:outputText>
 				</p:column>
 				
+				<p:column style="width:75px;">
+					<f:facet name="header">Atualizar</f:facet>
+					<p:commandButton title="Atualizar Saldo" icon="fa fa-edit"
+						process="@this" action="#{saldoController.selecionarSaldoAtualizar(saldo)}" >
+					</p:commandButton>
+				</p:column>
+				
 				<p:column style="width:50px;" >
 					<f:facet name="header">Deletar</f:facet>										
 					<p:commandButton onclick="PF('meuDialogo').show();"
@@ -68,9 +75,8 @@
 		
 		<ui:define name="conteudo-2">
 			<h:form id="btnCadastro" >
-				<div id="btnCadastroCliente" style="margin-top: 30px;" >
-					<p:commandButton value="Ir para a consulta do cliente" ajax="false" 
-						actionListener="#{navegacaoController.consultaCliente}"  />
+				<div id="btnCadastroUsuario" style="margin-top: 30px;" >
+					<input type="button" value="Voltar" id="voltar" onclick="return window.history.back()" />
 				</div>
 			</h:form>
 		</ui:define>
