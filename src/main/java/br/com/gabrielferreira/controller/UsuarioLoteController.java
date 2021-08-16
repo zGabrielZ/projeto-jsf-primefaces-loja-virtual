@@ -147,13 +147,13 @@ public class UsuarioLoteController implements Serializable{
 		}
 		
 		if(!listaUsuarios.isEmpty() && mensagens.isEmpty()) {
-			FacesMessages.adicionarMensagem("cadastroUsuarioLoteTxtForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrados com sucesso !",
+			FacesMessages.adicionarMensagem("cadastroUsuarioLoteForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrados com sucesso !",
 					null);
 		} else if(!listaUsuarios.isEmpty() && !mensagens.isEmpty()) {
-			FacesMessages.adicionarMensagem("cadastroUsuarioLoteTxtForm:msg", FacesMessage.SEVERITY_WARN, "Alguns foram cadastros e outros não, baixe o arquivo para verificar os erros !",
+			FacesMessages.adicionarMensagem("cadastroUsuarioLoteForm:msg", FacesMessage.SEVERITY_WARN, "Alguns foram cadastros e outros não, baixe o arquivo para verificar os erros !",
 					null);
 		} else {
-			FacesMessages.adicionarMensagem("cadastroUsuarioLoteTxtForm:msg", FacesMessage.SEVERITY_ERROR, "Baixe o arquivo para verificar os erros !",
+			FacesMessages.adicionarMensagem("cadastroUsuarioLoteForm:msg", FacesMessage.SEVERITY_ERROR, "Baixe o arquivo para verificar os erros !",
 					null);
 		}
 		

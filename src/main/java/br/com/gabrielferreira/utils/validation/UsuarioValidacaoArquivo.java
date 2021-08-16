@@ -184,10 +184,13 @@ public class UsuarioValidacaoArquivo implements Serializable{
 			loteValidacaos.add(new UsuarioLoteValidacao(codigoUsuario,"O cpf tem que ser númerico."));
 		} else if (!CpfValidation.isValidCPF(usuario.getCpf())) {
 			loteValidacaos.add(new UsuarioLoteValidacao(codigoUsuario,"O cpf não é válido."));
-		} else if (usuarioRepositorio.verificarCpf(usuario.getCpf())) {
-			loteValidacaos.add(new UsuarioLoteValidacao(codigoUsuario,"O cpf já está cadastrado."));
 		} else {
 			usuario.setCpf(cpfFormatacao.valueToString(usuario.getCpf()));
+			
+			if(usuarioRepositorio.verificarCpf(usuario.getCpf())) {
+				loteValidacaos.add(new UsuarioLoteValidacao(codigoUsuario,"O cpf já está cadastrado."));
+			}
+			
 		}
 	}
 	
