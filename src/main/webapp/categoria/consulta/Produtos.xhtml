@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<f:metadata>
+		<f:viewParam id="codigoCategoria" name="codigoCategoria" value="#{categoriaController.categoria.id}"/>
+		<f:event listener="#{categoriaController.carregarProdutos}" type="preRenderView"></f:event>
+	</f:metadata>
+
+	<ui:composition template="/layout/consulta/Consulta.xhtml" >
+
+		<ui:define name="titulo">
+			<h1>Produtos da categoria : #{categoriaController.tituloCadastroCategoria}</h1>
+
+		<div id="btnConsultaCategoria" style="margin-top: 30px;">
+			<input type="button" value="Voltar" id="voltar"
+				onclick="return window.history.back()" />
+		</div>
+
+	</ui:define>
+		
+		<ui:define name="conteudo" >
+			<h:form id="consultaProdutosForm" >
+			<p:messages id="msg" autoUpdate="true"  />
+			<p:dataTable id="dataTableProdutos" value="#{categoriaController.produtos}" 
+				var="produto" style="padding-top:20px;" rows="5" paginator="true" paginatorPosition="bottom"
+				emptyMessage="Sua consulta não retornou registros." rowsPerPageTemplate="5, 10, 25, 50, 100"
+				paginatorAlwaysVisible="false" >
+								
+				<p:column style="width:150px;" >
+					<f:facet name="header">Nome</f:facet>
+					<h:outputText value="#{produto.nome}" />
+				</p:column>
+				
+				<p:column style="width:80px;" >
+					<f:facet name="header">Valor</f:facet>
+					<h:outputText value="#{produto.valor}"  >
+						<f:convertNumber currencySymbol="R$" type="currency"  />
+					</h:outputText>
+				</p:column>
+
+				<p:column style="width:130px;" >
+					<f:facet name="header">Estoque</f:facet>
+					<h:outputText value="#{produto.estoque}" />
+				</p:column>
+				
+				<p:column style="width:130px;">
+					<f:facet name="header">Data da produção</f:facet>
+					<h:outputText value="#{produto.dataProducao}" converter="dataProducaoConverter" />
+				</p:column>
+				
+			</p:dataTable>
+
+		</h:form>
+		
+		</ui:define> 
+		
+	</ui:composition>
+</html>

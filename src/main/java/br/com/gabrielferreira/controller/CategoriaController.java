@@ -15,9 +15,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.com.gabrielferreira.entidade.Categoria;
+import br.com.gabrielferreira.entidade.Produto;
 import br.com.gabrielferreira.entidade.search.CategoriaSearch;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.service.CategoriaService;
+import br.com.gabrielferreira.service.ProdutoService;
 import br.com.gabrielferreira.utils.FacesMessages;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,6 +37,9 @@ public class CategoriaController implements Serializable{
 	private CategoriaService categoriaService;
 	
 	@Inject
+	private ProdutoService produtoService;
+	
+	@Inject
 	private NavegacaoController navegacaoController;
 	
 	@Getter
@@ -44,6 +49,10 @@ public class CategoriaController implements Serializable{
 	@Getter
 	@Setter
 	private List<Categoria> categorias;
+	
+	@Getter
+	@Setter
+	private List<Produto> produtos;
 	
 	@Getter
 	@Setter
@@ -58,6 +67,7 @@ public class CategoriaController implements Serializable{
 		tituloCadastroCategoria = "Cadastro de categoria";
 		categoriaSearch = new CategoriaSearch();
 		categorias = new ArrayList<Categoria>();
+		produtos = new ArrayList<Produto>();
 		categoria = new Categoria();
 	}
 	
@@ -116,6 +126,21 @@ public class CategoriaController implements Serializable{
 	public String selecionarCategoriaAtualizar(Categoria categoria) {
 		this.categoria = categoria;
 		return "/categoria/cadastro/CadastroCategoria?faces-redirect=true&codigo="+this.categoria.getId();
+	}
+	
+	public String selecionarProdutos(Categoria categoria) {
+		this.categoria = categoria;
+		return "/categoria/consulta/Produtos?faces-redirect=true&codigoCategoria="+this.categoria.getId();
+	}
+	
+	public void carregarProdutos() {
+		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		String id = params.get("codigoCategoria");
+		if(id != null) {
+			produtos = produtoService.procurarPorIdCategoria(Integer.parseInt(id));
+			Categoria categoria = categoriaService.procurarPorIdCategoria(Integer.parseInt(id));
+			tituloCadastroCategoria = categoria.getNome();
+		}
 	}
 	
 	public List<Categoria> getListaCategorias(){

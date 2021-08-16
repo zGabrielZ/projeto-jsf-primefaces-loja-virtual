@@ -59,7 +59,7 @@ public class ProdutoController implements Serializable{
 	private Produto produtoSelecionado;
 	
 	@PostConstruct
-	public void iniciarlizar() {
+	public void inicializar() {
 		tituloCadastroProduto = "Cadastro Produto";
 		produto = new Produto();
 		produtoSearch = new ProdutoSearch();

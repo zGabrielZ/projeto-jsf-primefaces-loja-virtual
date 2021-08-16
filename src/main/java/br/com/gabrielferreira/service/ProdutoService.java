@@ -54,6 +54,10 @@ public class ProdutoService implements Serializable{
 		return produtoRepositorio.filtrar(produtoSearch);
 	}
 	
+	public List<Produto> procurarPorIdCategoria(Integer idCategoria){
+		return produtoRepositorio.procurarPorIdCategoria(idCategoria);
+	}
+	
 	public void verificarNomeProduto(String nome) throws RegraDeNegocioException {
 		if(produtoRepositorio.verificarNomeProduto(nome)) {
 			throw new RegraDeNegocioException("Não é possível inserir este nome, pois já está cadastrado.");

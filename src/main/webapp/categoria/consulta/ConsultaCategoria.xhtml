@@ -57,7 +57,8 @@
 
 				<p:column style="width:60px;">
 					<f:facet name="header">Produtos</f:facet>
-					<p:commandButton title="Consultar Produtos" icon="fa fa-search-plus" ></p:commandButton>
+					<p:commandButton title="Consultar Produtos" icon="fa fa-search-plus" 
+					process="@this" action="#{categoriaController.selecionarProdutos(categoria)}"></p:commandButton>
 				</p:column>
 		
 			</p:dataTable>
