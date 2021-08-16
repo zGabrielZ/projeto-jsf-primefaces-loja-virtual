@@ -19,12 +19,7 @@ public class ArquivoUploadService implements Serializable {
 	private ArquivoUploadRepositorio arquivoUploadRepositorio;
 	
 	@Transacional
-	public void inserirExcel(ArquivoUpload arquivoUpload) {
-		arquivoUploadRepositorio.inserir(arquivoUpload);
-	}
-	
-	@Transacional
-	public void inserirTxt(ArquivoUpload arquivoUpload) {
+	public void inserir(ArquivoUpload arquivoUpload) {
 		arquivoUploadRepositorio.inserir(arquivoUpload);
 	}
 

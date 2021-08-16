@@ -133,7 +133,7 @@ public class UsuarioLoteController implements Serializable{
 		}
 	}
 	
-	public void cadastrarUsuariosTxt() throws RegraDeNegocioException, ParseException {
+	public void cadastrarUsuarios() throws RegraDeNegocioException, ParseException {
 		List<UsuarioLoteValidacao> validacaos = usuarioService.validacaoUsuariosLote(usuarios, usuarioLoteValidacoes);
 		Map<Integer, List<String>> agrupaValidacoes = getValidacoes(validacaos);
 		List<Usuario> listaUsuarios = adicionandoErros(agrupaValidacoes);
@@ -142,7 +142,7 @@ public class UsuarioLoteController implements Serializable{
 		
 		// Salvar o arquivo e tambem o usuario
 		if(!listaUsuarios.isEmpty()) {
-			arquivoUploadService.inserirTxt(arquivoUpload);
+			arquivoUploadService.inserir(arquivoUpload);
 			usuarioService.inserirUsuarioLote(listaUsuarios);
 		}
 		
@@ -159,35 +159,6 @@ public class UsuarioLoteController implements Serializable{
 		
 		arquivoUpload = new ArquivoUpload();
 		usuarios = new ArrayList<>();
-	}
-	
-	public void cadastrarUsuariosExcel() throws RegraDeNegocioException, ParseException {
-		List<UsuarioLoteValidacao> validacaos = usuarioService.validacaoUsuariosLote(usuarios, usuarioLoteValidacoes);
-		Map<Integer, List<String>> agrupaValidacoes = getValidacoes(validacaos);
-		List<Usuario> listaUsuarios = adicionandoErros(agrupaValidacoes);
-		// Remover da lista os que tem o codigo de erro como verdadeiro
-		listaUsuarios.removeIf(u -> u.isCodigoErro());
-		
-		// Salvar o arquivo e tambem o usuario
-		if(!listaUsuarios.isEmpty()) {
-			arquivoUploadService.inserirExcel(arquivoUpload);
-			usuarioService.inserirUsuarioLote(listaUsuarios);
-		}
-		
-		if(!listaUsuarios.isEmpty() && mensagens.isEmpty()) {
-			FacesMessages.adicionarMensagem("cadastroUsuarioLoteExcelForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrados com sucesso !",
-					null);
-		} else if(!listaUsuarios.isEmpty() && !mensagens.isEmpty()) {
-			FacesMessages.adicionarMensagem("cadastroUsuarioLoteExcelForm:msg", FacesMessage.SEVERITY_WARN, "Alguns foram cadastros e outros não, baixe o arquivo para verificar os erros !",
-					null);
-		} else {
-			FacesMessages.adicionarMensagem("cadastroUsuarioLoteExcelForm:msg", FacesMessage.SEVERITY_ERROR, "Baixe o arquivo para verificar os erros !",
-					null);
-		}
-		
-		
-		usuarios = new ArrayList<>();
-		arquivoUpload = new ArquivoUpload();
 	}
 	
 	private List<Usuario> adicionandoErros(Map<Integer, List<String>> agrupaValidacoes){
