@@ -32,7 +32,7 @@ public class VerificarLocalDateTime implements Validator{
 		
 		if(data != null) {
 			if(data.isAfter(dataAtual)) {
-				descricaoErro = label + ": Não é possível cadastrar esta data, pois a data não pode ser maior que a data atual !";
+				descricaoErro = label + ": Não é possível seguir em frente com esta esta data, pois a data não pode ser maior que a data atual !";
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,descricaoErro,null);
 				throw new ValidatorException(message);
 			}

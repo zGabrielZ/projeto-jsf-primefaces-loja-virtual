@@ -31,7 +31,7 @@ public class VerificarCpf implements Validator{
 		
 		if(cpf != null) {
 			if(!CpfValidation.isValidCPF(cpfSemFormatacao)) {
-				descricaoErro = label + ": Não é possível cadastrar este CPF, pois não é válido.";
+				descricaoErro = label + ": Não é possível seguir em frente com este CPF, pois não é válido.";
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,descricaoErro,null);
 				throw new ValidatorException(message);
 			}

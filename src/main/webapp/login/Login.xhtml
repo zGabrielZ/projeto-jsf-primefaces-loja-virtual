@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/layout/login/TelaLogin.xhtml">
+
+	<ui:define name="titulo">
+		<h1>Login</h1>
+
+		<div id="panelTitulo" style="margin-bottom: 10px; margin-top: 10px;">
+			<p:outputLabel value="Seja bem vindo ao nosso sistema de compras !!" />
+		</div>
+
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h:form id="loginForm">
+
+			<p:messages id="msg" autoUpdate="true" />
+
+			<p:inputText id="codigo" value="#{loginController.usuario.id}"
+				label="Código" type="hidden"></p:inputText>
+
+			<div align="center">
+				<h:panelGrid columns="2" style="text-align: center">
+					<p:outputLabel for="email" value="E-mail: " />
+					<p:inputText value="#{loginController.usuario.email}" required="true"
+						label="E-mail" id="email" requiredMessage="E-mail é necessário">
+					</p:inputText>
+
+					<p:outputLabel for="senha" value="Senha: " />
+					<p:password label="Senha" value="#{loginController.usuario.senha}" required="true"
+						id="senha" requiredMessage="Senha é necessário" />
+					
+				</h:panelGrid>
+			</div>
+
+			<div align="center" style="padding-top: 10px;">
+				<p:commandButton value="Logar" action="#{loginController.logar}"
+					 ajax="false" process="@form"></p:commandButton>
+					 
+				<p:commandButton style="margin-left:20px;" value="Cadastrar" immediate="true"
+					 ajax="false" action="#{navegacaoController.cadastrarUsuarioLogin}" process="@form"></p:commandButton>
+					 
+				<p:commandButton style="margin-left:20px;" value="Atualizar senha" immediate="true"
+					 ajax="false" action="#{navegacaoController.atualizarSenha}" process="@form"></p:commandButton>
+			
+			</div>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+</html>

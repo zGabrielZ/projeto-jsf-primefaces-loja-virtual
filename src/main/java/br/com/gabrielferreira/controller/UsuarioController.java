@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -16,6 +17,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.gabrielferreira.entidade.Perfil;
 import br.com.gabrielferreira.entidade.Saldo;
 import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.entidade.search.UsuarioSearch;
@@ -80,6 +82,26 @@ public class UsuarioController implements Serializable{
 	@Setter
 	private Usuario usuarioSelecionado;
 	
+	@Getter
+	@Setter
+	private String emailConsulta;
+	
+	@Getter
+	@Setter
+	private boolean passouEmailCorreto;
+	
+	@Getter
+	@Setter
+	private String codigoEmail;
+	
+	@Getter
+	@Setter
+	private String mensagem;
+	
+	@Getter
+	@Setter
+	private Integer codigoGerado;
+	
 	@PostConstruct
 	public void inicializar() {
 		tituloCadastroUsuario = "Cadastro de Usuário";
@@ -88,6 +110,7 @@ public class UsuarioController implements Serializable{
 		saldo = new Saldo();
 		saldos = new ArrayList<Saldo>();
 		desejoSaldo = false;
+		passouEmailCorreto = false;
 	}
 	
 	public void consultarUsuario() {
@@ -151,8 +174,53 @@ public class UsuarioController implements Serializable{
 			FacesMessages.adicionarMensagem("consultaUsuariosForm:msg", FacesMessage.SEVERITY_INFO, "Removido com sucesso !",
 					null);
 		} catch (Exception e) {
-			FacesMessages.adicionarMensagem("cconsultaUsuariosForm:msg", FacesMessage.SEVERITY_ERROR, "Não é possível excluir, pois tem entidades relacionada !",
+			FacesMessages.adicionarMensagem("consultaUsuariosForm:msg", FacesMessage.SEVERITY_ERROR, "Não é possível excluir, pois tem entidades relacionada !",
 					"Não é possível excluir !");
+		}
+	}
+	
+	public void inserirUsuarioCliente() {
+		Perfil perfil = new Perfil();
+		perfil.setId(3);
+		try {
+			usuario.setPerfil(perfil);
+			usuarioService.inserir(usuario, saldos);
+			FacesMessages.adicionarMensagem("loginForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
+					null);
+			FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+			navegacaoController.login();
+		} catch (RegraDeNegocioException e) {
+			FacesMessages.adicionarMensagem("cadastroUsuarioForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
+					null);
+		}
+	}
+	
+	public Integer getGerarNumeroAleatorio() {
+		Random numeroAleatorio = new Random();
+		int valor = numeroAleatorio.nextInt(100) + 1;
+		return valor;
+	}
+	
+	public void consultarEmail() {
+		if(usuarioService.verificarEmailLogin(emailConsulta)) {
+			passouEmailCorreto = true;
+			usuario = usuarioService.procurarEmail(emailConsulta);
+			codigoGerado = getGerarNumeroAleatorio();
+			mensagem = "E-mail encontrado e o código gerado foi " + codigoGerado + "." ;
+		} else {
+			mensagem = "E-mail não encontrado.";
+		}
+	}	
+	
+	public void inserirSenhaUsuario() {
+		if(!codigoEmail.equals(codigoGerado.toString())) {
+			mensagem = "Código incorreto ! Código : " + codigoGerado;
+		} else {
+			usuarioService.atualizarSenhaUsuario(usuario.getId(), usuario.getSenha());
+			FacesMessages.adicionarMensagem("loginForm:msg", FacesMessage.SEVERITY_INFO, "Senha atualizada com sucesso !",
+					null);
+			FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+			navegacaoController.login();
 		}
 	}
 	

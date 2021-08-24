@@ -11,7 +11,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
 import org.apache.commons.lang3.StringUtils;
 
 import br.com.gabrielferreira.entidade.Usuario;
@@ -84,6 +83,14 @@ public class UsuarioRepositorio implements Serializable{
 		return entityManager.find(Usuario.class, id);
 	}
 	
+	public Usuario procurarPorEmail(String email) {
+		String jpql = "SELECT u FROM Usuario u where u.email = :email";
+		TypedQuery<Usuario> query = entityManager.createQuery(jpql,Usuario.class);
+		query.setParameter("email", email);
+		Usuario usuario = query.getSingleResult();
+		return usuario;
+	}
+	
 	public boolean verificarCpf(String cpf) {
 		String jpql = "SELECT u FROM Usuario u where u.cpf = :cpf";
 		TypedQuery<Usuario> query = entityManager.createQuery(jpql,Usuario.class);
@@ -126,6 +133,14 @@ public class UsuarioRepositorio implements Serializable{
 		return !usuarios.isEmpty()?true:false;
 	}
 	
+	public List<Usuario> verificarEmailAndSenha(String email, String senha){
+		String jpql = "SELECT u FROM Usuario u where u.email = :email and u.senha = :senha";
+		TypedQuery<Usuario> query = entityManager.createQuery(jpql,Usuario.class);
+		query.setParameter("email", email);
+		query.setParameter("senha", senha);
+		
+		List<Usuario> usuarios = query.getResultList();
+		return usuarios;
+	}
 	
-
 }

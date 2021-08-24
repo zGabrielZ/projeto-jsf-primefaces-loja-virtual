@@ -10,12 +10,12 @@
 	<ui:composition template="/layout/home/Home.xhtml" >
 
 	<ui:define name="titulo">
-		<h1>Bem vindo, Usuário</h1>
+		<h1>Bem vindo, #{loginController.usuario.nome}</h1>
 		
 		<br/>
 		<h:form>
 			<p:commandButton value="Deslogar" 
-					 ajax="false" />
+					 ajax="false" action="#{loginController.logout}" />
 		</h:form>
 		
 	</ui:define>

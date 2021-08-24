@@ -12,6 +12,8 @@ import java.util.Scanner;
 import javax.inject.Inject;
 import javax.servlet.http.Part;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -47,6 +49,10 @@ public class UsuarioService implements Serializable {
 	public void inserir(Usuario usuario, List<Saldo> saldos) throws RegraDeNegocioException {
 		verificarEmailUsuario(usuario.getEmail());
 		verificarCpfUsuario(usuario.getCpf());
+		String senha = verificarSenha(usuario.getSenha(),usuario.getPerfil());
+		if(StringUtils.isNotBlank(senha)) {
+			usuario.setSenha(senha);
+		}
 		usuarioRepositorio.inserir(usuario);
 		verificarSaldo(usuario,saldos);
 	}
@@ -75,6 +81,20 @@ public class UsuarioService implements Serializable {
 	}
 	
 	@Transacional
+	public void atualizarSenhaUsuario(Integer idUsuario, String senha) {
+		Usuario entidade = getDetalhe(idUsuario);
+		String senhaCriptografada = transformarSenha(senha);
+		entidade.setSenha(senhaCriptografada);
+		usuarioRepositorio.atualizar(entidade);
+	}
+	
+	private String transformarSenha(String senha) {
+		Base64 base64 = new Base64();
+		String senhaSerializada = base64.encodeAsString(senha.getBytes());
+		return senhaSerializada;
+	}
+	
+	@Transacional
 	public void removerUsuario(Usuario usuario) {
 		usuarioRepositorio.remover(usuario);
 	}
@@ -91,6 +111,11 @@ public class UsuarioService implements Serializable {
 	public List<Usuario> getFiltrar(UsuarioSearch usuarioSearch){
 		List<Usuario> usuarios = usuarioRepositorio.filtrar(usuarioSearch);
 		return usuarios;
+	}
+	
+	public List<Usuario> verificarEmailAndSenha(String email, String senha){
+		String senhaTransformada = transformarSenha(senha);
+		return usuarioRepositorio.verificarEmailAndSenha(email, senhaTransformada);
 	}
 	
 	public void verificarSaldo(Usuario usuario,List<Saldo> saldos) {
@@ -167,10 +192,26 @@ public class UsuarioService implements Serializable {
 		xssfWorkbook.close();
 	}
 	
+	public boolean verificarEmailLogin(String email) {
+		return usuarioRepositorio.verificarEmail(email);
+	}
+	
+	public Usuario procurarEmail(String email) {
+		return usuarioRepositorio.procurarPorEmail(email);
+	}
+	
 	public void verificarCpfUsuario(String cpf) throws RegraDeNegocioException {
 		if(usuarioRepositorio.verificarCpf(cpf)) {
 			throw new RegraDeNegocioException("Não é possível cadastrar este CPF, pois já está cadastrado.");
 		}
+	}
+	
+	public String verificarSenha(String senha, Perfil perfil) {
+		if(StringUtils.isNotBlank(senha) && perfil != null) {
+			String senhaTransformada = transformarSenha(senha);
+			senha = senhaTransformada;
+		}
+		return senha;
 	}
 	
 	public void verificarEmailUsuario(String email) throws RegraDeNegocioException {

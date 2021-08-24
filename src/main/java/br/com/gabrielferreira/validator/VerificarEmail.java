@@ -31,7 +31,7 @@ public class VerificarEmail implements Validator{
 		
 		if(email != null) {
 			if(!validarEmail(email)) {
-				descricaoErro = label + ": Não é possível cadastrar este e-mail, pois não é válido.";
+				descricaoErro = label + ": Não é possível seguir em frente com este e-mail, pois não é válido.";
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,descricaoErro,null);
 				throw new ValidatorException(message);
 			}

@@ -20,6 +20,36 @@ public class NavegacaoController implements Serializable{
 		return FacesContext.getCurrentInstance().getExternalContext();
 	}
 	
+	public void login() {
+	    ExternalContext externalContext = getExternalContext();
+	    try {
+	          externalContext.redirect(externalContext.getRequestContextPath()
+	                + "/login/Login.xhtml");
+	    } catch (IOException e) {
+	          e.printStackTrace();
+	    }
+	}
+	
+	public void cadastrarUsuarioLogin() {
+	    ExternalContext externalContext = getExternalContext();
+	    try {
+	          externalContext.redirect(externalContext.getRequestContextPath()
+	                + "/login/CadastroLogin.xhtml");
+	    } catch (IOException e) {
+	          e.printStackTrace();
+	    }
+	}
+	
+	public void atualizarSenha() {
+	    ExternalContext externalContext = getExternalContext();
+	    try {
+	    	 externalContext.redirect(externalContext.getRequestContextPath()
+		                + "/login/AtualizarSenha.xhtml");
+	    } catch (IOException e) {
+	          e.printStackTrace();
+	    }
+	}
+	
 	public void cadastroProduto() {
 	    ExternalContext externalContext = getExternalContext();
 	    try {

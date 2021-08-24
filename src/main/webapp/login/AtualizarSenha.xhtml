@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+<ui:composition template="/layout/login/TelaLogin.xhtml">
+
+	<ui:define name="titulo">
+		<h1>Atualizar senha do usuário</h1>
+	</ui:define>
+
+	<ui:define name="conteudo">
+
+		<h:form id="atualizarSenhaUsuarioForm">
+			<div id="pnlEmail" align="center">
+				<h:panelGrid columns="3" style="center">
+
+					<p:outputLabel for="email" value="E-mail: " />
+					<p:inputText value="#{usuarioController.emailConsulta}"
+						label="Email" id="email" size="50" maxlength="150" required="true"
+						requiredMessage="E-mail é obrigatório"
+						validator="#{verificarEmail.validate}" disabled="#{usuarioController.passouEmailCorreto}" />
+					<p:commandButton value="Consultar E-mail" ajax="false"
+						process="@this" update="@form"
+						action="#{usuarioController.consultarEmail}" disabled="#{usuarioController.passouEmailCorreto}"></p:commandButton>
+
+				</h:panelGrid>
+			</div>
+
+			<div id="atualizarUsuario">
+
+				<p:outputLabel style="color:red;"
+					value="#{usuarioController.mensagem}"></p:outputLabel>
+				<p:messages id="msg" />
+
+				<div align="center">
+
+					<h:panelGroup id="pnlAtualizarSenhaUsuario"
+						rendered="#{usuarioController.passouEmailCorreto}">
+
+						<h:panelGrid columns="2" style="text-align: center">
+							<p:outputLabel for="senha" value="Senha: " />
+							<p:password label="Senha"
+								value="#{usuarioController.usuario.senha}" required="true"
+								id="senha" requiredMessage="Senha é necessário" />
+
+							<p:outputLabel for="codigo" value="Código: " />
+							<p:inputText label="Código"
+								value="#{usuarioController.codigoEmail}" required="true"
+								id="codigo" requiredMessage="Código é necessário" />
+
+						</h:panelGrid>
+
+						<div align="center" style="padding-top: 10px;">
+							<p:commandButton id="btnCadastrar" value="Atualizar senha"
+								action="#{usuarioController.inserirSenhaUsuario}" ajax="false"
+								process="@this" update="@form"></p:commandButton>
+						</div>
+
+					</h:panelGroup>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
+</html>
