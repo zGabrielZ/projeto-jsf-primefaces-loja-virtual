@@ -1,7 +1,6 @@
 package br.com.gabrielferreira.entidade.search;
 
-import java.io.Serializable;
-
+import br.com.gabrielferreira.entidade.Categoria;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoriaSearch implements Serializable{
+public class CategoriaSearch extends Categoria{
 
 	/**
 	 * 

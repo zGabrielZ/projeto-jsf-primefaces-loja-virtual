@@ -33,8 +33,12 @@ public class CategoriaService implements Serializable {
 		categoriaRepositorio.atualizar(categoria);
 	}
 	
-	public List<Categoria> getFiltrar(CategoriaSearch categoriaSearch){
-		return categoriaRepositorio.filtrar(categoriaSearch);
+	public List<Categoria> getFiltrar(CategoriaSearch categoriaSearch, int primeiroResultado, int quantidadeMaxima){
+		return categoriaRepositorio.filtrar(categoriaSearch, primeiroResultado, quantidadeMaxima);
+	}
+	
+	public Integer quantidadeRegistro(CategoriaSearch categoriaSearch) {
+		return categoriaRepositorio.quantidadeRegistro(categoriaSearch);
 	}
 	
 	public List<Categoria> getCategoriaById(Integer id){

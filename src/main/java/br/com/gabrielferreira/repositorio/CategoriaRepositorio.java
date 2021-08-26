@@ -1,6 +1,4 @@
 package br.com.gabrielferreira.repositorio;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import br.com.gabrielferreira.entidade.Categoria;
 import br.com.gabrielferreira.entidade.search.CategoriaSearch;
 
-public class CategoriaRepositorio implements Serializable{
+public class CategoriaRepositorio extends AbstractConsultaRepositorio<Categoria>{
 
 	/**
 	 * 
@@ -29,26 +27,42 @@ public class CategoriaRepositorio implements Serializable{
 	
 	public CategoriaRepositorio() {}
 	
-	public List<Categoria> filtrar(CategoriaSearch categoriaSearch){
+	@Override
+	public TypedQuery<Categoria> getListagem(Categoria search) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		
 		CriteriaQuery<Categoria> criteriaQuery = criteriaBuilder.createQuery(Categoria.class);
 		Root<Categoria> root = criteriaQuery.from(Categoria.class);
 		
-		List<Predicate> predicatesFiltros = criarFiltroCategoria(categoriaSearch, criteriaBuilder, root);
+		List<Predicate> predicatesFiltros = criarFiltroCategoria(search, criteriaBuilder, root);
 		
 		criteriaQuery.where((Predicate[])predicatesFiltros.toArray(new Predicate[0]));
 		
 		TypedQuery<Categoria> typedQuery = entityManager.createQuery(criteriaQuery);
+		
+		return typedQuery;
+	}
 
-		List<Categoria> categorias = typedQuery.getResultList();
+	@Override
+	public List<Categoria> filtrar(Categoria search, int primeiroResultado, int quantidadeMaxima) {
+		TypedQuery<Categoria> typedQuery = getListagem(search);
+		List<Categoria> categorias = typedQuery.setFirstResult(primeiroResultado).setMaxResults(quantidadeMaxima).getResultList();
 		return categorias;
 	}
+
+	@Override
+	public Integer quantidadeRegistro(Categoria search) {
+		TypedQuery<Categoria> typedQuery = getListagem(search);
+		List<Categoria> categorias = typedQuery.getResultList();
+		return categorias.size();
+	}
 	
-	private List<Predicate> criarFiltroCategoria(CategoriaSearch categoriaSearch, CriteriaBuilder criteriaBuilder
+	private List<Predicate> criarFiltroCategoria(Categoria search, CriteriaBuilder criteriaBuilder
 			, Root<Categoria> root){
 		
 		List<Predicate> predicates = new ArrayList<>();
+		
+		CategoriaSearch categoriaSearch = (CategoriaSearch) search;
 		
 		if(StringUtils.isNotBlank(categoriaSearch.getNome())) {
 			Predicate predicateNome = criteriaBuilder.like(root.get("nome"), "%" + categoriaSearch.getNome() + "%");

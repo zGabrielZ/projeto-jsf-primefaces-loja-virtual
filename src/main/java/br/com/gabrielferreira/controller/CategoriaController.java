@@ -14,6 +14,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.gabrielferreira.datatablelazy.LazyDataTableModelCategoria;
 import br.com.gabrielferreira.entidade.Categoria;
 import br.com.gabrielferreira.entidade.Produto;
 import br.com.gabrielferreira.entidade.search.CategoriaSearch;
@@ -46,9 +47,9 @@ public class CategoriaController implements Serializable{
 	@Setter
 	private String tituloCadastroCategoria;
 	
+	@Inject
 	@Getter
-	@Setter
-	private List<Categoria> categorias;
+	private LazyDataTableModelCategoria<Categoria> categorias;
 	
 	@Getter
 	@Setter
@@ -66,13 +67,13 @@ public class CategoriaController implements Serializable{
 	public void inicializar() {
 		tituloCadastroCategoria = "Cadastro de categoria";
 		categoriaSearch = new CategoriaSearch();
-		categorias = new ArrayList<Categoria>();
 		produtos = new ArrayList<Produto>();
 		categoria = new Categoria();
 	}
 	
 	public void consultarCategoria() {
-		categorias = categoriaService.getFiltrar(categoriaSearch);
+		categorias.setCategoriaSearch(categoriaSearch);
+		categorias.load(0,5,null,null,null);
 	}
 	
 	public void inserirOuAtualizarCategoria() {
@@ -153,6 +154,7 @@ public class CategoriaController implements Serializable{
 		HtmlInputText htmlInputTextNome = (HtmlInputText) uiViewRoot.findComponent("frmConsulta:nome");
 		htmlInputTextNome.setSubmittedValue("");
 		categoriaSearch = new CategoriaSearch();
+		consultarCategoria();
 	}
 	
 	public void limparFormularioCategoriaCadastro() {
