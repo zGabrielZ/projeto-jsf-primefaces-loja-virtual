@@ -43,12 +43,11 @@
 					<h:panelGrid id="pnlCadastroSaldo" columns="3"
 						style="margin-top:30px;text-align: center;">
 						<p:outputLabel for="deposito" value="Depósito: " />
-						<p:inputText value="#{saldoController.saldo.deposito}"
+						<p:inputNumber value="#{saldoController.saldo.deposito}"
 							label="Depósito" id="deposito" size="20" required="true"
 							requiredMessage="É necessário inserir o depósito" maxlength="150" >
-							<f:convertNumber pattern="#,##0.00"></f:convertNumber>
-							<f:validateLongRange minimum="0" ></f:validateLongRange>
-						</p:inputText>
+							<f:validateDoubleRange minimum="0" />
+						</p:inputNumber>
 						<p:message for="deposito" />
 
 						<p:outputLabel for="dataDeposito" value="Data do depósito: " />
