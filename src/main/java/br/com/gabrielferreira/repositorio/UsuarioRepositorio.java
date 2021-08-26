@@ -1,6 +1,4 @@
 package br.com.gabrielferreira.repositorio;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.entidade.search.UsuarioSearch;
-public class UsuarioRepositorio implements Serializable{
+public class UsuarioRepositorio extends AbstractConsultaRepositorio<Usuario>{
 
 	/**
 	 * 
@@ -25,36 +23,42 @@ public class UsuarioRepositorio implements Serializable{
 	@Inject
 	private EntityManager entityManager;
 		
-	public TypedQuery<Usuario> getListagem(UsuarioSearch usuarioSearch){
+	@Override
+	public TypedQuery<Usuario> getListagem(Usuario search) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		
 		CriteriaQuery<Usuario> criteriaQuery = criteriaBuilder.createQuery(Usuario.class);
 		Root<Usuario> root = criteriaQuery.from(Usuario.class);
 		
-		List<Predicate> predicatesFiltros = criarFiltroUsuario(usuarioSearch, criteriaBuilder, root);
+		List<Predicate> predicatesFiltros = criarFiltroUsuario(search, criteriaBuilder, root);
 		
 		criteriaQuery.where((Predicate[])predicatesFiltros.toArray(new Predicate[0]));
 		
 		TypedQuery<Usuario> typedQuery = entityManager.createQuery(criteriaQuery);
 		return typedQuery;
 	}
-	
-	public List<Usuario> filtrar(UsuarioSearch usuarioSearch, int primeiroResultado, int quantidadeMaxima){
-		TypedQuery<Usuario> typedQuery = getListagem(usuarioSearch);
+
+	@Override
+	public List<Usuario> filtrar(Usuario search, int primeiroResultado, int quantidadeMaxima) {
+		TypedQuery<Usuario> typedQuery = getListagem(search);
 		List<Usuario> usuarios = typedQuery.setFirstResult(primeiroResultado).setMaxResults(quantidadeMaxima).getResultList();
 		return usuarios;
 	}
-	
-	public Integer quantidadeRegistro(UsuarioSearch usuarioSearch) {
-		TypedQuery<Usuario> typedQuery = getListagem(usuarioSearch);
+
+	@Override
+	public Integer quantidadeRegistro(Usuario search) {
+		TypedQuery<Usuario> typedQuery = getListagem(search);
 		List<Usuario> usuarios = typedQuery.getResultList();
 		return usuarios.size();
 	}
 	
-	private List<Predicate> criarFiltroUsuario(UsuarioSearch usuarioSearch, CriteriaBuilder criteriaBuilder
+	
+	private List<Predicate> criarFiltroUsuario(Usuario search, CriteriaBuilder criteriaBuilder
 			, Root<Usuario> root){
 		
 		List<Predicate> predicates = new ArrayList<>();
+		
+		UsuarioSearch usuarioSearch = (UsuarioSearch) search;
 		
 		if(StringUtils.isNotBlank(usuarioSearch.getNome())) {
 			Predicate predicateNome = criteriaBuilder.like(root.get("nome"), "%" + usuarioSearch.getNome() + "%");

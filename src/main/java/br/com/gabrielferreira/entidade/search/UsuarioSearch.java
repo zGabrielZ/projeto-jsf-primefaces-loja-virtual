@@ -1,8 +1,7 @@
 package br.com.gabrielferreira.entidade.search;
 
 
-import java.io.Serializable;
-
+import br.com.gabrielferreira.entidade.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class UsuarioSearch implements Serializable{
+public class UsuarioSearch extends Usuario{
 
 	/**
 	 * 
