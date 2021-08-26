@@ -12,6 +12,14 @@
 
 	<ui:define name="titulo">
 		<h1>Consulta de saldos cadastrados</h1>
+		<div align="center" >
+			<h:panelGrid columns="2">
+				<p><strong>Saldo total :</strong></p>
+				<h:outputText value="#{saldoController.usuario.saldoTotal}">
+					<f:convertNumber currencySymbol="R$" type="currency" />
+				</h:outputText>
+			</h:panelGrid>
+		</div>
 	</ui:define>
 
 

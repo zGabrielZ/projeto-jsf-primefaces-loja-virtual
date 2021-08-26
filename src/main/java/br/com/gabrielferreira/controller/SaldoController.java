@@ -16,6 +16,7 @@ import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.service.SaldoService;
 import br.com.gabrielferreira.service.UsuarioService;
 import br.com.gabrielferreira.utils.FacesMessages;
+import br.com.gabrielferreira.utils.SessionUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -83,31 +84,40 @@ public class SaldoController implements Serializable{
 	
 	private void inserirSaldo(Usuario usuario, Saldo saldo) {
 		saldoService.inserirSaldoAndUsuario(saldo, usuario);
-		FacesMessages.adicionarMensagem("consultaUsuariosForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
-				null);
-		FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-		navegacaoController.consultaUsuario();
+		String mensagem = "Cadastrado com sucesso";
+		checarUsuarioLogado(mensagem);
 	}
 	
 	private void atualizarSaldo(Saldo saldo) {
 		saldoService.atualizar(saldo);
-		FacesMessages.adicionarMensagem("consultaUsuariosForm:msg", FacesMessage.SEVERITY_INFO, "Atualizado com sucesso !",
-				null);
-		FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-		navegacaoController.consultaUsuario();
+		String mensagem = "Atualizado com sucesso";
+		checarUsuarioLogado(mensagem);
 	}
 	
 	public void excluirSaldo() {
 		try {
 			Saldo saldo = saldoSelecionado;			
 			saldoService.removerSaldo(saldo);
-			FacesMessages.adicionarMensagem("consultaUsuariosForm:msg", FacesMessage.SEVERITY_INFO, "Removido com sucesso !",
-					null);
-			FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-			navegacaoController.consultaUsuario();
+			String mensagem = "Deletado com sucesso";
+			checarUsuarioLogado(mensagem);
 		} catch (Exception e) {
 			FacesMessages.adicionarMensagem("consultaSaldosForm:msg", FacesMessage.SEVERITY_ERROR, "Não é possível excluir, pois tem entidades relacionada !",
 					"Não é possível excluir !");
+		}
+	}
+	
+	private void checarUsuarioLogado(String mensagem) {
+		Usuario usuarioLogado = (Usuario) SessionUtil.getParam("usuario");
+		if(usuarioLogado.getPerfil().getId().equals(2) || usuarioLogado.getPerfil().getId().equals(3)) {
+			FacesMessages.adicionarMensagem("frmHome:msg", FacesMessage.SEVERITY_INFO,mensagem + ", " + usuarioLogado.getNome(),
+					null);
+			FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+			navegacaoController.home();
+		} else {
+			FacesMessages.adicionarMensagem("consultaUsuariosForm:msg", FacesMessage.SEVERITY_INFO,mensagem + ", " + usuarioLogado.getNome(),
+					null);
+			FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+			navegacaoController.consultaUsuario();
 		}
 	}
 	

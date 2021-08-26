@@ -13,7 +13,8 @@
 		<h1>Bem vindo, #{loginController.usuario.nome}</h1>
 		
 		<br/>
-		<h:form>
+		<h:form id="frmHome">
+			<p:messages id="msg" />
 			<p:commandButton value="Deslogar" 
 					 ajax="false" action="#{loginController.logout}" />
 		</h:form>

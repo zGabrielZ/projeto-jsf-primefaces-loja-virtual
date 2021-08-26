@@ -33,7 +33,7 @@
 					</p:submenu>
 				</p:submenu>
 				
-				<p:submenu label="Categoria" icon="fa fa-pencil" rendered="#{loginController.usuario.perfil.descricao eq 'Administrador'}" >
+				<p:submenu label="Categoria" icon="fa fa-pencil" rendered="#{loginController.usuario.perfil.descricao eq 'Administrador' or loginController.usuario.perfil.descricao eq 'Funcionário'}" >
 					<p:submenu label="Novo" icon="fa fa-pencil">
 						<p:menuitem value="Consulta"
 							action="#{navegacaoController.consultaCategoria}"></p:menuitem>
@@ -42,12 +42,21 @@
 					</p:submenu>
 				</p:submenu>
 				
-				<p:submenu label="Produto" icon="fa fa-pencil" rendered="#{loginController.usuario.perfil.descricao eq 'Administrador'}" >
+				<p:submenu label="Produto" icon="fa fa-pencil" rendered="#{loginController.usuario.perfil.descricao eq 'Administrador' or loginController.usuario.perfil.descricao eq 'Funcionário'}" >
 					<p:submenu label="Novo" icon="fa fa-pencil">
 						<p:menuitem value="Consulta"
 							action="#{navegacaoController.consultaProduto}"></p:menuitem>
 						<p:menuitem value="Cadastro"
 							action="#{navegacaoController.cadastroProduto}"></p:menuitem>
+					</p:submenu>
+				</p:submenu>
+				
+				<p:submenu label="Saldo" icon="fa fa-pencil" rendered="#{loginController.usuario.perfil.descricao eq 'Cliente' or loginController.usuario.perfil.descricao eq 'Funcionário'}" >
+					<p:submenu label="Novo" icon="fa fa-pencil">
+						<p:menuitem value="Consulta"
+							action="#{navegacaoController.consultaSaldo}"></p:menuitem>
+						<p:menuitem value="Cadastro"
+							action="#{navegacaoController.cadastroSaldo}"></p:menuitem>
 					</p:submenu>
 				</p:submenu>
 				
