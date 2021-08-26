@@ -1,7 +1,6 @@
 package br.com.gabrielferreira.controller;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -11,6 +10,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.gabrielferreira.datatablelazy.LazyDataTableModelSaldo;
 import br.com.gabrielferreira.entidade.Saldo;
 import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.service.SaldoService;
@@ -45,9 +45,9 @@ public class SaldoController implements Serializable{
 	@Setter
 	private Saldo saldo;
 	
+	@Inject
 	@Getter
-	@Setter
-	private List<Saldo> saldos;
+	private LazyDataTableModelSaldo<Saldo> saldos;
 	
 	@Getter
 	@Setter
@@ -64,7 +64,8 @@ public class SaldoController implements Serializable{
 		String id = params.get("codigo");
 		if(id != null) {
 			usuario = usuarioService.getDetalhe(Integer.parseInt(id));
-			saldos = saldoService.getSaldosByUsuario(usuario.getId());
+			saldos.setIdUsuario(Integer.parseInt(id));
+			saldos.load(0, 5, null, null, null);
 		}
 		saldo = new Saldo();
 	}

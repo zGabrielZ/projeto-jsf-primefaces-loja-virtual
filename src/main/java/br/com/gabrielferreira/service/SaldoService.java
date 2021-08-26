@@ -49,8 +49,12 @@ public class SaldoService implements Serializable {
 		saldoRepositorio.remover(saldo);
 	}
 	
-	public List<Saldo> getSaldosByUsuario(Integer id){
-		return saldoRepositorio.getSaldosByUsuario(id);
+	public List<Saldo> getSaldosByUsuario(Integer id, int primeiroResultado, int quantidadeMaxima){
+		return saldoRepositorio.getSaldosByUsuario(id, primeiroResultado, quantidadeMaxima);
+	}
+	
+	public Integer quantidadeRegistro(Integer idUsuario) {
+		return saldoRepositorio.quantidadeRegistro(idUsuario);
 	}
 	
 	public Saldo getDetalhe(Integer id) {

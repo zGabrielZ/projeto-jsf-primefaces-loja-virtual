@@ -21,7 +21,7 @@
 			<p:dataTable id="dataTableSaldos" value="#{saldoController.saldos}" 
 				var="saldo" style="padding-top:20px;" rows="5" paginator="true" paginatorPosition="bottom"
 				emptyMessage="Sua consulta não retornou registros." rowsPerPageTemplate="5, 10, 25, 50, 100"
-				paginatorAlwaysVisible="false" >
+				paginatorAlwaysVisible="false" lazy="true" >
 
 				<p:column style="width:50px;">
 					<f:facet name="header">Depósito</f:facet>
