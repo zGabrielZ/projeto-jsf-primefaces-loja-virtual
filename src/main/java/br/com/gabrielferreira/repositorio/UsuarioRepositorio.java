@@ -24,8 +24,8 @@ public class UsuarioRepositorio implements Serializable{
 	
 	@Inject
 	private EntityManager entityManager;
-	
-	public List<Usuario> filtrar(UsuarioSearch usuarioSearch){
+		
+	public TypedQuery<Usuario> getListagem(UsuarioSearch usuarioSearch){
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		
 		CriteriaQuery<Usuario> criteriaQuery = criteriaBuilder.createQuery(Usuario.class);
@@ -36,9 +36,19 @@ public class UsuarioRepositorio implements Serializable{
 		criteriaQuery.where((Predicate[])predicatesFiltros.toArray(new Predicate[0]));
 		
 		TypedQuery<Usuario> typedQuery = entityManager.createQuery(criteriaQuery);
-
-		List<Usuario> usuarios = typedQuery.getResultList();
+		return typedQuery;
+	}
+	
+	public List<Usuario> filtrar(UsuarioSearch usuarioSearch, int primeiroResultado, int quantidadeMaxima){
+		TypedQuery<Usuario> typedQuery = getListagem(usuarioSearch);
+		List<Usuario> usuarios = typedQuery.setFirstResult(primeiroResultado).setMaxResults(quantidadeMaxima).getResultList();
 		return usuarios;
+	}
+	
+	public Integer quantidadeRegistro(UsuarioSearch usuarioSearch) {
+		TypedQuery<Usuario> typedQuery = getListagem(usuarioSearch);
+		List<Usuario> usuarios = typedQuery.getResultList();
+		return usuarios.size();
 	}
 	
 	private List<Predicate> criarFiltroUsuario(UsuarioSearch usuarioSearch, CriteriaBuilder criteriaBuilder

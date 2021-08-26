@@ -17,6 +17,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.gabrielferreira.datatablelazy.LazyDataTableModelUsuario;
 import br.com.gabrielferreira.entidade.Perfil;
 import br.com.gabrielferreira.entidade.Saldo;
 import br.com.gabrielferreira.entidade.Usuario;
@@ -66,9 +67,9 @@ public class UsuarioController implements Serializable{
 	@Setter
 	private List<Saldo> saldos;
 	
+	@Inject
 	@Getter
-	@Setter
-	private List<Usuario> usuarios;
+	private LazyDataTableModelUsuario<Usuario> usuarios;
 	
 	@Getter
 	@Setter
@@ -114,7 +115,8 @@ public class UsuarioController implements Serializable{
 	}
 	
 	public void consultarUsuario() {
-		usuarios = usuarioService.getFiltrar(usuarioSearch);
+		usuarios.setUsuarioSearch(usuarioSearch);
+		usuarios.load(0, 5,null,null,null);
 	}
 	
 	public void removerSaldo() {
@@ -226,6 +228,7 @@ public class UsuarioController implements Serializable{
 	
 	public void limparPesquisa() {
 		usuarioSearch = new UsuarioSearch();
+		consultarUsuario();
 	}
 	
 	public String selecionarUsuarioSaldo(Usuario usuario) {

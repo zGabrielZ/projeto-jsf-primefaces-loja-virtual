@@ -108,9 +108,13 @@ public class UsuarioService implements Serializable {
 		return usuarioRepositorio.procurarPorId(id);
 	}
 	
-	public List<Usuario> getFiltrar(UsuarioSearch usuarioSearch){
-		List<Usuario> usuarios = usuarioRepositorio.filtrar(usuarioSearch);
+	public List<Usuario> getFiltrar(UsuarioSearch usuarioSearch, int primeiroPosicao, int quantidadeMaxima){
+		List<Usuario> usuarios = usuarioRepositorio.filtrar(usuarioSearch,primeiroPosicao,quantidadeMaxima);
 		return usuarios;
+	}
+	
+	public Integer quantidadeRegistro(UsuarioSearch usuarioSearch) {
+		return usuarioRepositorio.quantidadeRegistro(usuarioSearch);
 	}
 	
 	public List<Usuario> verificarEmailAndSenha(String email, String senha){
