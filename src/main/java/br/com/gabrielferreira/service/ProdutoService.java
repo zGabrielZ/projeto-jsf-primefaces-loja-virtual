@@ -50,8 +50,12 @@ public class ProdutoService implements Serializable{
 		produtoRepositorio.remover(produto);
 	}
 	
-	public List<Produto> getFiltrar(ProdutoSearch produtoSearch){
-		return produtoRepositorio.filtrar(produtoSearch);
+	public List<Produto> getFiltrar(ProdutoSearch produtoSearch, int primeiroResultado, int quantidadeMaxima){
+		return produtoRepositorio.filtrar(produtoSearch, primeiroResultado, quantidadeMaxima);
+	}
+	
+	public Integer quantidadeRegistro(ProdutoSearch produtoSearch) {
+		return produtoRepositorio.quantidadeRegistro(produtoSearch);
 	}
 	
 	public List<Produto> procurarPorIdCategoria(Integer idCategoria){

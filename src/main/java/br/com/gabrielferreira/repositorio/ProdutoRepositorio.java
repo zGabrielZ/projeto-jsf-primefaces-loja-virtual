@@ -1,6 +1,5 @@
 package br.com.gabrielferreira.repositorio;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import br.com.gabrielferreira.entidade.Categoria;
 import br.com.gabrielferreira.entidade.Produto;
 import br.com.gabrielferreira.entidade.search.ProdutoSearch;
-public class ProdutoRepositorio implements Serializable{
+public class ProdutoRepositorio extends AbstractConsultaRepositorio<Produto>{
 
 	/**
 	 * 
@@ -28,7 +27,10 @@ public class ProdutoRepositorio implements Serializable{
 	@Inject
 	private EntityManager entityManager;
 	
-	public List<Produto> filtrar(ProdutoSearch produtoSearch){
+	public ProdutoRepositorio() {}
+	
+	@Override
+	public TypedQuery<Produto> getListagem(Produto search) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		
 		CriteriaQuery<Produto> criteriaQuery = criteriaBuilder.createQuery(Produto.class);
@@ -37,20 +39,35 @@ public class ProdutoRepositorio implements Serializable{
 		Join<Produto, Categoria> categoriaJoin = root.join("categoria");
 		categoriaJoin.alias("c");
 		
-		List<Predicate> predicatesFiltros = criarFiltroProduto(produtoSearch, criteriaBuilder, root);
+		List<Predicate> predicatesFiltros = criarFiltroProduto(search, criteriaBuilder, root);
 		
 		criteriaQuery.where((Predicate[])predicatesFiltros.toArray(new Predicate[0]));
 		
 		TypedQuery<Produto> typedQuery = entityManager.createQuery(criteriaQuery);
+		
+		return typedQuery;
+	}
 
-		List<Produto> produtos = typedQuery.getResultList();
+	@Override
+	public List<Produto> filtrar(Produto search, int primeiroResultado, int quantidadeMaxima) {
+		TypedQuery<Produto> typedQuery = getListagem(search);
+		List<Produto> produtos = typedQuery.setFirstResult(primeiroResultado).setMaxResults(quantidadeMaxima).getResultList();
 		return produtos;
 	}
+
+	@Override
+	public Integer quantidadeRegistro(Produto search) {
+		TypedQuery<Produto> typedQuery = getListagem(search);
+		List<Produto> produtos = typedQuery.getResultList();
+		return produtos.size();
+	}
 	
-	private List<Predicate> criarFiltroProduto(ProdutoSearch produtoSearch, CriteriaBuilder criteriaBuilder
+	private List<Predicate> criarFiltroProduto(Produto search, CriteriaBuilder criteriaBuilder
 			, Root<Produto> root){
 		
 		List<Predicate> predicates = new ArrayList<>();
+		
+		ProdutoSearch produtoSearch = (ProdutoSearch) search;
 		
 		if(StringUtils.isNotBlank(produtoSearch.getNome())) {
 			Predicate predicateNome = criteriaBuilder.like(root.get("nome"), "%" + produtoSearch.getNome() + "%");
@@ -69,8 +86,6 @@ public class ProdutoRepositorio implements Serializable{
 			
 		return predicates;
 	}
-	
-	public ProdutoRepositorio() {}
 	
 	public void inserir(Produto produto) {
 		entityManager.persist(produto);

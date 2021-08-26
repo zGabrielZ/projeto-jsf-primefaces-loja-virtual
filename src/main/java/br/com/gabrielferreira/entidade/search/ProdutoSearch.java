@@ -1,8 +1,8 @@
 package br.com.gabrielferreira.entidade.search;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
+import br.com.gabrielferreira.entidade.Produto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProdutoSearch implements Serializable{
+public class ProdutoSearch extends Produto{
 
 	/**
 	 * 

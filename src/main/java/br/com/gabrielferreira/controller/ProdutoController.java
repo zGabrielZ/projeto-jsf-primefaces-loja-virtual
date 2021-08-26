@@ -1,8 +1,6 @@
 package br.com.gabrielferreira.controller;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -15,6 +13,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.gabrielferreira.datatablelazy.LazyDataTableModelProduto;
 import br.com.gabrielferreira.entidade.Produto;
 import br.com.gabrielferreira.entidade.search.ProdutoSearch;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
@@ -50,9 +49,9 @@ public class ProdutoController implements Serializable{
 	@Setter
 	private ProdutoSearch produtoSearch;
 	
+	@Inject
 	@Getter
-	@Setter
-	private List<Produto> produtos;
+	private LazyDataTableModelProduto<Produto> produtos;
 	
 	@Getter
 	@Setter
@@ -63,11 +62,11 @@ public class ProdutoController implements Serializable{
 		tituloCadastroProduto = "Cadastro Produto";
 		produto = new Produto();
 		produtoSearch = new ProdutoSearch();
-		produtos = new ArrayList<Produto>();
 	}
 	
 	public void consultarProduto() {
-		produtos = produtoService.getFiltrar(produtoSearch);
+		produtos.setProdutoSearch(produtoSearch);
+		produtos.load(0, 5, null, null, null);
 	}
 	
 	public void inserirOuAtualizarProduto() {
@@ -150,6 +149,7 @@ public class ProdutoController implements Serializable{
 		htmlInputTextData.setSubmittedValue("");
 		htmlInputTextEstoque.setSubmittedValue("");
 		produtoSearch = new ProdutoSearch();
+		consultarProduto();
 	}
 	
 	public void limparFormularioProduto() {
