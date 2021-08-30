@@ -34,7 +34,7 @@
 			<p>Formato da data da produção : DD/MM/YYYY</p>
 		
 			<o:form id="cadastroProdutoForm" includeRequestParams="true"
-			 acceptcharset="UTF-8">
+			 acceptcharset="UTF-8" enctype="multipart/form-data" >
 			
 			<p:messages id="msg" autoUpdate="true"/>
 			
@@ -51,11 +51,11 @@
 								requiredMessage="Nome é obrigatório" size="15" maxlength="150" />
 							
 							<p:outputLabel for="valor" value="Valor: " />
-						    <p:inputText value="#{produtoController.produto.valor}"
+						    <p:inputNumber value="#{produtoController.produto.valor}"
 								label="Valor" id="valor" size="15" required="true" requiredMessage="É necessário inserir o valor"
 								maxlength="150" >
-								<f:validateLongRange minimum="0" ></f:validateLongRange>
-							</p:inputText>
+								<f:validateDoubleRange minimum="0" />
+							</p:inputNumber>
 							
 							<p:outputLabel for="estoque" value="Estoque: " />
 						    <p:inputText value="#{produtoController.produto.estoque}"
@@ -65,11 +65,12 @@
 							</p:inputText>
 
 							<p:outputLabel for="data" value="Data de produção: " />
-							<p:inputText value="#{produtoController.produto.dataProducao}"
+							<p:inputMask value="#{produtoController.produto.dataProducao}"
 								label="Data de produção" id="data" required="true"
 								requiredMessage="É obrigatório inserir a data de produção"
-								converter="dataProducaoConverter" validator="#{verificarLocalDate.validate}">
-							</p:inputText>
+								converter="dataProducaoConverter" validator="#{verificarLocalDate.validate}"
+								mask="99/99/9999">
+							</p:inputMask>
 
 							<p:outputLabel for="categoria" value="Categoria: "></p:outputLabel>
 							<p:selectOneMenu id="categoria"
@@ -81,6 +82,12 @@
 									var="categoria"
 									itemLabel="#{categoria.nome}" itemValue="#{categoria}" />
 							</p:selectOneMenu>
+							
+							<p:outputLabel for="foto" value="Foto: " />
+							<h:inputFile label="Foto" id="foto" required="true" 
+							 requiredMessage="É necessário inserir a imagem do produto" 
+							 value="#{produtoController.imagemUploadProduto}"/>
+							
 
 						</h:panelGrid>
 

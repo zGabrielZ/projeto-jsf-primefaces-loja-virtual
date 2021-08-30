@@ -45,6 +45,10 @@ public class ProdutoService implements Serializable{
 		return produtoRepositorio.procurarPorId(id);
 	}
 	
+	public List<Produto> getProdutos(){
+		return produtoRepositorio.getProdutos();
+	}
+	
 	@Transacional
 	public void remover(Produto produto) {
 		produtoRepositorio.remover(produto);

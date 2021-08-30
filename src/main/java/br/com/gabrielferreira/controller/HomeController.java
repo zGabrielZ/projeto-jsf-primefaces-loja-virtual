@@ -1,14 +1,12 @@
 package br.com.gabrielferreira.controller;
 
 import java.io.Serializable;
-import java.util.Map;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-
 
 import br.com.gabrielferreira.entidade.Produto;
 import br.com.gabrielferreira.service.ProdutoService;
@@ -17,7 +15,7 @@ import lombok.Setter;
 
 @Named
 @ViewScoped
-public class ProdutoDetalheController implements Serializable{
+public class HomeController implements Serializable{
 
 	/**
 	 * 
@@ -29,12 +27,11 @@ public class ProdutoDetalheController implements Serializable{
 	
 	@Getter
 	@Setter
-	private Produto produto;
+	private List<Produto> produtos;
 	
 	@PostConstruct
 	public void inicializar() {
-		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-		String id = params.get("codigo");
-		produto = produtoService.procurarPorId(Integer.parseInt(id));
+		produtos = produtoService.getProdutos();
 	}
+
 }

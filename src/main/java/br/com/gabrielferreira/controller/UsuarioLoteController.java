@@ -222,7 +222,7 @@ public class UsuarioLoteController implements Serializable{
 		}
 		
 		FileWriter fileWriter = new FileWriter(file);
-		fileWriter.write("Lista de erros abaixo, por favor verifque eles. \n");
+		fileWriter.write("Lista de erros abaixo, por favor verifique eles. \n");
 		for(String msg : mensagens) {
 			fileWriter.write("\n" + msg + "\n");
 		}

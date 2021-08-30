@@ -112,6 +112,14 @@ public class ProdutoRepositorio extends AbstractConsultaRepositorio<Produto>{
 		List<Produto> produtos = query.getResultList();
 		return produtos;
 	}
+
+	public List<Produto> getProdutos(){
+		String jpql = "SELECT p FROM Produto p JOIN FETCH p.categoria c";
+		TypedQuery<Produto> query = entityManager.createQuery(jpql,Produto.class);
+		
+		List<Produto> produtos = query.getResultList();
+		return produtos;
+	}
 	
 	public boolean verificarNomeProduto(String nome) {
 		String jpql = "SELECT p FROM Produto p where p.nome = :nome";
