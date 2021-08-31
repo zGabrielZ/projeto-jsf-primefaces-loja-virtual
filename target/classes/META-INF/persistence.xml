@@ -3,6 +3,7 @@
 	<persistence-unit name="Projeto-Loja">
 		<class>br.com.gabrielferreira.entidade.ArquivoUpload</class>
 		<class>br.com.gabrielferreira.entidade.Categoria</class>
+		<class>br.com.gabrielferreira.entidade.Endereco</class>
 		<class>br.com.gabrielferreira.entidade.Itens</class>
 		<class>br.com.gabrielferreira.entidade.Parcela</class>
 		<class>br.com.gabrielferreira.entidade.Pedido</class>

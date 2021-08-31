@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<f:metadata>
+		<f:viewParam id="codigo" name="codigoEndereco" value="#{enderecoController.endereco.id}"/>
+		<f:event listener="#{enderecoController.carregarDados}" type="preRenderView"></f:event>
+	</f:metadata> 
+
+<ui:composition template="/layout/cadastro/Cadastrar.xhtml">
+
+	<ui:define name="titulo">
+		<h1>Cadastro Endereço</h1>
+	</ui:define>
+
+	<ui:define name="conteudo">
+
+		<div id="cadastroEndereco">
+
+			<o:form id="cadastroEnderecoForm" includeRequestParams="true"
+				acceptcharset="UTF-8">
+
+				<p:messages id="msg" />
+
+				<div align="center">
+					<h:panelGroup id="pnlCadastroEndereco">
+
+						<p:inputText id="codigo" value="#{enderecoController.endereco.id}"
+							label="Código" type="hidden"></p:inputText>
+
+						<h:panelGrid columns="2" style="text-align: center">
+							<p:outputLabel for="cep" value="Cep: " />
+							<h:panelGroup>
+								
+								<p:inputText value="#{enderecoController.endereco.cep}"
+								label="CEP" id="cep" size="10" maxlength="10"
+								required="true" requiredMessage="CEP é obrigatório"/>
+								
+								<p:commandButton action="#{enderecoController.consultarCep}" style="margin-left:10px;" id="btnConsultarCep" value="Consultar Cep"
+								ajax="false" process="@this" update="@form" ></p:commandButton>
+							
+							</h:panelGroup>
+
+							<p:outputLabel for="logradouro" value="Logradouro: " />
+							<p:inputText value="#{enderecoController.endereco.logradouro}"
+								label="Logradouro" id="logradouro" size="15" maxlength="150"
+								disabled="true" />
+
+							<p:outputLabel for="complemento" value="Complemento: " />
+							<p:inputText value="#{enderecoController.endereco.complemento}"
+								label="Complemento" id="complemento" size="15" maxlength="150" disabled="#{enderecoController.disabledCampos}" />
+
+							<p:outputLabel for="bairro" value="Bairro: " />
+							<p:inputText value="#{enderecoController.endereco.bairro}"
+								label="Bairro" id="bairro" size="15" maxlength="150"
+								disabled="true" />
+
+							<p:outputLabel for="localidade" value="Localidade: " />
+							<p:inputText value="#{enderecoController.endereco.localidade}"
+								label="Localidade" id="localidade" size="15" maxlength="150" 
+								disabled="true" />
+
+							<p:outputLabel for="numero" value="Número: " />
+							<p:inputText value="#{enderecoController.endereco.numero}"
+								label="Número" id="numero" size="15" maxlength="15"
+								required="true" requiredMessage="Número é obrigatório" disabled="#{enderecoController.disabledCampos}"/>
+								
+							<p:outputLabel for="uf" value="UF: " />
+							<p:inputText value="#{enderecoController.endereco.uf}"
+								label="UF" id="uf" size="15" maxlength="150" 
+								disabled="true"
+								/>
+								
+							<p:outputLabel for="ibge" value="IBGE: " />
+							<p:inputText value="#{enderecoController.endereco.ibge}"
+								label="IBGE" id="ibge" size="15" maxlength="150" 
+								disabled="true"/>
+								
+							<p:outputLabel for="ddd" value="DDD: " />
+							<p:inputText value="#{enderecoController.endereco.ddd}"
+								label="DDD" id="ddd" size="15" maxlength="150" 
+								disabled="true"/>
+
+						</h:panelGrid>
+
+
+						<div align="center" style="padding-top: 10px;">
+							<p:commandButton id="btnCadastrar" value="Cadastrar Endereço"
+								action="#{enderecoController.inserirOuAtualizarEndereco}"
+								ajax="false" process="@this" update="@form"></p:commandButton>
+						</div>
+
+					</h:panelGroup>
+				</div>
+			</o:form>
+		</div>
+
+	</ui:define>
+
+</ui:composition>
+</html>

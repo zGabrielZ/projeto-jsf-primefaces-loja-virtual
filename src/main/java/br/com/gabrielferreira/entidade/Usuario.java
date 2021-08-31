@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -70,6 +71,9 @@ public class Usuario implements Serializable{
 	
 	@OneToMany(mappedBy = "usuario",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Pedido> pedidos = new ArrayList<Pedido>();
+	
+	@OneToOne(cascade = CascadeType.ALL,mappedBy = "usuario")
+	private Endereco endereco;
 	
 	@Transient
 	private Integer codigoUsuario;
