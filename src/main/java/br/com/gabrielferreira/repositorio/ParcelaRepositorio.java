@@ -1,0 +1,45 @@
+package br.com.gabrielferreira.repositorio;
+
+import java.io.Serializable;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+
+import br.com.gabrielferreira.entidade.Parcela;
+public class ParcelaRepositorio implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	@Inject
+	private EntityManager entityManager;
+	
+	public ParcelaRepositorio() {}
+	
+	public void inserir(Parcela parcela) {
+		entityManager.persist(parcela);
+	}
+	
+	public void inserirParcelas(List<Parcela> parcelas) {
+		for(Parcela parcela : parcelas) {
+			entityManager.persist(parcela);
+		}
+	}
+	
+	public Parcela procurarPorId(Integer id) {
+		return entityManager.find(Parcela.class, id);
+	}
+	
+	public List<Parcela> getParcelas() {
+		String jpql = "SELECT p FROM Parcela p JOIN FETCH p.pedido ped";
+		TypedQuery<Parcela> query = entityManager.createQuery(jpql,Parcela.class);
+		
+		List<Parcela> parcelas = query.getResultList();
+		return parcelas;
+	}	
+
+}

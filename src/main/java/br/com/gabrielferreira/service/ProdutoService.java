@@ -45,13 +45,13 @@ public class ProdutoService implements Serializable{
 		return produtoRepositorio.procurarPorId(id);
 	}
 	
-	public List<Produto> getProdutos(){
-		return produtoRepositorio.getProdutos();
-	}
-	
 	@Transacional
 	public void remover(Produto produto) {
 		produtoRepositorio.remover(produto);
+	}
+	
+	public List<Produto> getListagem(){
+		return produtoRepositorio.getProdutos();
 	}
 	
 	public List<Produto> getFiltrar(ProdutoSearch produtoSearch, int primeiroResultado, int quantidadeMaxima){

@@ -15,42 +15,6 @@
 		<br/>
 		<h:form id="frmHome">
 			<p:messages id="msg" />
-
-			<div class="card">
-				<h2 style="" >Produtos</h2>
-				<p:carousel value="#{homeController.produtos}" var="produto"
-					responsive="true">
-					<div class="product">
-						<div class="product-grid-item p-p-5">
-							<div class="product-grid-item-top">
-								<div>
-									<i class="pi pi-tag product-category-icon" /> <span
-										class="product-category">#{produto.categoria.nome}</span>
-								</div>
-							</div>
-							<div class="product-grid-item-content">
-								<h:graphicImage id="imagem"
-									value="/ServletImagemProduto?idImagem=#{produto.id}"
-									width="150" height="150" />
-								<div class="product-name">#{produto.nome}</div>
-								<div class="product-description">Data da produção : #{produto.dataProducao}</div>
-								<p:outputLabel value="Estoque : #{produto.estoque}" />
-								<div>
-									<p:outputLabel value="#{produto.valor}"
-									styleClass="product-price">
-									<f:convertNumber currencySymbol="R$" type="currency" />
-								</p:outputLabel>
-								</div>
-							</div>
-							<div class="product-grid-item-bottom">
-								<p:commandButton type="button" value="Adicionar ao carrinho">
-								</p:commandButton>
-							</div>
-						</div>
-					</div>
-				</p:carousel>
-			</div>
-
 		</h:form>
 		
 	</ui:define>

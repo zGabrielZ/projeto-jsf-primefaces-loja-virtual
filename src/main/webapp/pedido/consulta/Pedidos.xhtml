@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/layout/consulta/Consulta.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{pedidoController.consultarProdutos}"></f:viewAction>
+	</f:metadata>
+
+	<ui:define name="titulo">
+		<h1>Produtos</h1>
+	</ui:define>
+
+	<ui:define name="conteudo">
+
+		<h:form id="consultaPedidosForm">
+			<p:messages id="msg" autoUpdate="true" />
+
+			<p:dataTable id="dataTableProdutos"
+				value="#{pedidoController.produtos}" var="produto"
+				style="padding-top:20px;" rows="5" paginator="true"
+				paginatorPosition="bottom"
+				emptyMessage="Sua consulta não retornou registros."
+				rowsPerPageTemplate="5, 10, 25, 50, 100"
+				paginatorAlwaysVisible="false" lazy="true">
+
+				<p:column style="width:150px;">
+					<f:facet name="header">Nome</f:facet>
+					<h:outputText value="#{produto.nome}" />
+				</p:column>
+
+				<p:column style="width:80px;">
+					<f:facet name="header">Valor</f:facet>
+					<h:outputText value="#{produto.valor}">
+						<f:convertNumber currencySymbol="R$" type="currency" />
+					</h:outputText>
+				</p:column>
+
+				<p:column style="width:130px;">
+					<f:facet name="header">Data da produção</f:facet>
+					<h:outputText value="#{produto.dataProducao}"
+						converter="dataProducaoConverter" />
+				</p:column>
+
+				<p:column style="width:150px;">
+					<f:facet name="header">Categoria</f:facet>
+					<h:outputText value="#{produto.categoria.nome}" />
+				</p:column>
+
+				<p:column style="width:150px;">
+					<f:facet name="header">Carrinho</f:facet>
+					<p:commandButton update=":frmCarrinhoPedidos" process="@this"
+						action="#{pedidoController.addCarrinho}" icon="fa fa-edit"
+						title="Adicionar ao carrinho">
+						<f:setPropertyActionListener value="#{produto}"
+							target="#{pedidoController.produtoSelecionado}"></f:setPropertyActionListener>
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="conteudo-2">
+		<h:form id="frmCarrinhoPedidos">
+		
+			<p:dataTable id="dataTablePedidos"
+				value="#{pedidoController.pedidos}" var="pedido"
+				style="padding-top:20px;" rows="5" paginator="true"
+				paginatorPosition="bottom"
+				emptyMessage="Sua consulta não retornou registros."
+				rowsPerPageTemplate="5, 10, 25, 50, 100"
+				paginatorAlwaysVisible="false" rendered="#{not empty pedidoController.pedidos}">
+
+				<p:column style="width:130px;">
+					<f:facet name="header">Data do pedido</f:facet>
+					<h:outputText value="#{pedido.dataCompra}"
+						converter="dataDepositoConverter" />
+				</p:column>
+
+				<p:column style="width:130px;">
+					<f:facet name="header">Quantidade</f:facet>
+					<h:outputText value="#{pedido.quantidadeCompra}" />
+				</p:column>
+
+				<p:column style="width:150px;">
+					<f:facet name="header">Nome</f:facet>
+					<h:outputText value="#{pedido.produto.nome}" />
+				</p:column>
+
+				<p:column style="width:80px;">
+					<f:facet name="header">Sub Total</f:facet>
+					<h:outputText value="#{pedido.subTotal}">
+						<f:convertNumber currencySymbol="R$" type="currency" />
+					</h:outputText>
+				</p:column>
+
+				<p:column style="width:130px;">
+					<f:facet name="header">Data da produção</f:facet>
+					<h:outputText value="#{pedido.produto.dataProducao}"
+						converter="dataProducaoConverter" />
+				</p:column>
+				
+				<p:column style="width:50px;" >
+					<f:facet name="header">Deletar</f:facet>										
+					<p:commandButton onclick="PF('meuDialogo').show();"
+						icon="fa fa-trash" title="Excluir este pedido" >
+						<f:setPropertyActionListener value="#{pedido}"
+							target="#{pedidoController.itensSelecionado}"></f:setPropertyActionListener>
+					</p:commandButton> 
+				</p:column>
+
+			</p:dataTable>
+			
+			<p:confirmDialog header="Exclusão de itens"
+				message="Tem certeza que deseja excluir este item ?"
+				widgetVar="meuDialogo" resizable="false" modal="true"
+				minimizable="true" maximizable="true">
+
+				<p:commandButton value="Sim" action="#{pedidoController.excluirItemPedido}"
+					update="dataTablePedidos" ajax="false" process="@form"
+					onclick="meuDialogo.hide()" />
+				<p:commandButton value="Não" update="dataTablePedidos"
+					ajax="false" process="@form" onclick="meuDialogo.hide()" />
+
+			</p:confirmDialog>
+			
+			
+			
+			<div id="valorTotalPedido" align="center" style="margin-top:30px;" >
+				<h:panelGrid columns="2" rendered="#{not empty pedidoController.pedidos}">
+					
+					<p:outputLabel for="saldoAtual" value="Saldo atual : " />
+					<h:outputText id="saldoAtual" value="#{pedidoController.saldoAtual}">
+						<f:convertNumber currencySymbol="R$" type="currency" />
+					</h:outputText>
+					
+					<p:outputLabel for="valor" value="Valor total : " />
+					<h:outputText id="valor" value="#{pedidoController.valorTotalPedido}">
+						<f:convertNumber currencySymbol="R$" type="currency" />
+					</h:outputText>
+					
+					<p:inputText value="#{pedidoController.quantidadeParcelas}"
+						id="parcela" required="true" 
+						requiredMessage="Parcela é obrigatório" size="15" maxlength="150" 
+						converterMessage="Campo parcela é numérico." >
+						<f:convertNumber integerOnly="true" minIntegerDigits="1" />
+					</p:inputText>
+					<p:commandButton style="margin-left:10px;" action="#{pedidoController.gerarParcelas}"  value="Gerar Parcelas" ajax="false" 
+						process="@this" update="@form" 
+					></p:commandButton>
+					
+				</h:panelGrid>
+			</div>
+
+			<div id="parcelas">
+				
+				<p:dataTable id="dataTableParcelas"
+					value="#{pedidoController.parcelas}" var="parcela"
+					style="padding-top:20px;" rows="5" paginator="true"
+					paginatorPosition="bottom"
+					emptyMessage="Sua consulta não retornou registros."
+					rowsPerPageTemplate="5, 10, 25, 50, 100"
+					paginatorAlwaysVisible="false"
+					rendered="#{not empty pedidoController.parcelas}">
+
+					<p:column style="width:130px;">
+						<f:facet name="header">Data do parcelamento</f:facet>
+						<h:outputText value="#{parcela.dataParcela}"
+							converter="dataProducaoConverter" />
+					</p:column>
+
+					<p:column style="width:130px;">
+						<f:facet name="header">Valor</f:facet>
+						<h:outputText value="#{parcela.valorParcela}" >
+							<f:convertNumber currencySymbol="R$" type="currency" />
+						</h:outputText>
+					</p:column>
+				</p:dataTable>
+			</div>
+			
+			<div id="compras" align="center" style="margin-top:20px;" >
+				<p:commandButton style="margin-left:10px;" value="Comprar" ajax="false" rendered="#{not empty pedidoController.parcelas}"
+						process="@this" update="@all"  action="#{pedidoController.comprarPedido}"
+					></p:commandButton>
+			</div>
+
+		</h:form>
+	</ui:define>
+
+
+</ui:composition>
+</html>

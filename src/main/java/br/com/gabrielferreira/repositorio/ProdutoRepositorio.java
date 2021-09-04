@@ -69,19 +69,21 @@ public class ProdutoRepositorio extends AbstractConsultaRepositorio<Produto>{
 		
 		ProdutoSearch produtoSearch = (ProdutoSearch) search;
 		
-		if(StringUtils.isNotBlank(produtoSearch.getNome())) {
-			Predicate predicateNome = criteriaBuilder.like(root.get("nome"), "%" + produtoSearch.getNome() + "%");
-			predicates.add(predicateNome);
-		}
-		
-		if(produtoSearch.getDataProducao() != null) {
-			Predicate predicateDataProducao = criteriaBuilder.equal(root.get("dataProducao"), produtoSearch.getDataProducao());
-			predicates.add(predicateDataProducao);
-		}
-		
-		if(produtoSearch.getEstoque() != null) {
-			Predicate predicateEstoque = criteriaBuilder.equal(root.get("estoque"),produtoSearch.getEstoque());
-			predicates.add(predicateEstoque);
+		if(produtoSearch != null) {
+			if(StringUtils.isNotBlank(produtoSearch.getNome())) {
+				Predicate predicateNome = criteriaBuilder.like(root.get("nome"), "%" + produtoSearch.getNome() + "%");
+				predicates.add(predicateNome);
+			}
+			
+			if(produtoSearch.getDataProducao() != null) {
+				Predicate predicateDataProducao = criteriaBuilder.equal(root.get("dataProducao"), produtoSearch.getDataProducao());
+				predicates.add(predicateDataProducao);
+			}
+			
+			if(produtoSearch.getEstoque() != null) {
+				Predicate predicateEstoque = criteriaBuilder.equal(root.get("estoque"),produtoSearch.getEstoque());
+				predicates.add(predicateEstoque);
+			}
 		}
 			
 		return predicates;
@@ -104,18 +106,18 @@ public class ProdutoRepositorio extends AbstractConsultaRepositorio<Produto>{
 		return entityManager.find(Produto.class, id);
 	}
 	
-	public List<Produto> procurarPorIdCategoria(Integer idCategoria) {
-		String jpql = "SELECT p FROM Produto p JOIN FETCH p.categoria c where c.id = :idCategoria";
+	public List<Produto> getProdutos() {
+		String jpql = "SELECT p FROM Produto p JOIN FETCH p.categoria c";
 		TypedQuery<Produto> query = entityManager.createQuery(jpql,Produto.class);
-		query.setParameter("idCategoria", idCategoria);
 		
 		List<Produto> produtos = query.getResultList();
 		return produtos;
 	}
-
-	public List<Produto> getProdutos(){
-		String jpql = "SELECT p FROM Produto p JOIN FETCH p.categoria c";
+	
+	public List<Produto> procurarPorIdCategoria(Integer idCategoria) {
+		String jpql = "SELECT p FROM Produto p JOIN FETCH p.categoria c where c.id = :idCategoria";
 		TypedQuery<Produto> query = entityManager.createQuery(jpql,Produto.class);
+		query.setParameter("idCategoria", idCategoria);
 		
 		List<Produto> produtos = query.getResultList();
 		return produtos;

@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -54,6 +55,9 @@ public class Itens implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "pedido_id")
 	private Pedido pedido;
+	
+	@Transient
+	private boolean itemPedidoRepetido;
 	
 	public BigDecimal getSubTotal() {
 		int i = quantidadeCompra.intValue();

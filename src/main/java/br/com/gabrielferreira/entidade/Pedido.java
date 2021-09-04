@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -43,14 +44,17 @@ public class Pedido implements Serializable{
 	@EqualsAndHashCode.Include
 	private Integer id;
 	
+	@Column(name = "codigo_pedido")
+	private Integer codigoPedido;
+	
 	@Column(name = "data_pedido")
 	private LocalDateTime dataPedido;
 	
 	@ManyToOne
-	@JoinColumn(name = "cliente_id")
+	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
 	
-	@OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	private List<Parcela> parcelas = new ArrayList<Parcela>();
 	
 	@OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY)

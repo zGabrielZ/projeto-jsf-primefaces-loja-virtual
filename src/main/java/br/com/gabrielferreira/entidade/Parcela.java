@@ -1,6 +1,7 @@
 package br.com.gabrielferreira.entidade;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -45,4 +46,7 @@ public class Parcela implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "pedido_id")
 	private Pedido pedido;
+	
+	@Column(name = "valor_parcela")
+	private BigDecimal valorParcela;
 }
