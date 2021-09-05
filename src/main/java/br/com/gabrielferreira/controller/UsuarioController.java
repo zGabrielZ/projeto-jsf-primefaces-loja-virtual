@@ -175,6 +175,9 @@ public class UsuarioController implements Serializable{
 			consultarUsuario();
 			FacesMessages.adicionarMensagem("consultaUsuariosForm:msg", FacesMessage.SEVERITY_INFO, "Removido com sucesso !",
 					null);
+		} catch (RegraDeNegocioException e) {
+			FacesMessages.adicionarMensagem("consultaUsuariosForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
+					"Não é possível excluir !");
 		} catch (Exception e) {
 			FacesMessages.adicionarMensagem("consultaUsuariosForm:msg", FacesMessage.SEVERITY_ERROR, "Não é possível excluir, pois tem entidades relacionada !",
 					"Não é possível excluir !");

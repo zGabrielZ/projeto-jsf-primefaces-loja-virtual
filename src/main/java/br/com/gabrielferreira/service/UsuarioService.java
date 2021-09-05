@@ -24,6 +24,7 @@ import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.entidade.search.UsuarioSearch;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.repositorio.UsuarioRepositorio;
+import br.com.gabrielferreira.utils.SessionUtil;
 import br.com.gabrielferreira.utils.Transacional;
 import br.com.gabrielferreira.utils.validation.UsuarioLoteValidacao;
 import br.com.gabrielferreira.utils.validation.UsuarioValidacaoArquivo;
@@ -94,7 +95,8 @@ public class UsuarioService implements Serializable {
 	}
 	
 	@Transacional
-	public void removerUsuario(Usuario usuario) {
+	public void removerUsuario(Usuario usuario) throws RegraDeNegocioException {
+		verificarUsuarioLogado(usuario);
 		usuarioRepositorio.remover(usuario);
 	}
 	
@@ -215,6 +217,13 @@ public class UsuarioService implements Serializable {
 			senha = senhaTransformada;
 		}
 		return senha;
+	}
+	
+	public void verificarUsuarioLogado(Usuario usuarioSelecionado) throws RegraDeNegocioException {
+		Usuario usuarioLogado = (Usuario) SessionUtil.getParam("usuario");
+		if(usuarioLogado.getId().equals(usuarioSelecionado.getId())) {
+			throw new RegraDeNegocioException("Não é possível excluir o próprio usuário logado.");
+		}
 	}
 	
 	public void verificarEmailUsuario(String email) throws RegraDeNegocioException {
