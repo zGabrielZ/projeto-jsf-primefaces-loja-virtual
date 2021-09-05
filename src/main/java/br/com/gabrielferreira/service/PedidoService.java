@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -14,6 +15,7 @@ import br.com.gabrielferreira.entidade.Parcela;
 import br.com.gabrielferreira.entidade.Pedido;
 import br.com.gabrielferreira.entidade.Produto;
 import br.com.gabrielferreira.entidade.Usuario;
+import br.com.gabrielferreira.entidade.to.PedidoTo;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.repositorio.EnderecoRepositorio;
 import br.com.gabrielferreira.repositorio.PedidoRepositorio;
@@ -49,10 +51,6 @@ public class PedidoService implements Serializable{
 	
 	public Pedido procurarPorId(Integer id) {
 		return pedidoRepositorio.procurarPorId(id);
-	}
-	
-	public List<Pedido> getListagem(){
-		return pedidoRepositorio.getPedidos();
 	}
 	
 	@Transacional
@@ -151,6 +149,22 @@ public class PedidoService implements Serializable{
 			valorTotal = valorTotal.add(i.getSubTotal());
 		}
 		return valorTotal;
+	}
+	
+	
+	public List<Pedido> getItens(Integer idUsuario){
+		return pedidoRepositorio.getListagem(idUsuario);
+	}
+	
+	public List<PedidoTo> getValorTotalDeCadaPedidoCadastrado(Integer idUsuario) {
+		List<PedidoTo> pedidos = new ArrayList<>();
+		for(Pedido p : getItens(idUsuario)) {
+			PedidoTo pedidoTo = new PedidoTo();
+			pedidoTo.setCodigoPedido(p.getCodigoPedido());
+			pedidoTo.setValorTotal(p.getValorTotalPedido());
+			pedidos.add(pedidoTo);
+		}
+		return pedidos;
 	}
  
 }

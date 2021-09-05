@@ -104,6 +104,15 @@ public class ItensService implements Serializable{
 			parcelaService.gerarParcelasPedido(parcelas, quantidadeParcelas, valorTotalPedido);
 		}
 	}
+	
+	public List<Itens> getItens(Integer idUsuario, int primeiroResultado, int quantidadeMaxima){
+		return itensRepositorio.getItensByUsuario(idUsuario, primeiroResultado, quantidadeMaxima);
+	}
+	
+	public Integer quantidadeRegistro(Integer idUsuario) {
+		return itensRepositorio.quantidadeRegistro(idUsuario);
+	}
+	
 
  
 }

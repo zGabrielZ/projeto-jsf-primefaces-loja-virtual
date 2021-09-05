@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/layout/consulta/Consulta.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{pedidoConfirmadoController.consultarPedidos}"></f:viewAction>
+	</f:metadata>
+
+	<ui:define name="titulo">
+		<h1>Pedidos confirmados</h1>
+	</ui:define>
+
+	<ui:define name="conteudo">
+
+		<h:form id="consultaPedidosConfimradosForm">
+			
+			<p:messages id="msg" autoUpdate="true" />
+
+			<p:dataTable id="dataTablePedidos"
+				value="#{pedidoConfirmadoController.itens}" var="itens"
+				style="padding-top:20px;" rows="5" paginator="true"
+				paginatorPosition="bottom"
+				emptyMessage="Sua consulta não retornou registros."
+				rowsPerPageTemplate="5, 10, 25, 50, 100"
+				paginatorAlwaysVisible="false" lazy="true">
+				
+				<p:column style="width:100px;">
+					<f:facet name="header">ID</f:facet>
+					<h:outputText value="#{itens.pedido.id}" />
+				</p:column>
+
+				<p:column style="width:100px;">
+					<f:facet name="header">Código Pedido</f:facet>
+					<h:outputText value="#{itens.pedido.codigoPedido}" />
+				</p:column>
+
+				<p:column style="width:130px;">
+					<f:facet name="header">Data do pedido</f:facet>
+					<h:outputText value="#{itens.pedido.dataPedido}"
+						converter="dataDepositoConverter" />
+				</p:column>
+				
+				<p:column style="width:100px;">
+					<f:facet name="header">Quantidade Compra</f:facet>
+					<h:outputText value="#{itens.quantidadeCompra}" />
+				</p:column>
+				
+				<p:column style="width:130px;">
+					<f:facet name="header">Data da compra</f:facet>
+					<h:outputText value="#{itens.dataCompra}"
+						converter="dataDepositoConverter" />
+				</p:column>
+				
+				<p:column style="width:100px;">
+					<f:facet name="header">Produto</f:facet>
+					<h:outputText value="#{itens.produto.nome}" />
+				</p:column>
+				
+				<p:column style="width:100px;">
+					<f:facet name="header">Sub total</f:facet>
+					<h:outputText value="#{itens.subTotal}" />
+				</p:column>
+
+			</p:dataTable>
+			
+			
+			<h2>Valor total de cada pedido</h2>
+			
+			<p:dataTable id="dataTableValores"
+				value="#{pedidoConfirmadoController.pedidos}" var="pedido"
+				style="padding-top:20px;" rows="5" paginator="true"
+				paginatorPosition="bottom"
+				emptyMessage="Sua consulta não retornou registros."
+				rowsPerPageTemplate="5, 10, 25, 50, 100"
+				paginatorAlwaysVisible="false">
+
+				<p:column style="width:100px;">
+					<f:facet name="header">Código Pedido</f:facet>
+					<h:outputText value="#{pedido.codigoPedido}" />
+				</p:column>
+				
+				<p:column style="width:100px;">
+					<f:facet name="header">Valor</f:facet>
+					<h:outputText value="#{pedido.valorTotal}" />
+				</p:column>
+				
+			</p:dataTable>
+			
+
+		</h:form>
+
+	</ui:define>
+
+
+</ui:composition>
+</html>

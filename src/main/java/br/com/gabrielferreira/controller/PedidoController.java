@@ -43,9 +43,6 @@ public class PedidoController implements Serializable{
 	@Inject
 	private ParcelaService parcelaService;
 	
-	//@Inject
-	//private UsuarioService usuarioService;
-	
 	@Inject
 	@Getter
 	private LazyDataTableModelProduto<Produto> produtos;

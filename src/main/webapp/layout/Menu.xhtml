@@ -62,9 +62,15 @@
 				
 				<p:menuitem value="Endereço" icon="fa fa-pencil"
 							action="#{navegacaoController.cadastroEndereco}"></p:menuitem>
-				
-				<p:menuitem value="Carrinho" icon="fa fa-pencil"
+							
+				<p:submenu label="Pedidos" icon="fa fa-pencil">
+					<p:menuitem value="Carrinho" 
 							action="#{navegacaoController.consultaPedido}"></p:menuitem>
+					<p:menuitem value="Pedidos Confirmados"
+							action="#{navegacaoController.consultaPedidoConfirmados}"></p:menuitem>
+					<p:menuitem value="Parcelas"
+							action="#{navegacaoController.consultaParcelas}"></p:menuitem>
+				</p:submenu>
 				
 				<p:menuitem icon="fa fa-pencil" value="Deslogar" action="#{loginController.logout}"></p:menuitem>
 				

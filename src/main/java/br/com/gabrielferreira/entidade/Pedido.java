@@ -1,6 +1,7 @@
 package br.com.gabrielferreira.entidade;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,5 +60,13 @@ public class Pedido implements Serializable{
 	
 	@OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY)
 	private List<Itens> itens = new ArrayList<Itens>();
+	
+	public BigDecimal getValorTotalPedido() {
+		BigDecimal valorTotal = BigDecimal.ZERO;
+		for(Itens i : itens) {
+			valorTotal = valorTotal.add(i.getSubTotal());
+		}
+		return valorTotal;
+	}
 
 }
