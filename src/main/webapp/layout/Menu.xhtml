@@ -51,7 +51,7 @@
 					</p:submenu>
 				</p:submenu>
 				
-				<p:submenu label="Saldo" icon="fa fa-pencil" rendered="#{loginController.usuario.perfil.descricao eq 'Cliente' or loginController.usuario.perfil.descricao eq 'Funcionário'}" >
+				<p:submenu label="Saldo" icon="fa fa-pencil">
 					<p:submenu label="Novo" icon="fa fa-pencil">
 						<p:menuitem value="Consulta"
 							action="#{navegacaoController.consultaSaldo}"></p:menuitem>
