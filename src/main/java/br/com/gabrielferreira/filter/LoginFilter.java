@@ -32,7 +32,7 @@ public class LoginFilter implements Filter {
 		HttpServletResponse httpServletResponse = (HttpServletResponse) 	response;
 		String url = httpServletRequest.getRequestURL().toString();
 		
-		if( (url.contains("/categoria") || url.contains("/produto") || url.contains("/saldo") || url.contains("/usuario") || url.contains("/HomePrincipal.xhtml") || url.contains("/endereco") || url.contains("/pedido") ) 
+		if( (url.contains("/categoria") || url.contains("/produto") || url.contains("/saldo") || url.contains("/usuario") || url.contains("/HomePrincipal.xhtml") || url.contains("/endereco") || url.contains("/pedido")) 
 				&& !loginController.isPassou()) {
 			httpServletResponse.sendRedirect(httpServletRequest.getServletContext().getContextPath() + "/login/Login.xhtml");
 		} else {

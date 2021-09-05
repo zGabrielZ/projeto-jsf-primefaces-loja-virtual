@@ -70,5 +70,13 @@ public class ParcelaService implements Serializable{
 			parcelas.add(parcela);
 		}
 	}
+	
+	public List<Parcela> getParcelas(Integer idUsuario, int primeiroResultado, int quantidadeMaxima){
+		return parcelaRepositorio.getParcelasByUsuario(idUsuario, primeiroResultado, quantidadeMaxima);
+	}
+	
+	public Integer quantidadeRegistro(Integer idUsuario) {
+		return parcelaRepositorio.quantidadeRegistro(idUsuario);
+	}
  
 }
