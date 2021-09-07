@@ -40,6 +40,7 @@
   	<url-pattern>/produto/*</url-pattern>
   </filter-mapping>
   
+  
   <context-param>
     <param-name>primefaces.FONT_AWESOME</param-name>
     <param-value>true</param-value>

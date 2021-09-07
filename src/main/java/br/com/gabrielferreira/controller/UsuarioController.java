@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -83,26 +82,6 @@ public class UsuarioController implements Serializable{
 	@Setter
 	private Usuario usuarioSelecionado;
 	
-	@Getter
-	@Setter
-	private String emailConsulta;
-	
-	@Getter
-	@Setter
-	private boolean passouEmailCorreto;
-	
-	@Getter
-	@Setter
-	private String codigoEmail;
-	
-	@Getter
-	@Setter
-	private String mensagem;
-	
-	@Getter
-	@Setter
-	private Integer codigoGerado;
-	
 	@PostConstruct
 	public void inicializar() {
 		tituloCadastroUsuario = "Cadastro de Usuário";
@@ -111,7 +90,6 @@ public class UsuarioController implements Serializable{
 		saldo = new Saldo();
 		saldos = new ArrayList<Saldo>();
 		desejoSaldo = false;
-		passouEmailCorreto = false;
 	}
 	
 	public void consultarUsuario() {
@@ -197,35 +175,6 @@ public class UsuarioController implements Serializable{
 		} catch (RegraDeNegocioException e) {
 			FacesMessages.adicionarMensagem("cadastroUsuarioForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
 					null);
-		}
-	}
-	
-	public Integer getGerarNumeroAleatorio() {
-		Random numeroAleatorio = new Random();
-		int valor = numeroAleatorio.nextInt(100) + 1;
-		return valor;
-	}
-	
-	public void consultarEmail() {
-		if(usuarioService.verificarEmailLogin(emailConsulta)) {
-			passouEmailCorreto = true;
-			usuario = usuarioService.procurarEmail(emailConsulta);
-			codigoGerado = getGerarNumeroAleatorio();
-			mensagem = "E-mail encontrado e o código gerado foi " + codigoGerado + "." ;
-		} else {
-			mensagem = "E-mail não encontrado.";
-		}
-	}	
-	
-	public void inserirSenhaUsuario() {
-		if(!codigoEmail.equals(codigoGerado.toString())) {
-			mensagem = "Código incorreto ! Código : " + codigoGerado;
-		} else {
-			usuarioService.atualizarSenhaUsuario(usuario.getId(), usuario.getSenha());
-			FacesMessages.adicionarMensagem("loginForm:msg", FacesMessage.SEVERITY_INFO, "Senha atualizada com sucesso !",
-					null);
-			FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-			navegacaoController.login();
 		}
 	}
 	

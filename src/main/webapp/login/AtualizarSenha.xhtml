@@ -20,13 +20,13 @@
 				<h:panelGrid columns="3" style="center">
 
 					<p:outputLabel for="email" value="E-mail: " />
-					<p:inputText value="#{usuarioController.emailConsulta}"
+					<p:inputText value="#{emailController.emailConsulta}"
 						label="Email" id="email" size="50" maxlength="150" required="true"
 						requiredMessage="E-mail é obrigatório"
-						validator="#{verificarEmail.validate}" disabled="#{usuarioController.passouEmailCorreto}" />
+						validator="#{verificarEmail.validate}" disabled="#{emailController.passouEmailCorreto}" />
 					<p:commandButton value="Consultar E-mail" ajax="false"
 						process="@this" update="@form"
-						action="#{usuarioController.consultarEmail}" disabled="#{usuarioController.passouEmailCorreto}"></p:commandButton>
+						action="#{emailController.consultarEmail}" disabled="#{emailController.passouEmailCorreto}"></p:commandButton>
 
 				</h:panelGrid>
 			</div>
@@ -34,30 +34,30 @@
 			<div id="atualizarUsuario">
 
 				<p:outputLabel style="color:red;"
-					value="#{usuarioController.mensagem}"></p:outputLabel>
+					value="#{emailController.mensagem}"></p:outputLabel>
 				<p:messages id="msg" />
 
 				<div align="center">
 
 					<h:panelGroup id="pnlAtualizarSenhaUsuario"
-						rendered="#{usuarioController.passouEmailCorreto}">
+						rendered="#{emailController.passouEmailCorreto}">
 
 						<h:panelGrid columns="2" style="text-align: center">
 							<p:outputLabel for="senha" value="Senha: " />
 							<p:password label="Senha"
-								value="#{usuarioController.usuario.senha}" required="true"
+								value="#{emailController.usuario.senha}" required="true"
 								id="senha" requiredMessage="Senha é necessário" />
 
 							<p:outputLabel for="codigo" value="Código: " />
 							<p:inputText label="Código"
-								value="#{usuarioController.codigoEmail}" required="true"
+								value="#{emailController.codigoEmail}" required="true"
 								id="codigo" requiredMessage="Código é necessário" />
 
 						</h:panelGrid>
 
 						<div align="center" style="padding-top: 10px;">
 							<p:commandButton id="btnCadastrar" value="Atualizar senha"
-								action="#{usuarioController.inserirSenhaUsuario}" ajax="false"
+								action="#{emailController.inserirSenhaUsuario}" ajax="false"
 								process="@this" update="@form"></p:commandButton>
 						</div>
 
