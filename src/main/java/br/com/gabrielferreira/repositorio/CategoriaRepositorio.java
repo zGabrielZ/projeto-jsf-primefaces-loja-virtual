@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import br.com.gabrielferreira.entidade.Categoria;
 import br.com.gabrielferreira.entidade.search.CategoriaSearch;
+import br.com.gabrielferreira.repositorio.generico.AbstractConsultaRepositorio;
 
 public class CategoriaRepositorio extends AbstractConsultaRepositorio<Categoria>{
 

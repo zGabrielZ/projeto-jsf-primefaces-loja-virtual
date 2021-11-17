@@ -10,9 +10,12 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.codec.binary.Base64;
 
 import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.entidade.search.UsuarioSearch;
+import br.com.gabrielferreira.repositorio.generico.AbstractConsultaRepositorio;
+
 public class UsuarioRepositorio extends AbstractConsultaRepositorio<Usuario>{
 
 	/**
@@ -53,55 +56,35 @@ public class UsuarioRepositorio extends AbstractConsultaRepositorio<Usuario>{
 	}
 	
 	
-	private List<Predicate> criarFiltroUsuario(Usuario search, CriteriaBuilder criteriaBuilder
-			, Root<Usuario> root){
-		
+	private List<Predicate> criarFiltroUsuario(Usuario search, CriteriaBuilder criteriaBuilder, Root<Usuario> root) {
+
 		List<Predicate> predicates = new ArrayList<>();
-		
+
 		UsuarioSearch usuarioSearch = (UsuarioSearch) search;
-		
-		if(StringUtils.isNotBlank(usuarioSearch.getNome())) {
+
+		if (StringUtils.isNotBlank(usuarioSearch.getNome())) {
 			Predicate predicateNome = criteriaBuilder.like(root.get("nome"), "%" + usuarioSearch.getNome() + "%");
 			predicates.add(predicateNome);
 		}
-		
-		if(StringUtils.isNotBlank(usuarioSearch.getCpf())) {
+
+		if (StringUtils.isNotBlank(usuarioSearch.getCpf())) {
 			Predicate predicateCpf = criteriaBuilder.like(root.get("cpf"), "%" + usuarioSearch.getCpf() + "%");
 			predicates.add(predicateCpf);
 		}
-		
-		if(StringUtils.isNotBlank(usuarioSearch.getEmail())) {
+
+		if (StringUtils.isNotBlank(usuarioSearch.getEmail())) {
 			Predicate predicateEmail = criteriaBuilder.like(root.get("email"), "%" + usuarioSearch.getEmail() + "%");
 			predicates.add(predicateEmail);
 		}
-			
+
 		return predicates;
-	}
-	
-	public UsuarioRepositorio() {}
-	
-	public void inserir(Usuario usuario) {
-		entityManager.persist(usuario);
-	}
-	
-	public void remover(Usuario usuario) {
-		usuario = procurarPorId(usuario.getId());
-		entityManager.remove(usuario);
-	}
-	
-	public void atualizar(Usuario usuario) {
-		entityManager.merge(usuario);
-	}
-	
-	public Usuario procurarPorId(Integer id) {
-		return entityManager.find(Usuario.class, id);
 	}
 	
 	public Usuario procurarPorEmail(String email) {
 		String jpql = "SELECT u FROM Usuario u where u.email = :email";
 		TypedQuery<Usuario> query = entityManager.createQuery(jpql,Usuario.class);
 		query.setParameter("email", email);
-		Usuario usuario = query.getSingleResult();
+		Usuario usuario = verificarNulo(query);
 		return usuario;
 	}
 	
@@ -112,7 +95,7 @@ public class UsuarioRepositorio extends AbstractConsultaRepositorio<Usuario>{
 		
 		List<Usuario> usuarios = query.getResultList();
 		
-		return !usuarios.isEmpty()?true:false;
+		return !usuarios.isEmpty() ? true : false;
 	}
 	
 	public boolean verificarEmail(String email) {
@@ -122,7 +105,7 @@ public class UsuarioRepositorio extends AbstractConsultaRepositorio<Usuario>{
 		
 		List<Usuario> usuarios = query.getResultList();
 		
-		return !usuarios.isEmpty()?true:false;
+		return !usuarios.isEmpty() ? true : false;
 	}
 	
 	public boolean verificarEmailAtualizado(String email, Integer id) {
@@ -133,7 +116,7 @@ public class UsuarioRepositorio extends AbstractConsultaRepositorio<Usuario>{
 		
 		List<Usuario> usuarios = query.getResultList();
 		
-		return !usuarios.isEmpty()?true:false;
+		return !usuarios.isEmpty() ? true : false;
 	}
 	
 	public boolean verificarCpfAtualizado(String cpf, Integer id) {
@@ -144,17 +127,24 @@ public class UsuarioRepositorio extends AbstractConsultaRepositorio<Usuario>{
 		
 		List<Usuario> usuarios = query.getResultList();
 		
-		return !usuarios.isEmpty()?true:false;
+		return !usuarios.isEmpty() ? true : false;
 	}
 	
-	public List<Usuario> verificarEmailAndSenha(String email, String senha){
-		String jpql = "SELECT u FROM Usuario u where u.email = :email and u.senha = :senha";
+	public Usuario verificarEmailSenha(String email, String senha){
+		String senhaTransformada = transformarSenha(senha);
+		String jpql = "SELECT u FROM Usuario u where u.email = :email and u.senha = :senhaTransformada";
 		TypedQuery<Usuario> query = entityManager.createQuery(jpql,Usuario.class);
 		query.setParameter("email", email);
-		query.setParameter("senha", senha);
+		query.setParameter("senhaTransformada", senhaTransformada);
 		
-		List<Usuario> usuarios = query.getResultList();
-		return usuarios;
+		Usuario usuario = verificarNulo(query);
+		return usuario;
+	}
+	
+	public String transformarSenha(String senha) {
+		Base64 base64 = new Base64();
+		String senhaSerializada = base64.encodeAsString(senha.getBytes());
+		return senhaSerializada;
 	}
 	
 }

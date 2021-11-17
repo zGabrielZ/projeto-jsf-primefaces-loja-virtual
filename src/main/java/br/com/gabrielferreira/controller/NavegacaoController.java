@@ -119,7 +119,7 @@ public class NavegacaoController implements Serializable{
 	    ExternalContext externalContext = getExternalContext();
 	    try {
 	    	 externalContext.redirect(externalContext.getRequestContextPath()
-		                + "/login/AtualizarSenha.xhtml");
+		                + "/login/AtualizarLoginSenha.xhtml");
 	    } catch (IOException e) {
 	          e.printStackTrace();
 	    }

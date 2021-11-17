@@ -20,27 +20,6 @@
   	<url-pattern>/*</url-pattern>
   </filter-mapping>
   
-  <filter>
-  	<filter-name>FuncionarioFilter</filter-name>
-  	<filter-class>br.com.gabrielferreira.filter.FuncionarioFilter</filter-class>
-  </filter>
-  <filter-mapping>
-  	<filter-name>FuncionarioFilter</filter-name>
-  	<url-pattern>/usuario/*</url-pattern>
-  </filter-mapping>
-  
-  <filter>
-  	<filter-name>ClienteFilter</filter-name>
-  	<filter-class>br.com.gabrielferreira.filter.ClienteFilter</filter-class>
-  </filter>
-  <filter-mapping>
-  	<filter-name>ClienteFilter</filter-name>
-  	<url-pattern>/usuario/*</url-pattern>
-  	<url-pattern>/categoria/*</url-pattern>
-  	<url-pattern>/produto/*</url-pattern>
-  </filter-mapping>
-  
-  
   <context-param>
     <param-name>primefaces.FONT_AWESOME</param-name>
     <param-value>true</param-value>

@@ -114,13 +114,12 @@ public class UsuarioService implements Serializable {
 		return usuarios;
 	}
 	
-	public Integer quantidadeRegistro(UsuarioSearch usuarioSearch) {
-		return usuarioRepositorio.quantidadeRegistro(usuarioSearch);
+	public Usuario getVerificarEmailSenhaLogin(String email, String senha) {
+		return usuarioRepositorio.verificarEmailSenha(email, senha);
 	}
 	
-	public List<Usuario> verificarEmailAndSenha(String email, String senha){
-		String senhaTransformada = transformarSenha(senha);
-		return usuarioRepositorio.verificarEmailAndSenha(email, senhaTransformada);
+	public Integer quantidadeRegistro(UsuarioSearch usuarioSearch) {
+		return usuarioRepositorio.quantidadeRegistro(usuarioSearch);
 	}
 	
 	public void verificarSaldo(Usuario usuario,List<Saldo> saldos) {

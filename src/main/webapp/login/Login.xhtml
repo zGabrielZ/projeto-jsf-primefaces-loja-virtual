@@ -29,27 +29,34 @@
 			<div align="center">
 				<h:panelGrid columns="2" style="text-align: center">
 					<p:outputLabel for="email" value="E-mail: " />
-					<p:inputText value="#{loginController.usuario.email}" required="true"
-						label="E-mail" id="email" requiredMessage="E-mail é necessário">
+					<p:inputText value="#{loginController.usuario.email}"
+						required="true" label="E-mail" id="email"
+						requiredMessage="E-mail é necessário">
 					</p:inputText>
 
 					<p:outputLabel for="senha" value="Senha: " />
-					<p:password label="Senha" value="#{loginController.usuario.senha}" required="true"
-						id="senha" requiredMessage="Senha é necessário" />
-					
+					<p:password label="Senha" value="#{loginController.usuario.senha}"
+						required="true" id="senha" requiredMessage="Senha é necessário" />
+
 				</h:panelGrid>
 			</div>
 
 			<div align="center" style="padding-top: 10px;">
-				<p:commandButton value="Logar" action="#{loginController.logar}"
-					 ajax="false" process="@form"></p:commandButton>
-					 
-				<p:commandButton style="margin-left:20px;" value="Cadastrar" immediate="true"
-					 ajax="false" action="#{navegacaoController.cadastrarUsuarioLogin}" process="@form"></p:commandButton>
-					 
-				<p:commandButton style="margin-left:20px;" value="Atualizar senha" immediate="true"
-					 ajax="false" action="#{navegacaoController.atualizarSenha}" process="@form"></p:commandButton>
-			
+				<h:panelGrid columns="3">
+					<p:commandButton value="Logar" action="#{loginController.logar}"
+						ajax="false" update="@form" />
+
+					<p:commandButton style="margin-left:20px;" value="Cadastrar"
+						ajax="false" action="#{navegacaoController.cadastrarUsuarioLogin}"
+						update="@form" immediate="true">
+					</p:commandButton>
+
+					<p:commandButton style="margin-left:20px;" value="Atualizar senha"
+						ajax="false" action="#{navegacaoController.atualizarSenha}"
+						update="@form" immediate="true">
+					</p:commandButton>
+				</h:panelGrid>
+
 			</div>
 
 		</h:form>

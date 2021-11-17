@@ -1,10 +1,9 @@
-package br.com.gabrielferreira.repositorio;
+package br.com.gabrielferreira.repositorio.generico;
 
-import java.io.Serializable;
 import java.util.List;
 import javax.persistence.TypedQuery;
 
-public abstract class AbstractConsultaRepositorio<T> implements Serializable{
+public abstract class AbstractConsultaRepositorio<T> extends RepositorioGenerico<T>{
 
 	/**
 	 * 
