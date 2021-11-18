@@ -45,7 +45,6 @@ public class UsuarioService implements Serializable {
 	@Inject
 	private UsuarioValidacaoArquivo usuarioValidacaoArquivo;
 	
-	@Transacional
 	public void inserir(Usuario usuario, List<Saldo> saldos) throws RegraDeNegocioException {
 		verificarEmailUsuario(usuario.getEmail());
 		verificarCpfUsuario(usuario.getCpf());
@@ -66,21 +65,18 @@ public class UsuarioService implements Serializable {
 		return validacaos;
 	}
 	
-	@Transacional
 	public void inserirUsuarioLote(List<Usuario> usuarios) {
 		for(Usuario usuario : usuarios) {
 			usuarioRepositorio.inserir(usuario);
 		}
 	}
 	
-	@Transacional
 	public void atualizarUsuario(Usuario usuario) throws RegraDeNegocioException {
 		verificarEmailUsuarioAtualizado(usuario.getEmail(), usuario.getId());
 		verificarCpfUsuarioAtualizado(usuario.getCpf(),usuario.getId());
 		usuarioRepositorio.atualizar(usuario);
 	}
 	
-	@Transacional
 	public void atualizarSenhaUsuario(Integer idUsuario, String senha) {
 		Usuario entidade = getDetalhe(idUsuario);
 		String senhaCriptografada = transformarSenha(senha);
@@ -88,19 +84,11 @@ public class UsuarioService implements Serializable {
 		usuarioRepositorio.atualizar(entidade);
 	}
 	
-	private String transformarSenha(String senha) {
-		Base64 base64 = new Base64();
-		String senhaSerializada = base64.encodeAsString(senha.getBytes());
-		return senhaSerializada;
-	}
-	
-	@Transacional
 	public void removerUsuario(Usuario usuario) throws RegraDeNegocioException {
 		verificarUsuarioLogado(usuario);
 		usuarioRepositorio.remover(usuario);
 	}
 	
-	@Transacional
 	public void atualizarUsuarioSaldo(Usuario usuario) {
 		usuarioRepositorio.atualizar(usuario);
 	}
@@ -212,7 +200,7 @@ public class UsuarioService implements Serializable {
 	
 	public String verificarSenha(String senha, Perfil perfil) {
 		if(StringUtils.isNotBlank(senha) && perfil != null) {
-			String senhaTransformada = transformarSenha(senha);
+			String senhaTransformada = usuarioRepositorio.transformarSenha(senha);
 			senha = senhaTransformada;
 		}
 		return senha;

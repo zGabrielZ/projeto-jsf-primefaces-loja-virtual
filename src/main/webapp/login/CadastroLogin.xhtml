@@ -5,12 +5,13 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui">
 
 <ui:composition template="/layout/login/TelaLogin.xhtml">
 
 	<ui:define name="titulo">
-		<h1>Cadastro do cliente</h1>
+		<h1>Cadastro do usuário</h1>
 
 		<div id="panelTitulo" style="margin-bottom: 10px; margin-top: 10px;">
 			<p:outputLabel value="Por favor, infome seu contato abaixo." />
@@ -20,8 +21,6 @@
 
 	<ui:define name="conteudo">
 		<div id="cadastroUsuario">
-
-			<p>Formato da data de nascimento : DD/MM/YYYY</p>
 
 			<h:form id="cadastroUsuarioForm" >
 				<p:messages id="msg" autoUpdate="true" />
@@ -54,19 +53,34 @@
 							<p:outputLabel for="data" value="Data de nascimento: " />
 							<p:inputMask value="#{usuarioController.usuario.dataNascimento}"
 								mask="99/99/9999" size="6" label="Data de nascimento" id="data"
-								required="true"
-								requiredMessage="Data de nascimento é obrigatório"
-								converter="dataNascimentoConverter"
-								validator="#{verificarLocalDate.validate}">
+								required="true" requiredMessage="Data de nascimento é obrigatório"
+								validator="#{verificarLocalDate.validate}"
+								converter="dataNascimentoConverter" >
 							</p:inputMask>
 							
 						</h:panelGrid>
 
 						<div align="center" style="padding-top: 10px;">
-							<p:commandButton id="btnCadastrar"
-								value="Cadastrar cliente"
-								action="#{usuarioController.inserirUsuarioCliente}"
-								ajax="false" process="@this" update="@form"></p:commandButton>
+							<h:panelGrid columns="3" >
+								
+								<p:commandButton id="btnCadastrar" value="Cadastrar usuário"
+									action="#{usuarioController.inserirUsuarioCliente}"
+									ajax="false" process="@this" update="@form"></p:commandButton>
+
+								<p:commandButton style="margin-left:20px;"
+									value="Login" ajax="false"
+									action="#{navegacaoController.login}" update="@form"
+									immediate="true">
+								</p:commandButton>
+								
+								<p:commandButton style="margin-left:20px;"
+									value="Limpar" ajax="false"
+									action="#{usuarioController.novo}" update="@form"
+									>
+									<o:skipValidators />
+								</p:commandButton>
+
+							</h:panelGrid>
 						</div>
 
 					</h:panelGroup>

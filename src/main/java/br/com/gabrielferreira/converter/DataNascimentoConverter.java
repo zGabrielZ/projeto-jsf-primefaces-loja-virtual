@@ -25,7 +25,7 @@ public class DataNascimentoConverter implements Converter{
 			try {
 				data = LocalDate.parse(value, dtf);
 			} catch (Exception e) {
-				FacesMessages.adicionarMensagem("cadastroClienteForm:dataNascimento", FacesMessage.SEVERITY_ERROR,"Data incorreta (Formato : DD/MM/YYYY) !", null);
+				FacesMessages.adicionarMensagem(null, FacesMessage.SEVERITY_ERROR,"Data incorreta !", null);
 			}
 		}
 		

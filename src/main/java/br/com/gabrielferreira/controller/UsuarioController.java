@@ -213,6 +213,10 @@ public class UsuarioController implements Serializable{
 		}
 	}
 	
+	public void novo() {
+		usuario = new Usuario();
+	}
+	
 	public void limparFormularioUsuario() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		UIViewRoot uiViewRoot = facesContext.getViewRoot();
