@@ -81,6 +81,9 @@ public class Usuario implements Serializable{
 	@Transient
 	private boolean codigoErro;
 	
+	@Transient
+	private Integer codigoSenhaGerado;
+	
 	public BigDecimal getSaldoTotal() {
 		BigDecimal valor = new BigDecimal("0.0");
 		for(Saldo saldo : saldos) {

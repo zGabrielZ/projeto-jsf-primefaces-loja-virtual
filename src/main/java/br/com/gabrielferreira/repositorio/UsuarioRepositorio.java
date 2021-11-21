@@ -141,6 +141,15 @@ public class UsuarioRepositorio extends AbstractConsultaRepositorio<Usuario>{
 		return usuario;
 	}
 	
+	public Usuario getUsuarioEmail(String email){
+		String jpql = "SELECT u FROM Usuario u where u.email = :email";
+		TypedQuery<Usuario> query = entityManager.createQuery(jpql,Usuario.class);
+		query.setParameter("email", email);
+		
+		Usuario usuario = verificarNulo(query);
+		return usuario;
+	}
+	
 	public String transformarSenha(String senha) {
 		Base64 base64 = new Base64();
 		String senhaSerializada = base64.encodeAsString(senha.getBytes());

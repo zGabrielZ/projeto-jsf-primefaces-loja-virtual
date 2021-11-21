@@ -77,11 +77,10 @@ public class UsuarioService implements Serializable {
 		usuarioRepositorio.atualizar(usuario);
 	}
 	
-	public void atualizarSenhaUsuario(Integer idUsuario, String senha) {
-		Usuario entidade = getDetalhe(idUsuario);
-		String senhaCriptografada = transformarSenha(senha);
-		entidade.setSenha(senhaCriptografada);
-		usuarioRepositorio.atualizar(entidade);
+	public Usuario atualizarSenhaUsuario(Usuario usuario) {
+		String senhaCriptografada = usuarioRepositorio.transformarSenha(usuario.getSenha());
+		usuario.setSenha(senhaCriptografada);
+		return usuarioRepositorio.atualizar(usuario);
 	}
 	
 	public void removerUsuario(Usuario usuario) throws RegraDeNegocioException {
@@ -94,7 +93,11 @@ public class UsuarioService implements Serializable {
 	}
 	
 	public Usuario getDetalhe(Integer id) {
-		return usuarioRepositorio.procurarPorId(id);
+		return usuarioRepositorio.pesquisarPorId(id, Usuario.class);
+	}
+	
+	public Usuario getEmailUsuario(String email) {
+		return usuarioRepositorio.getUsuarioEmail(email);
 	}
 	
 	public List<Usuario> getFiltrar(UsuarioSearch usuarioSearch, int primeiroPosicao, int quantidadeMaxima){
@@ -228,6 +231,12 @@ public class UsuarioService implements Serializable {
 	public void verificarCpfUsuarioAtualizado(String cpf, Integer id) throws RegraDeNegocioException {
 		if(usuarioRepositorio.verificarCpfAtualizado(cpf, id)) {
 			throw new RegraDeNegocioException("Não é possível atualizar este CPF, pois já está cadastrado.");
+		}
+	}
+	
+	public void verificarEmailTrocarSenha(Usuario usuario) throws RegraDeNegocioException {
+		if(!usuarioRepositorio.verificarEmail(usuario.getEmail())) {
+			throw new RegraDeNegocioException("Não existe este e-mail cadastrado no nosso sistema !");
 		}
 	}
 	

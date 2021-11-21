@@ -3,13 +3,16 @@ package br.com.gabrielferreira.controller;
 import java.io.Serializable;
 import java.util.Random;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import br.com.gabrielferreira.email.UsuarioEmail;
 import br.com.gabrielferreira.entidade.Usuario;
-import br.com.gabrielferreira.service.EmailService;
+import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.service.UsuarioService;
 import br.com.gabrielferreira.utils.FacesMessages;
 import lombok.Getter;
@@ -17,85 +20,79 @@ import lombok.Setter;
 
 @Named
 @ViewScoped
+@Getter
+@Setter
 public class EmailController implements Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	private static final String ASSUNTO = "Atualização da senha";
 
 	@Inject
 	private UsuarioService usuarioService;
 	
 	@Inject
-	private EmailService emailService;
+	private UsuarioEmail usuarioEmail;
 	
 	@Inject
 	private NavegacaoController navegacaoController;
 	
-	@Getter
-	@Setter
-	private String codigoEmail;
-	
-	@Getter
-	@Setter
-	private Integer codigoGerado;
-	
-	@Getter
-	@Setter
-	private String emailConsulta;
-	
-	@Getter
-	@Setter
-	private boolean passouEmailCorreto;
-	
-	@Getter
-	@Setter
 	private Usuario usuario;
 	
-	@Getter
-	@Setter
-	private String mensagem;
+	private boolean codigoEnviado;
 	
+	private Integer codigo;
+	
+	private String senha;
+	
+	@PostConstruct
 	public void inicializar() {
+		codigoEnviado = false;
 		usuario = new Usuario();
-		passouEmailCorreto = false;
 	}
 	
-	public void enviarEmail() {
-		emailService.enviarCodigo(usuario.getEmail(),ASSUNTO,codigoGerado);
-	}
-	
-	public void consultarEmail() {
-		if(usuarioService.verificarEmailLogin(emailConsulta)) {
-			passouEmailCorreto = true;
-			usuario = usuarioService.procurarEmail(emailConsulta);
-			codigoGerado = getGerarNumeroAleatorio();
-			enviarEmail();
-			System.out.println("Código gerado via email, " + codigoGerado);
-			mensagem = "E-mail encontrado e o código gerado foi para o seu e-mail !";
-		} else {
-			mensagem = "E-mail não encontrado.";
+	public void enviarCodigo() {
+		try {
+			usuarioService.verificarEmailTrocarSenha(usuario);
+			codigoEnviado = true;
+			
+			String email = usuario.getEmail();
+			Integer codigoGerado = gerarCodigoAleatorio();
+			
+			usuario.setCodigoSenhaGerado(codigoGerado);
+			usuarioEmail.assuntoEmail(email, codigoGerado);
+			
+			FacesMessages.adicionarMensagem("updateUsuarioForm:msg", FacesMessage.SEVERITY_INFO, "Código enviado com sucesso !",
+					null);
+		} catch (RegraDeNegocioException e) {
+			FacesMessages.adicionarMensagem("updateUsuarioForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
+					null);
 		}
 	}
 	
-	public void inserirSenhaUsuario() {
-		if(!codigoEmail.equals(codigoGerado.toString())) {
-			mensagem = "Código incorreto !!";
-		} else {
-			usuarioService.atualizarSenhaUsuario(usuario.getId(), usuario.getSenha());
-			FacesMessages.adicionarMensagem("loginForm:msg", FacesMessage.SEVERITY_INFO, "Senha atualizada com sucesso !",
+	private Integer gerarCodigoAleatorio() {
+		Random random = new Random();
+		Integer valor = random.nextInt(50) + 1; // 1 até 50
+		return valor;
+	}
+	
+	public void atualizarSenha() {
+		if(codigo.equals(usuario.getCodigoSenhaGerado())) {
+			Usuario usuarioEncontrado = usuarioService.getEmailUsuario(usuario.getEmail());
+			usuarioEncontrado.setSenha(senha);
+			
+			usuarioService.atualizarSenhaUsuario(usuarioEncontrado);
+			
+			FacesMessages.adicionarMensagem("loginUsuarioForm:msg", FacesMessage.SEVERITY_INFO, "Senha atualizada sucesso !",
 					null);
 			FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 			navegacaoController.login();
+		} else {
+			FacesMessages.adicionarMensagem("updateUsuarioForm:msg", FacesMessage.SEVERITY_ERROR, "Código incorreto !",
+					null);
 		}
 	}
 	
-	public Integer getGerarNumeroAleatorio() {
-		Random numeroAleatorio = new Random();
-		int valor = numeroAleatorio.nextInt(100) + 1;
-		return valor;
-	}
+	
 }
