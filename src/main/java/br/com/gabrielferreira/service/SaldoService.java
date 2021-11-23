@@ -9,7 +9,6 @@ import br.com.gabrielferreira.entidade.Saldo;
 import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.repositorio.SaldoRepositorio;
 import br.com.gabrielferreira.repositorio.UsuarioRepositorio;
-import br.com.gabrielferreira.utils.Transacional;
 
 public class SaldoService implements Serializable {
 
@@ -24,17 +23,14 @@ public class SaldoService implements Serializable {
 	@Inject
 	private SaldoRepositorio saldoRepositorio;
 	
-	@Transacional
 	public void inserir(Saldo saldo) {
 		saldoRepositorio.inserir(saldo);
 	}
 	
-	@Transacional
-	public void atualizar(Saldo saldo) {
-		saldoRepositorio.atualizar(saldo);
+	public Saldo atualizar(Saldo saldo) {
+		return saldoRepositorio.atualizar(saldo);
 	}
 	
-	@Transacional
 	public void inserirSaldoAndUsuario(Saldo saldo, Usuario usuario) {
 		saldo.setUsuario(usuario);
 		saldoRepositorio.inserir(saldo);
@@ -44,9 +40,8 @@ public class SaldoService implements Serializable {
 		
 	}
 	
-	@Transacional
 	public void removerSaldo(Saldo saldo) {
-		saldoRepositorio.remover(saldo);
+		saldoRepositorio.deletarPorId(Saldo.class, saldo.getId());
 	}
 	
 	public List<Saldo> getSaldosByUsuario(Integer id, int primeiroResultado, int quantidadeMaxima){
@@ -58,7 +53,7 @@ public class SaldoService implements Serializable {
 	}
 	
 	public Saldo getDetalhe(Integer id) {
-		return saldoRepositorio.procurarPorId(id);
+		return saldoRepositorio.pesquisarPorId(id, Saldo.class);
 	}
 
 

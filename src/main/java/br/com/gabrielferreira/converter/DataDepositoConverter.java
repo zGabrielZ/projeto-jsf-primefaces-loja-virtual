@@ -25,7 +25,7 @@ public class DataDepositoConverter implements Converter{
 			try {
 				data = LocalDateTime.parse(value, dtf);
 			} catch (Exception e) {
-				FacesMessages.adicionarMensagem("frmCadastroSaldo:dataDeposito", FacesMessage.SEVERITY_ERROR,"Data incorreta !", null);
+				FacesMessages.adicionarMensagem(null, FacesMessage.SEVERITY_ERROR,"Data incorreta !", null);
 			}
 		}
 		

@@ -81,6 +81,7 @@ public class UsuarioController implements Serializable{
 	public void verificarParametro() {
 		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		String idDetalheUsuario = params.get("codigoDetalheUsuario");
+		
 		if(idDetalheUsuario != null) {
 			usuarioDetalhe = usuarioService.getDetalhe(Integer.parseInt(idDetalheUsuario));
 		}
@@ -175,16 +176,6 @@ public class UsuarioController implements Serializable{
 	public void limparPesquisa() {
 		usuarioSearch = new UsuarioSearch();
 		consultarUsuario();
-	}
-	
-	public String selecionarUsuarioSaldo(Usuario usuario) {
-		this.usuario = usuario;
-		return "/saldo/cadastro/CadastroSaldo?faces-redirect=true&codigo="+this.usuario.getId();
-	}
-	
-	public String selecionarUsuarioConsultaSaldo(Usuario usuario) {
-		this.usuario = usuario;
-		return "/saldo/consulta/ConsultaSaldo?faces-redirect=true&codigo="+this.usuario.getId();
 	}
 	
 	public String selecionarUsuarioAtualizar(Usuario usuario) {

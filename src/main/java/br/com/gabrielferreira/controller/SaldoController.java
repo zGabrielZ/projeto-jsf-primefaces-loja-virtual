@@ -16,12 +16,14 @@ import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.service.SaldoService;
 import br.com.gabrielferreira.service.UsuarioService;
 import br.com.gabrielferreira.utils.FacesMessages;
-import br.com.gabrielferreira.utils.SessionUtil;
+import br.com.gabrielferreira.utils.LoginJSF;
 import lombok.Getter;
 import lombok.Setter;
 
 @Named
 @ViewScoped
+@Getter
+@Setter
 public class SaldoController implements Serializable{
 
 	/**
@@ -38,51 +40,58 @@ public class SaldoController implements Serializable{
 	@Inject
 	private NavegacaoController navegacaoController;
 	
-	@Getter
-	@Setter
-	private String tituloCadastroSaldo;
-	
-	@Getter
-	@Setter
-	private Saldo saldo;
-	
 	@Inject
-	@Getter
 	private LazyDataTableModelSaldo<Saldo> saldos;
 	
-	@Getter
-	@Setter
+	private Saldo saldo;
+	
 	private Usuario usuario;
 	
-	@Getter
-	@Setter
 	private Saldo saldoSelecionado;
 	
 	@PostConstruct
 	public void inicializar() {
-		tituloCadastroSaldo = "Cadastro Saldo";
+		saldo = new Saldo();
+		verificarParametro();
+	}
+	
+	private void verificarParametro() {
 		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-		String id = params.get("codigo");
-		if(id != null) {
-			usuario = usuarioService.getDetalhe(Integer.parseInt(id));
-			saldos.setIdUsuario(Integer.parseInt(id));
+		String idUsuarioCadastroSaldo = params.get("codigoUsuarioAdicionarSaldo");
+		String idUsuarioConsultaSaldo = params.get("codigoUsuarioConsultarSaldo");
+		String idCodigoSaldoAtualizar = params.get("codigoSaldoAtualizar");
+		
+		if(idUsuarioConsultaSaldo != null) {
+			usuario = usuarioService.getDetalhe(Integer.parseInt(idUsuarioConsultaSaldo));
+			saldos.setIdUsuario(Integer.parseInt(idUsuarioConsultaSaldo));
 			saldos.load(0, 5, null, null, null);
 		}
-		saldo = new Saldo();
+		
+		if(idUsuarioCadastroSaldo != null) {
+			usuario = usuarioService.getDetalhe(Integer.parseInt(idUsuarioCadastroSaldo));
+		}
+		
+		if(idCodigoSaldoAtualizar != null) {
+			saldo = saldoService.getDetalhe(Integer.parseInt(idCodigoSaldoAtualizar));
+		}
 	}
 	
 	public void inserirSaldo() {
 		
 		if(saldo.getId() == null) {
-			inserirSaldo(usuario, saldo);
-			saldo = new Saldo();
+			inserirSaldoUsuario();
+			novo();
 		} else {
 			atualizarSaldo(saldo);
 		}
 		
 	}
 	
-	private void inserirSaldo(Usuario usuario, Saldo saldo) {
+	public void novo() {
+		saldo = new Saldo();
+	}
+	
+	private void inserirSaldoUsuario() {
 		saldoService.inserirSaldoAndUsuario(saldo, usuario);
 		String mensagem = "Cadastrado com sucesso";
 		checarUsuarioLogado(mensagem);
@@ -107,7 +116,7 @@ public class SaldoController implements Serializable{
 	}
 	
 	private void checarUsuarioLogado(String mensagem) {
-		Usuario usuarioLogado = (Usuario) SessionUtil.getParam("usuario");
+		Usuario usuarioLogado = LoginJSF.getRecuperarUsuarioLogada();
 		if(usuarioLogado.getPerfil().getId().equals(2) || usuarioLogado.getPerfil().getId().equals(3)) {
 			FacesMessages.adicionarMensagem("frmHome:msg", FacesMessage.SEVERITY_INFO,mensagem + ", " + usuarioLogado.getNome(),
 					null);
@@ -119,21 +128,6 @@ public class SaldoController implements Serializable{
 			FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
 			navegacaoController.consultaUsuario();
 		}
-	}
-	
-	public void carregarDados() {
-		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-		String idUsuario = params.get("codigoUsuario");
-		String idSaldo = params.get("codigoSaldo");
-		if(idSaldo != null && idUsuario != null) {
-			saldo = saldoService.getDetalhe(Integer.parseInt(idSaldo));
-			tituloCadastroSaldo = "Atualizar Saldo";
-		}
-	}
-	
-	public String selecionarSaldoAtualizar(Saldo saldo) {
-		this.saldo = saldo;
-		return "/saldo/cadastro/CadastroSaldo?faces-redirect=true&codigoUsuario="+usuario.getId()+"&codigoSaldo="+this.saldo.getId();
 	}
 
 }

@@ -85,10 +85,15 @@
 					<f:facet name="header">Add Saldo</f:facet>
 					
 					<p:commandButton title="Adicionar Saldo" icon="fa fa-credit-card"
-						process="@this" action="#{usuarioController.selecionarUsuarioSaldo(usuario)}" >
+						process="@this" update="@form" action="/saldo/cadastro/CadastroSaldo" >
+						<f:param name="codigoUsuarioAdicionarSaldo" value="#{usuario.id}" />	
 					</p:commandButton>
 					
-					<p:commandButton style="margin-left:10px;" title="Consultar Saldos" action="#{usuarioController.selecionarUsuarioConsultaSaldo(usuario)}" icon="fa fa-search-plus" ></p:commandButton>
+					<p:commandButton style="margin-left:10px;" title="Consultar Saldos"  
+						icon="fa fa-search-plus" process="@this" update="@form" 
+						action="/saldo/consulta/ConsultaSaldo">
+						<f:param name="codigoUsuarioConsultarSaldo" value="#{usuario.id}" />	
+					</p:commandButton>
 				</p:column>
 				
 				<p:column style="width:55px;">

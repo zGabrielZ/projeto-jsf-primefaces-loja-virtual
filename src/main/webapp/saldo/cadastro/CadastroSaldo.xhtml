@@ -5,69 +5,64 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:o="http://omnifaces.org/ui">
-	
-	<f:metadata>
-		<f:viewParam id="codigo" name="codigoSaldo" value="#{saldoController.saldo.id}"/>
-		<f:event listener="#{saldoController.carregarDados}" type="preRenderView"></f:event>
-	</f:metadata>
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
 
-	<ui:composition template="/layout/cadastro/Cadastrar.xhtml" >
-	
+<ui:composition template="/layout/cadastro/Cadastrar.xhtml">
+
 	<ui:define name="titulo">
-			<h1>#{saldoController.tituloCadastroSaldo}</h1>
-		
-			<div id="btnVoltar" style="margin-bottom:10px; margin-top: 10px;" >
-				<input type="button" value="Voltar" id="voltar" onclick="return window.history.back()" />
-			</div>
-		
-		</ui:define>
+		<h1>Cadastro de Saldo</h1>
+
+		<div id="btnVoltar" style="margin-bottom: 10px; margin-top: 10px;">
+			<h:form>
+				<p:commandButton value="Consulta de usuários" ajax="false"
+					action="#{navegacaoController.consultaUsuario}" />
+			</h:form>
+		</div>
+
+	</ui:define>
 
 	<ui:define name="conteudo">
 
 		<div id="cadastroSaldo">
 
-			<p>Formato da data do depósito : DD/MM/YYYY HH:MM:SS</p>
-
-			<o:form id="cadastroSaldoForm" includeRequestParams="true"
-			 acceptcharset="UTF-8">
+			<h:form id="cadastroSaldoForm">
 
 				<p:messages id="msg" autoUpdate="true" />
 
 				<div align="center">
-				
+
 					<p:inputText id="codigo" value="#{saldoController.saldo.id}"
-								label="Código" type="hidden"></p:inputText>
-				
-					<h:panelGrid id="pnlCadastroSaldo" columns="3"
+						label="Código" type="hidden"></p:inputText>
+
+					<h:panelGrid id="pnlCadastroSaldo" columns="2"
 						style="margin-top:30px;text-align: center;">
+						
 						<p:outputLabel for="deposito" value="Depósito: " />
 						<p:inputNumber value="#{saldoController.saldo.deposito}"
 							label="Depósito" id="deposito" size="20" required="true"
-							requiredMessage="É necessário inserir o depósito" maxlength="150" >
+							requiredMessage="É necessário inserir o depósito" maxlength="150">
 							<f:validateDoubleRange minimum="0" />
 						</p:inputNumber>
-						<p:message for="deposito" />
 
 						<p:outputLabel for="dataDeposito" value="Data do depósito: " />
 						<p:inputMask value="#{saldoController.saldo.dataDeposito}"
 							label="Data do depósito" id="dataDeposito" required="true"
 							requiredMessage="É necessário inserir a data do depósito"
-							converter="dataDepositoConverter" mask="99/99/9999 99:99:99" 
+							converter="dataDepositoConverter" mask="99/99/9999 99:99:99"
 							validator="#{verificarLocalDateTime.validate}">
 						</p:inputMask>
-						<p:message for="dataDeposito" />
-					</h:panelGrid>
-					
-					<div style="padding-top: 10px;">
-						<p:commandButton value="#{saldoController.tituloCadastroSaldo}" action="#{saldoController.inserirSaldo}"
-							ajax="false" process="@this" update="@form">
+
+						<p:commandButton value="Novo" action="#{saldoController.novo}" update="@form" 
+							process="@this" ajax="false" style="width:100%;" >
+							<o:skipValidators />
 						</p:commandButton>
-					</div>
-					
+						<p:commandButton value="Cadastrar"
+							action="#{saldoController.inserirSaldo}" ajax="false"
+							process="@this" update="@form" style="width:100%;">
+						</p:commandButton>
+					</h:panelGrid>
 				</div>
-			</o:form>
+			</h:form>
 		</div>
 
 	</ui:define>

@@ -5,16 +5,25 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:o="http://omnifaces.org/ui">
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
 
-	<ui:composition template="/layout/consulta/Consulta.xhtml" >
+<ui:composition template="/layout/consulta/Consulta.xhtml">
 
 	<ui:define name="titulo">
 		<h1>Consulta de saldos cadastrados</h1>
-		<div align="center" >
+		
+		<div id="btnVoltar" style="margin-bottom: 10px; margin-top: 10px;">
+			<h:form>
+				<p:commandButton value="Consulta de usuários" ajax="false"
+					action="#{navegacaoController.consultaUsuario}" />
+			</h:form>
+		</div>
+		
+		<div align="center">
 			<h:panelGrid columns="2">
-				<p><strong>Saldo total :</strong></p>
+				<p>
+					<strong>Saldo total :</strong>
+				</p>
 				<h:outputText value="#{saldoController.usuario.saldoTotal}">
 					<f:convertNumber currencySymbol="R$" type="currency" />
 				</h:outputText>
@@ -23,13 +32,14 @@
 	</ui:define>
 
 
-	<ui:define name="conteudo" >
-			<o:form id="consultaSaldosForm" includeRequestParams="true" >
-			<p:messages id="msg" autoUpdate="true"  />
-			<p:dataTable id="dataTableSaldos" value="#{saldoController.saldos}" 
-				var="saldo" style="padding-top:20px;" rows="5" paginator="true" paginatorPosition="bottom"
-				emptyMessage="Sua consulta não retornou registros." rowsPerPageTemplate="5, 10, 25, 50, 100"
-				paginatorAlwaysVisible="false" lazy="true" >
+	<ui:define name="conteudo">
+		<h:form id="consultaSaldosForm">
+			<p:messages id="msg" autoUpdate="true" />
+			<p:dataTable id="dataTableSaldos" value="#{saldoController.saldos}"
+				var="saldo" style="padding-top:20px;" rows="5" paginator="true"
+				paginatorPosition="bottom" emptyMessage="Sua consulta não retornou registros."
+				rowsPerPageTemplate="5, 10, 25, 50, 100"
+				paginatorAlwaysVisible="false" lazy="true">
 
 				<p:column style="width:50px;">
 					<f:facet name="header">Depósito</f:facet>
@@ -44,50 +54,42 @@
 						converter="dataDepositoConverter">
 					</h:outputText>
 				</p:column>
-				
+
 				<p:column style="width:75px;">
 					<f:facet name="header">Atualizar</f:facet>
 					<p:commandButton title="Atualizar Saldo" icon="fa fa-edit"
-						process="@this" action="#{saldoController.selecionarSaldoAtualizar(saldo)}" >
+						process="@this" update="@form" action="/saldo/cadastro/CadastroSaldo">
+						<f:param name="codigoSaldoAtualizar" value="#{saldo.id}" />
 					</p:commandButton>
 				</p:column>
-				
-				<p:column style="width:50px;" >
-					<f:facet name="header">Deletar</f:facet>										
+
+				<p:column style="width:50px;">
+					<f:facet name="header">Deletar</f:facet>
 					<p:commandButton onclick="PF('meuDialogo').show();"
-						icon="fa fa-trash" title="Excluir este saldo" >
+						icon="fa fa-trash" title="Excluir este saldo">
 						<f:setPropertyActionListener value="#{saldo}"
 							target="#{saldoController.saldoSelecionado}"></f:setPropertyActionListener>
-					</p:commandButton> 
+					</p:commandButton>
 				</p:column>
 
 			</p:dataTable>
-			
+
 			<p:confirmDialog header="Exclusão de saldos"
 				message="Tem certeza que deseja excluir este saldo ?"
 				widgetVar="meuDialogo" resizable="false" modal="true"
 				minimizable="true" maximizable="true">
 
 				<p:commandButton value="Sim"
-					action="#{saldoController.excluirSaldo}"
-					update="dataTableSaldos" ajax="false" process="@form"
-					onclick="meuDialogo.hide()" />
-				<p:commandButton value="Nao" update="dataTableSaldos"
+					action="#{saldoController.excluirSaldo}" update="dataTableSaldos"
 					ajax="false" process="@form" onclick="meuDialogo.hide()" />
+				<p:commandButton value="Nao" update="dataTableSaldos" ajax="false"
+					process="@form" onclick="meuDialogo.hide()" />
 
 			</p:confirmDialog>
 
-		</o:form>
-		
-		</ui:define> 
-		
-		<ui:define name="conteudo-2">
-			<h:form id="btnCadastro" >
-				<div id="btnCadastroUsuario" style="margin-top: 30px;" >
-					<input type="button" value="Voltar" id="voltar" onclick="return window.history.back()" />
-				</div>
-			</h:form>
-		</ui:define>
-		
-	</ui:composition>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
 </html>
