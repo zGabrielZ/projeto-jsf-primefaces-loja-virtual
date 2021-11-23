@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 
-import br.com.gabrielferreira.entidade.Perfil;
 import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.service.UsuarioService;
 import br.com.gabrielferreira.utils.FacesMessages;
@@ -33,13 +32,9 @@ public class LoginController implements Serializable{
 	
 	private Usuario usuario;
 	
-	private Perfil perfil;
-	
 	@PostConstruct
 	private void inicializar() {
 		usuario = new Usuario();
-		perfil = new Perfil();
-		usuario.setPerfil(perfil);
 	}
 	
 	public String logar() {

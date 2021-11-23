@@ -62,7 +62,7 @@
 					<h:outputText value="#{usuario.cpf}" />
 				</p:column>
 
-				<p:column style="width:200px;" >
+				<p:column style="width:220px;" >
 					<f:facet name="header">E-mail</f:facet>
 					<h:outputText value="#{usuario.email}" />
 				</p:column>
@@ -72,36 +72,41 @@
 					<h:outputText value="#{usuario.perfil.descricao}" />
 				</p:column>
 				
-				<p:column style="width:80px;">
+				<p:column style="width:50px;">
 					<f:facet name="header">Detalhe</f:facet>
+					
 					<p:commandButton title="Detalhe do usuário" icon="fa fa-search-plus"
-					action="#{usuarioController.selecionarUsuarioDetalhe(usuario)}" ></p:commandButton>
+						action="DetalheUsuario" process="@this" update="@form ">
+						<f:param name="codigoDetalheUsuario" value="#{usuario.id}" />		
+					</p:commandButton>
 				</p:column>
 				
-				<p:column style="width:100px;">
+				<p:column style="width:90px;">
 					<f:facet name="header">Add Saldo</f:facet>
+					
 					<p:commandButton title="Adicionar Saldo" icon="fa fa-credit-card"
 						process="@this" action="#{usuarioController.selecionarUsuarioSaldo(usuario)}" >
 					</p:commandButton>
-					<p:commandButton title="Consultar Saldos" action="#{usuarioController.selecionarUsuarioConsultaSaldo(usuario)}" icon="fa fa-search-plus" ></p:commandButton>
+					
+					<p:commandButton style="margin-left:10px;" title="Consultar Saldos" action="#{usuarioController.selecionarUsuarioConsultaSaldo(usuario)}" icon="fa fa-search-plus" ></p:commandButton>
 				</p:column>
 				
-				<p:column style="width:75px;">
+				<p:column style="width:55px;">
 					<f:facet name="header">Atualizar</f:facet>
 					<p:commandButton title="Atualizar Usuário" icon="fa fa-edit"
 						process="@this" action="#{usuarioController.selecionarUsuarioAtualizar(usuario)}" >
 					</p:commandButton>
 				</p:column>
 				
-				<p:column style="width:90px;" >
+				<p:column style="width:100px;" >
 					<f:facet name="header">Saldo</f:facet>
 					<h:outputText value="#{usuario.saldoTotal}"  >
 						<f:convertNumber currencySymbol="R$" type="currency"  />
 					</h:outputText>
 				</p:column>
 				
-				<p:column style="width:60px;" >
-					<f:facet name="header">Deletar</f:facet>										
+				<p:column style="width:50px;" >
+					<f:facet name="header">Excluir</f:facet>										
 					<p:commandButton onclick="PF('meuDialogo').show();"
 						icon="fa fa-trash" title="Excluir este usuário" >
 						<f:setPropertyActionListener value="#{usuario}"

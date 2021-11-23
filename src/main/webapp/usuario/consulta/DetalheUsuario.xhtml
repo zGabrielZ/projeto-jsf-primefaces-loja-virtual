@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/layout/cadastro/Cadastrar.xhtml">
+
+	<ui:define name="titulo">
+		<h1>Detalhe do usuário : #{usuarioController.usuarioDetalhe.nome}</h1>
+
+		<div id="btnVoltar" style="margin-bottom: 10px; margin-top: 10px;">
+			<h:form>
+				<p:commandButton value="Consulta de usuários" ajax="false"
+					action="#{navegacaoController.consultaUsuario}" />
+			</h:form>
+		</div>
+
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h:form id="detalheUsuarioForm">
+
+			<div align="center">
+				<h:panelGrid columns="2" style="text-align: center">
+					<p:outputLabel for="cpf" value="CPF: " />
+					<h:outputText label="CPF"
+						value="#{usuarioController.usuarioDetalhe.cpf}" id="cpf" />
+
+					<p:outputLabel for="email" value="E-mail: " />
+					<h:outputText value="#{usuarioController.usuarioDetalhe.email}"
+						label="E-mail" id="email">
+					</h:outputText>
+
+					<p:outputLabel for="perfil" value="Perfil: " />
+					<h:outputText
+						value="#{usuarioController.usuarioDetalhe.perfil.descricao}"
+						label="Perfil" id="perfil">
+					</h:outputText>
+
+					<p:outputLabel for="data" value="Data de nascimento: " />
+					<h:outputText label="Data de nascimento" id="data"
+						value="#{usuarioController.usuarioDetalhe.dataNascimento}"
+						converter="dataNascimentoConverter" />
+
+					<p:outputLabel for="cep" value="CEP :" />
+					<h:outputText label="CEP"
+						value="#{usuarioController.usuarioDetalhe.endereco.cep}" id="cep" />
+
+					<p:outputLabel for="logradouro" value="Logradouro :" />
+					<h:outputText label="Logradouro"
+						value="#{usuarioController.usuarioDetalhe.endereco.logradouro}"
+						id="logradouro" />
+
+					<p:outputLabel for="complemento" value="Complemento :" />
+					<h:outputText label="Complemento"
+						value="#{usuarioController.usuarioDetalhe.endereco.complemento}"
+						id="complemento" />
+
+					<p:outputLabel for="bairro" value="Bairro :" />
+					<h:outputText label="Bairro"
+						value="#{usuarioController.usuarioDetalhe.endereco.bairro}"
+						id="bairro" />
+
+					<p:outputLabel for="localidade" value="Localidade :" />
+					<h:outputText label="Localidade"
+						value="#{usuarioController.usuarioDetalhe.endereco.localidade}"
+						id="localidade" />
+
+					<p:outputLabel for="uf" value="UF :" />
+					<h:outputText label="UF"
+						value="#{usuarioController.usuarioDetalhe.endereco.uf}" id="uf" />
+
+					<p:outputLabel for="ibge" value="IBGE :" />
+					<h:outputText label="IBGE"
+						value="#{usuarioController.usuarioDetalhe.endereco.ibge}"
+						id="ibge" />
+
+					<p:outputLabel for="ddd" value="DDD :" />
+					<h:outputText label="DDD"
+						value="#{usuarioController.usuarioDetalhe.endereco.ddd}" id="ddd" />
+
+					<p:outputLabel for="numero" value="Número :" />
+					<h:outputText label="Número"
+						value="#{usuarioController.usuarioDetalhe.endereco.numero}"
+						id="numero" />
+				</h:panelGrid>
+			</div>
+
+			<div align="center">
+				<p:dataTable id="dataTableSaldos"
+					value="#{usuarioController.usuarioDetalhe.saldos}" var="saldo"
+					style="padding-top:20px;" rows="5" paginator="true"
+					paginatorPosition="bottom"
+					emptyMessage="Sua consulta não retornou registros."
+					rowsPerPageTemplate="5, 10, 25, 50, 100"
+					paginatorAlwaysVisible="false">
+
+					<f:facet name="header">
+            			Saldos
+        			</f:facet>
+
+					<p:column style="width:50px;">
+						<f:facet name="header">Depósito</f:facet>
+						<h:outputText value="#{saldo.deposito}">
+							<f:convertNumber currencySymbol="R$" type="currency" />
+						</h:outputText>
+					</p:column>
+
+					<p:column style="width:100px;">
+						<f:facet name="header">Data do depósito</f:facet>
+						<h:outputText value="#{saldo.dataDeposito}"
+							converter="dataDepositoConverter">
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+
+				<h:panelGrid columns="2">
+					<p><strong>Saldo total :</strong></p>
+					<h:outputText value="#{usuarioController.usuarioDetalhe.saldoTotal}">
+						<f:convertNumber currencySymbol="R$" type="currency" />
+					</h:outputText>
+				</h:panelGrid>
+
+			</div>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+</html>

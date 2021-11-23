@@ -29,6 +29,8 @@ import lombok.Setter;
 
 @Named
 @ViewScoped
+@Getter
+@Setter
 public class UsuarioController implements Serializable{
 
 	/**
@@ -42,44 +44,27 @@ public class UsuarioController implements Serializable{
 	@Inject
 	private NavegacaoController navegacaoController;
 	
-	@Getter
-	@Setter
-	private String tituloCadastroUsuario;
-	
-	@Getter
-	@Setter
-	private Usuario usuario;
-	
-	@Getter
-	@Setter
-	private Saldo saldo;
-	
-	@Getter
-	@Setter
-	private boolean desejoSaldo;
-	
-	@Getter
-	@Setter
-	private boolean saldoNaoAtualizar;
-	
-	@Getter
-	@Setter
-	private List<Saldo> saldos;
-	
 	@Inject
-	@Getter
 	private LazyDataTableModelUsuario<Usuario> usuarios;
 	
-	@Getter
-	@Setter
+	private String tituloCadastroUsuario;
+	
+	private Usuario usuario;
+	
+	private Usuario usuarioDetalhe;
+	
+	private Saldo saldo;
+	
+	private boolean desejoSaldo;
+	
+	private boolean saldoNaoAtualizar;
+
+	private List<Saldo> saldos;
+	
 	private UsuarioSearch usuarioSearch;
 	
-	@Getter
-	@Setter
 	private Saldo saldoSelecionado;
 	
-	@Getter
-	@Setter
 	private Usuario usuarioSelecionado;
 	
 	@PostConstruct
@@ -90,6 +75,15 @@ public class UsuarioController implements Serializable{
 		saldo = new Saldo();
 		saldos = new ArrayList<Saldo>();
 		desejoSaldo = false;
+		verificarParametro();
+	}
+	
+	public void verificarParametro() {
+		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		String idDetalheUsuario = params.get("codigoDetalheUsuario");
+		if(idDetalheUsuario != null) {
+			usuarioDetalhe = usuarioService.getDetalhe(Integer.parseInt(idDetalheUsuario));
+		}
 	}
 	
 	public void consultarUsuario() {
@@ -191,11 +185,6 @@ public class UsuarioController implements Serializable{
 	public String selecionarUsuarioConsultaSaldo(Usuario usuario) {
 		this.usuario = usuario;
 		return "/saldo/consulta/ConsultaSaldo?faces-redirect=true&codigo="+this.usuario.getId();
-	}
-	
-	public String selecionarUsuarioDetalhe(Usuario usuario) {
-		this.usuario = usuario;
-		return "/usuario/detalhe/DetalheUsuario?faces-redirect=true&codigo="+this.usuario.getId();
 	}
 	
 	public String selecionarUsuarioAtualizar(Usuario usuario) {
