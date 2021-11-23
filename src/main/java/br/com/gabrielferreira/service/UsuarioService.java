@@ -12,7 +12,6 @@ import java.util.Scanner;
 import javax.inject.Inject;
 import javax.servlet.http.Part;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -24,8 +23,7 @@ import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.entidade.search.UsuarioSearch;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.repositorio.UsuarioRepositorio;
-import br.com.gabrielferreira.utils.SessionUtil;
-import br.com.gabrielferreira.utils.Transacional;
+import br.com.gabrielferreira.utils.LoginJSF;
 import br.com.gabrielferreira.utils.validation.UsuarioLoteValidacao;
 import br.com.gabrielferreira.utils.validation.UsuarioValidacaoArquivo;
 
@@ -85,7 +83,7 @@ public class UsuarioService implements Serializable {
 	
 	public void removerUsuario(Usuario usuario) throws RegraDeNegocioException {
 		verificarUsuarioLogado(usuario);
-		usuarioRepositorio.remover(usuario);
+		usuarioRepositorio.deletarPorId(Usuario.class, usuario.getId());
 	}
 	
 	public void atualizarUsuarioSaldo(Usuario usuario) {
@@ -210,7 +208,7 @@ public class UsuarioService implements Serializable {
 	}
 	
 	public void verificarUsuarioLogado(Usuario usuarioSelecionado) throws RegraDeNegocioException {
-		Usuario usuarioLogado = (Usuario) SessionUtil.getParam("usuario");
+		Usuario usuarioLogado = LoginJSF.getRecuperarUsuarioLogada();
 		if(usuarioLogado.getId().equals(usuarioSelecionado.getId())) {
 			throw new RegraDeNegocioException("Não é possível excluir o próprio usuário logado.");
 		}

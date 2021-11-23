@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.service.UsuarioService;
 import br.com.gabrielferreira.utils.FacesMessages;
+import br.com.gabrielferreira.utils.LoginJSF;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -58,5 +59,13 @@ public class LoginController implements Serializable{
 		httpSession.removeAttribute("usuarioLogado");
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 		return "/login/Login.xhtml?faces-redirect=true";
+	}
+	
+	public boolean isAdmin() {
+		Usuario usuario = LoginJSF.getRecuperarUsuarioLogada();
+		if(usuario.getPerfil().getId().equals(1)) {
+			return true;
+		}
+		return false;
 	}
 }

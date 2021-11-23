@@ -35,6 +35,7 @@ public class UsuarioRepositorio extends AbstractConsultaRepositorio<Usuario>{
 		
 		List<Predicate> predicatesFiltros = criarFiltroUsuario(search, criteriaBuilder, root);
 		
+		criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
 		criteriaQuery.where((Predicate[])predicatesFiltros.toArray(new Predicate[0]));
 		
 		TypedQuery<Usuario> typedQuery = entityManager.createQuery(criteriaQuery);
