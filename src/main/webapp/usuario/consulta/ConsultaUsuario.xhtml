@@ -14,11 +14,17 @@
 	</f:metadata>
 
 	<ui:define name="titulo">
+		<h:panelGroup rendered="#{loginController.admin}" >
 			<h1>Consulta de usuários cadastrados</h1>
-		</ui:define>
+		</h:panelGroup>
+		
+		<h:panelGroup rendered="#{!loginController.admin}" >
+			<h1>Você não tem permissão para essa página</h1>
+		</h:panelGroup>
+	</ui:define>
 		
 		<ui:define name="consulta">
-			<p:panelGrid>
+			<p:panelGrid rendered="#{loginController.admin}" >
 				<h:form id="frmConsulta" >
 					
 					<h:panelGrid columns="8" >
@@ -47,7 +53,7 @@
 		<ui:define name="conteudo" >
 			<h:form id="consultaUsuariosForm" >
 			<p:messages id="msg" autoUpdate="true"  />
-			<p:dataTable id="dataTableUsuarios" value="#{usuarioController.usuarios}" 
+			<p:dataTable id="dataTableUsuarios" value="#{usuarioController.usuarios}" rendered="#{loginController.admin}"
 				var="usuario" style="padding-top:20px;" rows="5" paginator="true" paginatorPosition="bottom"
 				emptyMessage="Sua consulta não retornou registros." rowsPerPageTemplate="5, 10, 25, 50, 100"
 				paginatorAlwaysVisible="false" lazy="true" >
@@ -143,10 +149,11 @@
 			<h:form id="btnCadastro" >
 				<div id="btnCadastroCliente" style="margin-top: 30px;" >
 					<p:commandButton value="Ir para o cadastro do usuário" ajax="false" 
-						actionListener="#{navegacaoController.cadastrarUsuario}"  />
+						actionListener="#{navegacaoController.cadastrarUsuario}" rendered="#{loginController.admin}"  />
 				</div>
 				<div id="btnLimparPesquisa" style="margin-top: 10px;" >
-					<p:commandButton value="Limpar pesquisa" ajax="false" actionListener="#{usuarioController.limparPesquisa}"  />
+					<p:commandButton value="Limpar pesquisa" ajax="false" actionListener="#{usuarioController.limparPesquisa}" 
+					 rendered="#{loginController.admin}"  />
 				</div>	
 			</h:form>
 		</ui:define>
