@@ -7,10 +7,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIViewRoot;
-import javax.faces.component.html.HtmlInputText;
-import javax.faces.component.html.HtmlSelectBooleanCheckbox;
-import javax.faces.component.html.HtmlSelectOneMenu;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -47,8 +43,6 @@ public class UsuarioController implements Serializable{
 	@Inject
 	private LazyDataTableModelUsuario<Usuario> usuarios;
 	
-	private String tituloCadastroUsuario;
-	
 	private Usuario usuario;
 	
 	private Usuario usuarioDetalhe;
@@ -69,21 +63,27 @@ public class UsuarioController implements Serializable{
 	
 	@PostConstruct
 	public void inicializar() {
-		tituloCadastroUsuario = "Cadastro de Usuário";
 		usuarioSearch = new UsuarioSearch();
 		usuario = new Usuario();
 		saldo = new Saldo();
 		saldos = new ArrayList<Saldo>();
 		desejoSaldo = false;
+		saldoNaoAtualizar = false;
 		verificarParametro();
 	}
 	
 	public void verificarParametro() {
 		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		String idDetalheUsuario = params.get("codigoDetalheUsuario");
+		String idCodigoUsuarioAtualizar = params.get("codigoUsuarioAtualizar");
 		
 		if(idDetalheUsuario != null) {
 			usuarioDetalhe = usuarioService.getDetalhe(Integer.parseInt(idDetalheUsuario));
+		}
+		
+		if(idCodigoUsuarioAtualizar != null) {
+			saldoNaoAtualizar = true;
+			usuario = usuarioService.getDetalhe(Integer.parseInt(idCodigoUsuarioAtualizar));
 		}
 	}
 	
@@ -104,18 +104,16 @@ public class UsuarioController implements Serializable{
 	public void inserirOuAtualizarUsuario() {
 		
 		if(usuario.getId() == null) {
-			boolean inserir = inserirUsuario(usuario);
-			if(inserir) {
-				usuario = new Usuario();
-			}
+			inserirUsuario();
+			novo();
 		} else {
-			atualizarUsuario(usuario);
+			atualizarUsuario();
+			novo();
 		}
 		desejoSaldo = false;
 	}
 	
-	public boolean inserirUsuario(Usuario usuario) {
-		boolean inserir = true;
+	public void inserirUsuario() {
 		try {
 			usuarioService.inserir(usuario,saldos);
 			FacesMessages.adicionarMensagem("cadastroUsuarioForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
@@ -123,12 +121,10 @@ public class UsuarioController implements Serializable{
 		} catch (RegraDeNegocioException e) {
 			FacesMessages.adicionarMensagem("cadastroUsuarioForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
 					null);
-			inserir = false;
 		}
-		return inserir;
 	}
 	
-	public void atualizarUsuario(Usuario usuario) {
+	public void atualizarUsuario() {
 		try {
 			usuarioService.atualizarUsuario(usuario);
 			FacesMessages.adicionarMensagem("consultaUsuariosForm:msg", FacesMessage.SEVERITY_INFO, "Atualizado com sucesso !",
@@ -178,40 +174,8 @@ public class UsuarioController implements Serializable{
 		consultarUsuario();
 	}
 	
-	public String selecionarUsuarioAtualizar(Usuario usuario) {
-		this.usuario = usuario;
-		return "/usuario/cadastro/CadastroUsuario?faces-redirect=true&codigo="+this.usuario.getId();
-	}
-	
-	public void carregarDados() {
-		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-		String id = params.get("codigo");
-		if(id != null) {
-			usuario = usuarioService.getDetalhe(Integer.parseInt(id));
-			saldoNaoAtualizar = true;
-			tituloCadastroUsuario = "Atualizar Usuário";
-		}
-	}
-	
 	public void novo() {
 		usuario = new Usuario();
-	}
-	
-	public void limparFormularioUsuario() {
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		UIViewRoot uiViewRoot = facesContext.getViewRoot();
-		HtmlInputText htmlInputTextNome = (HtmlInputText) uiViewRoot.findComponent("cadastroUsuarioForm:nome");
-		HtmlInputText htmlInputTextEmail = (HtmlInputText) uiViewRoot.findComponent("cadastroUsuarioForm:email");
-		HtmlInputText htmlInputTextCpf = (HtmlInputText) uiViewRoot.findComponent("cadastroUsuarioForm:cpf");
-		HtmlInputText htmlInputTextDataNascimento = (HtmlInputText) uiViewRoot.findComponent("cadastroUsuarioForm:data");
-		HtmlSelectBooleanCheckbox htmlSelectBooleanCheckboxSaldo = (HtmlSelectBooleanCheckbox) uiViewRoot.findComponent("cadastroUsuarioForm:saldo");
-		HtmlSelectOneMenu htmlSelectOneMenuPefil = (HtmlSelectOneMenu) uiViewRoot.findComponent("cadastroUsuarioForm:perfil");
-		htmlInputTextNome.setSubmittedValue("");
-		htmlInputTextEmail.setSubmittedValue("");
-		htmlInputTextCpf.setSubmittedValue("");
-		htmlInputTextDataNascimento.setSubmittedValue("");
-		htmlSelectBooleanCheckboxSaldo.setSubmittedValue("");
-		htmlSelectOneMenuPefil.setSubmittedValue("");
 		saldos.clear();
 		saldo = new Saldo();
 		usuario = new Usuario();

@@ -105,7 +105,8 @@
 				<p:column style="width:55px;">
 					<f:facet name="header">Atualizar</f:facet>
 					<p:commandButton title="Atualizar Usuário" icon="fa fa-edit"
-						process="@this" action="#{usuarioController.selecionarUsuarioAtualizar(usuario)}" >
+						process="@this" update="@form" action="/usuario/cadastro/CadastroUsuario" >
+						<f:param name="codigoUsuarioAtualizar" value="#{usuario.id}" />	
 					</p:commandButton>
 				</p:column>
 				

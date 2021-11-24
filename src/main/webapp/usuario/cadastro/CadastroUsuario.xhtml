@@ -7,20 +7,15 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:o="http://omnifaces.org/ui">
-	
-	<f:metadata>
-		<f:viewParam id="codigo" name="codigo" value="#{usuarioController.usuario.id}"/>
-		<f:event listener="#{usuarioController.carregarDados}" type="preRenderView"></f:event>
-	</f:metadata>
 
 	<ui:composition template="/layout/cadastro/Cadastrar.xhtml" >
 	
 	<ui:define name="titulo">
-			<h1>#{usuarioController.tituloCadastroUsuario}</h1>
+			<h1>Cadastro de usuário</h1>
 		
 			<div id="btnVoltar" style="margin-bottom:10px; margin-top: 10px;" >
 				<h:form id="frmBtnConsultaUsuario">
-					<p:commandButton value="Ir para consulta de usuários"
+					<p:commandButton value="Consulta de usuários"
 					actionListener="#{navegacaoController.consultaUsuario}" ajax="false" />
 				</h:form>
 			</div>
@@ -31,10 +26,7 @@
 
 		<div id="cadastroUsuario">
 		
-			<p>Formato da data de nascimento : DD/MM/YYYY</p>
-		
-			<o:form id="cadastroUsuarioForm" includeRequestParams="true"
-			 acceptcharset="UTF-8">
+		<h:form id="cadastroUsuarioForm">
 			
 			<p:messages id="msg"/>
 			
@@ -78,44 +70,38 @@
 									itemLabel="#{perfil.descricao}" itemValue="#{perfil}" />
 							</p:selectOneMenu>
 
-							<h:panelGroup
-								rendered="#{usuarioController.saldoNaoAtualizar == false}">
+							<h:panelGroup rendered="#{usuarioController.saldoNaoAtualizar == false}">
 								<p:outputLabel
 									for="saldo" value="Deseja incluir saldo ? " />
-								<p:selectBooleanCheckbox
-									id="saldo" value="#{usuarioController.desejoSaldo}">
-									<p:ajax process="@this"
-										oncomplete="PF('adicionarSaldo').show()"
+								<p:selectBooleanCheckbox id="saldo" value="#{usuarioController.desejoSaldo}">
+									<p:ajax process="@this" oncomplete="PF('adicionarSaldo').show()"
 										update=":frmCadastroSaldo"></p:ajax>
 								</p:selectBooleanCheckbox>
 							</h:panelGroup>
-						</h:panelGrid>
-
-						<div align="center" style="padding-top: 10px;">
-							<p:commandButton id="btnCadastrar" value="#{usuarioController.tituloCadastroUsuario}"
+							
+							<p:outputLabel rendered="#{usuarioController.saldoNaoAtualizar == false}" />
+							
+							<p:commandButton id="btnCadastrar" value="Cadastrar"
 								action="#{usuarioController.inserirOuAtualizarUsuario}"
 								ajax="false" process="@this" update="@form"></p:commandButton>
-						</div>
-
-						<div align="center" style="padding-top: 10px;">
-							<p:commandButton rendered="#{usuarioController.tituloCadastroUsuario eq 'Cadastro de Usuário'}" id="btnLimpar" value="Limpar formulário"
-								immediate="true" action="#{usuarioController.limparFormularioUsuario}"
-								ajax="false" process="@this" update="@form"></p:commandButton>
-						</div>
-
+								
+							<p:commandButton id="btnLimpar" value="Limpar formulário"
+								action="#{usuarioController.novo}"
+								ajax="false" process="@this" update="@form">
+								<o:skipValidators />	
+							</p:commandButton>
+								
+						</h:panelGrid>
 					</h:panelGroup>
 				</div>
-			</o:form>
+			</h:form>
 		</div>
 		
 		<div id="cadastroSaldo" align="center" >
 			<p:dialog modal="true" id="saldoDialog" height="400" width="800" widgetVar="adicionarSaldo" resizable="false">
-				<o:form id="frmCadastroSaldo" includeRequestParams="true"
-				 acceptcharset="UTF-8">
+				<h:form id="frmCadastroSaldo">
 				 
 				 	<p:messages id="msgSaldo" autoUpdate="true"/>
-				 
-				 	<p>Formato da data do depósito : DD/MM/YYYY HH:MM:SS</p>
 				 
 					<h:panelGrid id="pnlCadastroSaldo" columns="2"
 						style="margin-top:30px;text-align: center;">
@@ -179,7 +165,7 @@
 
 					</div>
 
-				</o:form>
+				</h:form>
 			</p:dialog>
 		</div>
 		
