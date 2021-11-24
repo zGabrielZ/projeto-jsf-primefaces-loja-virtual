@@ -5,69 +5,72 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:o="http://omnifaces.org/ui" >
-	
-	<f:metadata>
-		<f:viewParam id="codigo" name="codigo" value="#{categoriaController.categoria.id}"/>
-		<f:event listener="#{categoriaController.carregar}" type="preRenderView"></f:event>
-	</f:metadata>
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
 
-	<ui:composition template="/layout/cadastro/Cadastrar.xhtml" >
-	
+<ui:composition template="/layout/cadastro/Cadastrar.xhtml">
+
 	<ui:define name="titulo">
-			<h1>#{categoriaController.tituloCadastroCategoria}</h1>
-		
-			<div id="btnVoltar" style="margin-bottom:10px; margin-top: 10px;" >
+		<h:panelGroup rendered="#{loginController.admin or loginController.funcionario}">
+			<h1>Cadastro de categorias</h1>
+
+			<div id="btnVoltar" style="margin-bottom: 10px; margin-top: 10px;">
 				<h:form id="frmBtnConsultaCliente">
-					<p:commandButton value="Ir para consulta de categorias"
-					actionListener="#{navegacaoController.consultaCategoria}" ajax="false" />
+					<p:commandButton value="Consulta categorias"
+						actionListener="#{navegacaoController.consultaCategoria}"
+						ajax="false" />
 				</h:form>
 			</div>
+		</h:panelGroup>
 		
-		</ui:define>
-		
-		<ui:define name="conteudo" >
+		<h:panelGroup rendered="#{loginController.cliente}" >
+			<h1>Você não tem permissão para essa página</h1>
+		</h:panelGroup>
+
+	</ui:define>
+
+	<ui:define name="conteudo">
 
 		<div id="cadastroCategoria">
-		
-			<o:form id="cadastroCategoriaForm" includeRequestParams="true"
-			 acceptcharset="UTF-8">
-			
-			<p:messages id="msg" autoUpdate="true"/>
-			
+
+			<h:form id="cadastroCategoriaForm">
+
+				<p:messages id="msg" autoUpdate="true" />
+
 				<div align="center">
-					<h:panelGroup id="pnlCadastroCategoria">
-					
-						<p:inputText id="codigo" value="#{categoriaController.categoria.id}"
-							label="Código" type="hidden"></p:inputText>
-					
+					<h:panelGroup id="pnlCadastroCategoria" rendered="#{loginController.admin or loginController.funcionario}" >
+
+						<p:inputText id="codigo"
+							value="#{categoriaController.categoria.id}" label="Código"
+							type="hidden"></p:inputText>
+
 						<h:panelGrid columns="3" style="text-align: center">
 							<p:outputLabel for="nome" value="Nome: " />
 							<p:inputText value="#{categoriaController.categoria.nome}"
-								label="Nome" id="nome" required="true" 
+								label="Nome" id="nome" required="true"
 								requiredMessage="Nome é obrigatório" size="15" maxlength="150" />
-							
+
 						</h:panelGrid>
 
 						<div align="center" style="padding-top: 10px;">
-							<p:commandButton id="btnCadastrar" value="#{categoriaController.tituloCadastroCategoria}"
-								action="#{categoriaController.inserirOuAtualizarCategoria}"
+							<p:commandButton id="btnCadastrar"
+								value="Cadastrar" action="#{categoriaController.inserirOuAtualizarCategoria}"
 								ajax="false" process="@this" update="@form"></p:commandButton>
 						</div>
 
 						<div align="center" style="padding-top: 10px;">
-							<p:commandButton id="btnLimpar" value="Limpar formulário" rendered="#{categoriaController.tituloCadastroCategoria eq 'Cadastro de categoria'}"
-								immediate="true" action="#{categoriaController.limparFormularioCategoriaCadastro}"
-								ajax="false" process="@this" update="@form"></p:commandButton>
+							<p:commandButton id="btnLimpar" value="Limpar formulário"
+								action="#{categoriaController.limparFormularioCategoriaCadastro}"
+								ajax="false" process="@this" update="@form">
+								<o:skipValidators />	
+							</p:commandButton>
 						</div>
 
 					</h:panelGroup>
 				</div>
-			</o:form>
+			</h:form>
 		</div>
-				
+
 	</ui:define>
-	
-	</ui:composition>
+
+</ui:composition>
 </html>

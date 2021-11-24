@@ -68,4 +68,20 @@ public class LoginController implements Serializable{
 		}
 		return false;
 	}
+	
+	public boolean isFuncionario() {
+		Usuario usuario = LoginJSF.getRecuperarUsuarioLogada();
+		if(usuario.getPerfil().getId().equals(2)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isCliente() {
+		Usuario usuario = LoginJSF.getRecuperarUsuarioLogada();
+		if(usuario.getPerfil().getId().equals(3)) {
+			return true;
+		}
+		return false;
+	}
 }

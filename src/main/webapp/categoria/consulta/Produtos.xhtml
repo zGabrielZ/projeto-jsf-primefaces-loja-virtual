@@ -7,19 +7,16 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-	<f:metadata>
-		<f:viewParam id="codigoCategoria" name="codigoCategoria" value="#{categoriaController.categoria.id}"/>
-		<f:event listener="#{categoriaController.carregarProdutos}" type="preRenderView"></f:event>
-	</f:metadata>
-
 	<ui:composition template="/layout/consulta/Consulta.xhtml" >
 
 		<ui:define name="titulo">
 			<h1>Produtos da categoria : #{categoriaController.tituloCadastroCategoria}</h1>
 
 		<div id="btnConsultaCategoria" style="margin-top: 30px;">
-			<input type="button" value="Voltar" id="voltar"
-				onclick="return window.history.back()" />
+			<h:form>
+				<p:commandButton value="Consulta de categorias" ajax="false"
+					action="#{navegacaoController.consultaCategoria}" />
+			</h:form>
 		</div>
 
 	</ui:define>

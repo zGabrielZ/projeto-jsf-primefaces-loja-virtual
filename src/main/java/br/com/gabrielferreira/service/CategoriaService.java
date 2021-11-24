@@ -9,7 +9,6 @@ import br.com.gabrielferreira.entidade.Categoria;
 import br.com.gabrielferreira.entidade.search.CategoriaSearch;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.repositorio.CategoriaRepositorio;
-import br.com.gabrielferreira.utils.Transacional;
 
 public class CategoriaService implements Serializable {
 
@@ -21,16 +20,14 @@ public class CategoriaService implements Serializable {
 	@Inject
 	private CategoriaRepositorio categoriaRepositorio;
 	
-	@Transacional
 	public void inserir(Categoria categoria) throws RegraDeNegocioException {
 		verificarNomeCategoria(categoria.getNome());
 		categoriaRepositorio.inserir(categoria);
 	}
 	
-	@Transacional
-	public void atualizar(Categoria categoria) throws RegraDeNegocioException {
+	public Categoria atualizar(Categoria categoria) throws RegraDeNegocioException {
 		verificarNomeCategoriaAtualizado(categoria.getNome(), categoria.getId());
-		categoriaRepositorio.atualizar(categoria);
+		return categoriaRepositorio.atualizar(categoria);
 	}
 	
 	public List<Categoria> getFiltrar(CategoriaSearch categoriaSearch, int primeiroResultado, int quantidadeMaxima){
@@ -50,7 +47,7 @@ public class CategoriaService implements Serializable {
 	}
 	
 	public Categoria procurarPorIdCategoria(Integer id) {
-		return categoriaRepositorio.procurarPorIdCategoria(id);
+		return categoriaRepositorio.pesquisarPorId(id, Categoria.class);
 	}
 	
 	public void verificarNomeCategoria(String nome) throws RegraDeNegocioException {

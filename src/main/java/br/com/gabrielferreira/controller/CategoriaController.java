@@ -7,8 +7,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIViewRoot;
-import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -27,6 +25,8 @@ import lombok.Setter;
 
 @Named
 @ViewScoped
+@Getter
+@Setter
 public class CategoriaController implements Serializable{
 
 	/**
@@ -43,32 +43,39 @@ public class CategoriaController implements Serializable{
 	@Inject
 	private NavegacaoController navegacaoController;
 	
-	@Getter
-	@Setter
-	private String tituloCadastroCategoria;
-	
 	@Inject
-	@Getter
 	private LazyDataTableModelCategoria<Categoria> categorias;
 	
-	@Getter
-	@Setter
+	private String tituloCadastroCategoria;
+	
 	private List<Produto> produtos;
 	
-	@Getter
-	@Setter
 	private CategoriaSearch categoriaSearch;
 	
-	@Getter
-	@Setter
 	private Categoria categoria;
 	
 	@PostConstruct
 	public void inicializar() {
-		tituloCadastroCategoria = "Cadastro de categoria";
 		categoriaSearch = new CategoriaSearch();
 		produtos = new ArrayList<Produto>();
 		categoria = new Categoria();
+		verificarParametro();
+	}
+	
+	private void verificarParametro() {
+		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		String idCodigoConsultaProdutos = params.get("codigoConsultaProdutos");
+		String idCodigoAtualizarCategoria = params.get("codigoAtualizarCategoria");
+		
+		if(idCodigoConsultaProdutos != null) {
+			produtos = produtoService.procurarPorIdCategoria(Integer.parseInt(idCodigoConsultaProdutos));
+			tituloCadastroCategoria = categoriaService.procurarPorIdCategoria(Integer.parseInt(idCodigoConsultaProdutos)).getNome();
+		}
+		
+		if(idCodigoAtualizarCategoria != null) {
+			categoria = categoriaService.procurarPorIdCategoria(Integer.parseInt(idCodigoAtualizarCategoria));
+		}
+		
 	}
 	
 	public void consultarCategoria() {
@@ -79,17 +86,15 @@ public class CategoriaController implements Serializable{
 	public void inserirOuAtualizarCategoria() {
 		
 		if(categoria.getId() == null) {
-			boolean inserir = inserirCategoria(categoria);
-			if(inserir) {
-				categoria = new Categoria();
-			}
+			inserirCategoria();
+			limparFormularioCategoriaCadastro();
 		} else {
 			atualizarCategoria(categoria);
+			limparFormularioCategoria();
 		}
 	}
 	
-	public boolean inserirCategoria(Categoria categoria) {
-		boolean inserir = true;
+	public void inserirCategoria() {
 		try {
 			categoriaService.inserir(categoria);
 			FacesMessages.adicionarMensagem("cadastroCategoriaForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
@@ -97,9 +102,7 @@ public class CategoriaController implements Serializable{
 		} catch (RegraDeNegocioException e) {
 			FacesMessages.adicionarMensagem("cadastroCategoriaForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
 					null);
-			inserir = false;
 		}
-		return inserir;
 	}
 	
 	public void atualizarCategoria(Categoria categoria) {
@@ -115,54 +118,17 @@ public class CategoriaController implements Serializable{
 		}
 	}
 	
-	public void carregar() {
-		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-		String id = params.get("codigo");
-		if(id != null) {
-			categoria = categoriaService.procurarPorIdCategoria(Integer.parseInt(id));
-			tituloCadastroCategoria = "Atualizar categoria";
-		}
-	}
-	
-	public String selecionarCategoriaAtualizar(Categoria categoria) {
-		this.categoria = categoria;
-		return "/categoria/cadastro/CadastroCategoria?faces-redirect=true&codigo="+this.categoria.getId();
-	}
-	
-	public String selecionarProdutos(Categoria categoria) {
-		this.categoria = categoria;
-		return "/categoria/consulta/Produtos?faces-redirect=true&codigoCategoria="+this.categoria.getId();
-	}
-	
-	public void carregarProdutos() {
-		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-		String id = params.get("codigoCategoria");
-		if(id != null) {
-			produtos = produtoService.procurarPorIdCategoria(Integer.parseInt(id));
-			Categoria categoria = categoriaService.procurarPorIdCategoria(Integer.parseInt(id));
-			tituloCadastroCategoria = categoria.getNome();
-		}
-	}
-	
 	public List<Categoria> getListaCategorias(){
 		return categoriaService.listaCategorias();
 	}
 	
 	public void limparFormularioCategoria() {
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		UIViewRoot uiViewRoot = facesContext.getViewRoot();
-		HtmlInputText htmlInputTextNome = (HtmlInputText) uiViewRoot.findComponent("frmConsulta:nome");
-		htmlInputTextNome.setSubmittedValue("");
 		categoriaSearch = new CategoriaSearch();
 		consultarCategoria();
 	}
 	
 	public void limparFormularioCategoriaCadastro() {
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		UIViewRoot uiViewRoot = facesContext.getViewRoot();
-		HtmlInputText htmlInputTextNome = (HtmlInputText) uiViewRoot.findComponent("cadastroCategoriaForm:nome");
-		htmlInputTextNome.setSubmittedValue("");
-		categoriaSearch = new CategoriaSearch();
+		categoria = new Categoria();
 	}
 
 }

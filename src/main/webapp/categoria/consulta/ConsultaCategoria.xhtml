@@ -14,11 +14,17 @@
 	</f:metadata>
 
 	<ui:define name="titulo">
+		<h:panelGroup rendered="#{loginController.admin or loginController.funcionario}" >
 			<h1>Consulta de categorias</h1>
-		</ui:define>
+		</h:panelGroup>
 		
-		<ui:define name="consulta">
-			<p:panelGrid>
+		<h:panelGroup rendered="#{loginController.cliente}" >
+			<h1>Você não tem permissão para essa página</h1>
+		</h:panelGroup>
+	</ui:define>
+
+	<ui:define name="consulta">
+			<p:panelGrid rendered="#{loginController.admin or loginController.funcionario}" >
 				<h:form id="frmConsulta" >
 					
 					<h:panelGrid columns="4" >
@@ -42,7 +48,7 @@
 			<p:dataTable id="dataTableCategorias" value="#{categoriaController.categorias}" 
 				var="categoria" style="padding-top:20px;" rows="5" paginator="true" paginatorPosition="bottom"
 				emptyMessage="Sua consulta não retornou registros." rowsPerPageTemplate="5, 10, 25, 50, 100"
-				paginatorAlwaysVisible="false" lazy="true" >
+				paginatorAlwaysVisible="false" lazy="true" rendered="#{loginController.admin or loginController.funcionario}" >
 								
 				<p:column style="width:150px;" >
 					<f:facet name="header">Nome</f:facet>
@@ -52,15 +58,19 @@
 				<p:column style="width:60px;">
 					<f:facet name="header">Atualizar</f:facet>
 					<p:commandButton title="Atualizar Categoria" icon="fa fa-edit"
-						process="@this" action="#{categoriaController.selecionarCategoriaAtualizar(categoria)}" />
+						process="@this" update="@form" action="/categoria/cadastro/CadastroCategoria" >
+						<f:param name="codigoAtualizarCategoria" value="#{categoria.id}" />
+					</p:commandButton>
 				</p:column>
 
 				<p:column style="width:60px;">
 					<f:facet name="header">Produtos</f:facet>
 					<p:commandButton title="Consultar Produtos" icon="fa fa-search-plus" 
-					process="@this" action="#{categoriaController.selecionarProdutos(categoria)}"></p:commandButton>
+						process="@this" update="@form" action="Produtos">
+						<f:param name="codigoConsultaProdutos" value="#{categoria.id}" />		
+					</p:commandButton>
 				</p:column>
-		
+				
 			</p:dataTable>
 
 		</h:form>
@@ -68,7 +78,7 @@
 		</ui:define> 
 		
 		<ui:define name="conteudo-2">
-			<h:form id="btnCadastro" >
+			<h:form id="btnCadastro" rendered="#{loginController.admin or loginController.funcionario}" >
 				<div id="btnCadastroCliente" style="margin-top: 30px;" >
 					<p:commandButton value="Ir para o cadastro de categoria" ajax="false" 
 					  actionListener="#{navegacaoController.cadastrarCategoria}"	/>

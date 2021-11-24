@@ -26,8 +26,6 @@ public class CategoriaRepositorio extends AbstractConsultaRepositorio<Categoria>
 	@Inject
 	private EntityManager entityManager;
 	
-	public CategoriaRepositorio() {}
-	
 	@Override
 	public TypedQuery<Categoria> getListagem(Categoria search) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -37,6 +35,7 @@ public class CategoriaRepositorio extends AbstractConsultaRepositorio<Categoria>
 		
 		List<Predicate> predicatesFiltros = criarFiltroCategoria(search, criteriaBuilder, root);
 		
+		criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
 		criteriaQuery.where((Predicate[])predicatesFiltros.toArray(new Predicate[0]));
 		
 		TypedQuery<Categoria> typedQuery = entityManager.createQuery(criteriaQuery);
@@ -73,18 +72,6 @@ public class CategoriaRepositorio extends AbstractConsultaRepositorio<Categoria>
 		return predicates;
 	}
 	
-	public void inserir(Categoria categoria) {
-		entityManager.persist(categoria);
-	}
-	
-	public void atualizar(Categoria categoria) {
-		entityManager.merge(categoria);
-	}
-	
-	public Categoria procurarPorIdCategoria(Integer id) {
-		return entityManager.find(Categoria.class, id);
-	}
-	
 	public List<Categoria> procurarPorId(Integer id) {
 		String jpql = "SELECT c FROM Categoria c JOIN FETCH c.produtos p where c.id = :id";
 		TypedQuery<Categoria> query = entityManager.createQuery(jpql,Categoria.class);
@@ -108,7 +95,7 @@ public class CategoriaRepositorio extends AbstractConsultaRepositorio<Categoria>
 		
 		List<Categoria> categorias = query.getResultList();
 		
-		return !categorias.isEmpty()?true:false;
+		return !categorias.isEmpty() ? true : false;
 	}
 	
 	public boolean verificarNomeCategoriaAtualizado(String nome, Integer id) {
@@ -119,7 +106,7 @@ public class CategoriaRepositorio extends AbstractConsultaRepositorio<Categoria>
 		
 		List<Categoria> categorias = query.getResultList();
 		
-		return !categorias.isEmpty()?true:false;
+		return !categorias.isEmpty() ? true : false;
 	}
 
 }

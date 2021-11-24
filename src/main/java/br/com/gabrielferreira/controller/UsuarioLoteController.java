@@ -41,6 +41,8 @@ import lombok.Setter;
 
 @Named
 @ViewScoped
+@Getter
+@Setter
 public class UsuarioLoteController implements Serializable{
 
 	/**
@@ -56,33 +58,20 @@ public class UsuarioLoteController implements Serializable{
 	@Inject
 	private UsuarioService usuarioService;
 	
-	@Setter
 	private StreamedContent modeloArquivoExcel;
 	
-	@Setter
 	private StreamedContent modeloArquivoTxt;
 	
-	@Setter
 	private StreamedContent erros;
 	
-	@Getter
-	@Setter
 	private ArquivoUpload arquivoUpload;
 	
-	@Getter
-	@Setter
 	private Part arquivoUploadExcelTxt;
 	
-	@Getter
-	@Setter
 	private List<Usuario> usuarios;
 	
-	@Getter
-	@Setter
 	private List<UsuarioLoteValidacao> usuarioLoteValidacoes;
 	
-	@Getter
-	@Setter
 	private List<String> mensagens;
 	
 	@PostConstruct
