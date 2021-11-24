@@ -11,16 +11,22 @@
 	<ui:composition template="/layout/cadastro/Cadastrar.xhtml" >
 	
 	<ui:define name="titulo">
+		<h:panelGroup rendered="#{loginController.admin}" >
 			<h1>Cadastro de usuário</h1>
-		
-			<div id="btnVoltar" style="margin-bottom:10px; margin-top: 10px;" >
+
+			<div id="btnVoltar" style="margin-bottom: 10px; margin-top: 10px;">
 				<h:form id="frmBtnConsultaUsuario">
 					<p:commandButton value="Consulta de usuários"
-					actionListener="#{navegacaoController.consultaUsuario}" ajax="false" />
+						actionListener="#{navegacaoController.consultaUsuario}"
+						ajax="false" />
 				</h:form>
 			</div>
+		</h:panelGroup>
 		
-		</ui:define>
+		<h:panelGroup rendered="#{!loginController.admin}" >
+			<h1>Você não tem permissão para essa página</h1>
+		</h:panelGroup>
+	</ui:define>
 		
 		<ui:define name="conteudo" >
 
@@ -31,7 +37,7 @@
 			<p:messages id="msg"/>
 			
 				<div align="center">
-					<h:panelGroup id="pnlCadastroUsuario">
+					<h:panelGroup id="pnlCadastroUsuario" rendered="#{loginController.admin}">
 						
 						<p:inputText id="codigo" value="#{usuarioController.usuario.id}"
 								label="Código" type="hidden"></p:inputText>
