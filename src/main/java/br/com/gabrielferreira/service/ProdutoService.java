@@ -11,7 +11,6 @@ import br.com.gabrielferreira.entidade.search.ProdutoSearch;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.repositorio.CategoriaRepositorio;
 import br.com.gabrielferreira.repositorio.ProdutoRepositorio;
-import br.com.gabrielferreira.utils.Transacional;
 
 public class ProdutoService implements Serializable{
 
@@ -26,28 +25,25 @@ public class ProdutoService implements Serializable{
 	@Inject
 	private CategoriaRepositorio categoriaRepositorio;
 	
-	@Transacional
 	public void inserir(Produto produto) throws RegraDeNegocioException {
 		verificarNomeProduto(produto.getNome());
 		produtoRepositorio.inserir(produto);
-		Categoria categoria = categoriaRepositorio.procurarPorIdCategoria(produto.getCategoria().getId());
+		Categoria categoria = categoriaRepositorio.pesquisarPorId(produto.getCategoria().getId(), Categoria.class);
 		categoria.getProdutos().add(produto);
 		categoriaRepositorio.atualizar(categoria);
 	}
 	
-	@Transacional
-	public void atualizar(Produto produto) throws RegraDeNegocioException {
+	public Produto atualizar(Produto produto) throws RegraDeNegocioException {
 		verificarNomeProdutoAtualizado(produto.getNome(), produto.getId());
-		produtoRepositorio.atualizar(produto);
+		return produtoRepositorio.atualizar(produto);
 	}
 	
 	public Produto procurarPorId(Integer id) {
-		return produtoRepositorio.procurarPorId(id);
+		return produtoRepositorio.pesquisarPorId(id, Produto.class);
 	}
 	
-	@Transacional
 	public void remover(Produto produto) {
-		produtoRepositorio.remover(produto);
+		produtoRepositorio.deletarPorId(Produto.class, produto.getId());
 	}
 	
 	public List<Produto> getListagem(){

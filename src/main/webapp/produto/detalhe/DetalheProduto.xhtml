@@ -11,7 +11,7 @@
 	<ui:composition template="/layout/cadastro/Cadastrar.xhtml" >
 
 	<ui:define name="titulo">
-			<h1>Detalhe do produto : #{produtoDetalheController.produto.nome}</h1>
+			<h1>Detalhe do produto : #{produtoController.produto.nome}</h1>
 		
 			<div id="btnVoltar" style="margin-bottom:10px; margin-top: 10px;" >
 				<h:form id="frmBtnConsultaProduto">
@@ -29,25 +29,25 @@
 				<h:panelGrid columns="2" style="text-align: center">
 					
 					<p:outputLabel for="valor" value="Valor: " />
-					<h:outputText id="valor" label="Valor" value="#{produtoDetalheController.produto.valor}"  >
+					<h:outputText id="valor" label="Valor" value="#{produtoController.produto.valor}"  >
 						<f:convertNumber currencySymbol="R$" type="currency"  />
 					</h:outputText>
 
 					<p:outputLabel for="estoque" value="Estoque: " />
-					<h:outputText value="#{produtoDetalheController.produto.estoque}"
+					<h:outputText value="#{produtoController.produto.estoque}"
 						label="Estoque" id="estoque">
 					</h:outputText>
 					
 					<p:outputLabel for="data" value="Data de produção: " />
-					<h:outputText id="data" label="Data de produção: " value="#{produtoDetalheController.produto.dataProducao}" converter="dataProducaoConverter" />
+					<h:outputText id="data" label="Data de produção: " value="#{produtoController.produto.dataProducao}" converter="dataProducaoConverter" />
 					
 					<p:outputLabel for="categoria" value="Categoria: " />
-					<h:outputText value="#{produtoDetalheController.produto.categoria.nome}"
+					<h:outputText value="#{produtoController.produto.categoria.nome}"
 						label="Categoria" id="categoria">
 					</h:outputText>
 					
 					<p:outputLabel for="imagem" value="Imagem: " />
-					<h:graphicImage id="imagem" value="/ServletImagemProduto?idImagem=#{produtoDetalheController.produto.id}" 
+					<h:graphicImage id="imagem" value="/ServletImagemProduto?idImagem=#{produtoController.produto.id}" 
 						width="150" height="150"/>
 
 

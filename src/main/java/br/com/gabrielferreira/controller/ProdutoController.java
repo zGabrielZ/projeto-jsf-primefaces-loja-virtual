@@ -8,9 +8,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIViewRoot;
-import javax.faces.component.html.HtmlInputText;
-import javax.faces.component.html.HtmlSelectOneMenu;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -28,6 +25,8 @@ import lombok.Setter;
 
 @Named
 @ViewScoped
+@Getter
+@Setter
 public class ProdutoController implements Serializable{
 
 	/**
@@ -41,35 +40,36 @@ public class ProdutoController implements Serializable{
 	@Inject
 	private ProdutoService produtoService;
 	
-	@Getter
-	@Setter
-	private String tituloCadastroProduto;
-	
-	@Getter
-	@Setter
-	private Produto produto;
-	
-	@Getter
-	@Setter
-	private ProdutoSearch produtoSearch;
-	
 	@Inject
-	@Getter
 	private LazyDataTableModelProduto<Produto> produtos;
 	
-	@Getter
-	@Setter
+	private Produto produto;
+
+	private ProdutoSearch produtoSearch;
+	
 	private Produto produtoSelecionado;
 	
-	@Getter
-	@Setter
 	private Part imagemUploadProduto;
 	
 	@PostConstruct
 	public void inicializar() {
-		tituloCadastroProduto = "Cadastro Produto";
 		produto = new Produto();
 		produtoSearch = new ProdutoSearch();
+		verificarParametro();
+	}
+	
+	private void verificarParametro() {
+		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		String idCodigoDetalheProduto = params.get("codigoDetalheProduto");
+		String idCodigoAtualizarProduto = params.get("codigoAtualizarProduto");
+		
+		if(idCodigoDetalheProduto != null) {
+			produto = produtoService.procurarPorId(Integer.parseInt(idCodigoDetalheProduto));
+		}
+		
+		if(idCodigoAtualizarProduto != null) {
+			produto = produtoService.procurarPorId(Integer.parseInt(idCodigoAtualizarProduto));
+		}
 	}
 	
 	public void consultarProduto() {
@@ -79,33 +79,32 @@ public class ProdutoController implements Serializable{
 	
 	public void inserirOuAtualizarProduto() {
 		if(produto.getId() == null) {
-			boolean inserir = inserirProduto(produto);
-			if(inserir) {
-				produto = new Produto();
-			}
+			inserirProduto();
+			limparFormularioProduto();
 		} else {
-			atualizarProduto(produto);
+			atualizarProduto();
+			limparFormularioProduto();
 		}
 	}
 	
-	public boolean inserirProduto(Produto produto) {
-		boolean inserir = true;
+	public void inserirProduto() {
 		try {
-			uploadImagem(produto);
+			uploadImagem();
 			produtoService.inserir(produto);
 			FacesMessages.adicionarMensagem("cadastroProdutoForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
 					null);
 		} catch (RegraDeNegocioException  | IOException e) {
 			FacesMessages.adicionarMensagem("cadastroProdutoForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
 					null);
-			inserir = false;
 		}
-		return inserir;
 	}
 	
-	public void atualizarProduto(Produto produto) {
+	public void atualizarProduto() {
 		try {
-			uploadImagem(produto);
+			if(imagemUploadProduto != null) {
+				deletarImagemSalva(produto);
+			}
+			uploadImagem();
 			produtoService.atualizar(produto);
 			FacesMessages.adicionarMensagem("cadastroProdutoForm:msg", FacesMessage.SEVERITY_INFO, "Atualizado com sucesso !",
 					null);
@@ -117,35 +116,44 @@ public class ProdutoController implements Serializable{
 		}
 	}
 	
-	public void uploadImagem(Produto produto) throws IOException {
-		if(imagemUploadProduto.getContentType().equals("image/jpeg") || imagemUploadProduto.getContentType().equals("image/png")){
-			String caminhoImagem = caminhoImagem(imagemUploadProduto,produto);
-			produto.setCaminhoImagem(caminhoImagem);
+	public void uploadImagem() throws IOException {
+		if(imagemUploadProduto != null) {
+			if(imagemUploadProduto.getContentType().equals("image/jpeg") || imagemUploadProduto.getContentType().equals("image/png")
+					|| imagemUploadProduto.getContentType().equals("image/jpg")){
+				
+				String caminhoImagem = caminhoImagem(imagemUploadProduto);
+				String extensaoImagem = extensaoImagem(imagemUploadProduto);
+				produto.setCaminhoImagem(caminhoImagem);
+				produto.setExtensao(extensaoImagem);
+				
+				// Enviar a imagem processada para o caminho da pasta
+				
+				// Cria um espaço de memória que vai armazenar o conteúdo da imagem 
+				byte[] bytesImagem = new byte[(int) imagemUploadProduto.getSize()];
+				
+				// Le o conteudo da imagem e joga dentro do array de bytes
+				imagemUploadProduto.getInputStream().read(bytesImagem);
+				
+				// Cria uma referencia para o arquivo que será criado no lado do servidor
+				File arquivo = new File(caminhoImagem);
+				
+				// Cria o objeto que irá manipular o arquivo criado
+				FileOutputStream fileOutputStream = new FileOutputStream(arquivo);
+				
+				// Escreve o conteudo da imagem (upload) dentro do arquivo servidor
+				fileOutputStream.write(bytesImagem);
+				
+				fileOutputStream.close();
+			}
 		}
 	}
 	
-	private String caminhoImagem(Part imagemUploadProduto, Produto produto) throws IOException {
-		String nome = nomeArquivo(imagemUploadProduto);
-		// Caminho completo da imagem
-		String caminhoTipo = "C:\\Users\\Acer\\Desktop\\Curso Java Server Faces\\8.Projetos\\Projeto-Loja\\src\\main\\webapp\\resources\\imagem-produto\\"+nome;
-		// Criar um espaço de memoria que vai salvar o conteudo da imagem 
-		byte[] bytesImagens = new byte[(int) imagemUploadProduto.getSize()];
-		produto.setByteImagem(bytesImagens);
-		// le o conteudo da imagem e joga dentro do array 
-		imagemUploadProduto.getInputStream().read(bytesImagens);
-		// Criar uma referencia do arquivo
-		File file = new File(caminhoTipo);
-		// Criar o objeto que irá manipular o arquivo criado
-		FileOutputStream fileOutputStream = new FileOutputStream(file);
-		// Escrever o conteudo da imagem dentro do servidor 
-		fileOutputStream.write(bytesImagens);
-		// Fechando 
-		fileOutputStream.close();
-		
-		
-		return caminhoTipo;
+	private String caminhoImagem(Part imagemUploadProduto) {
+		String caminho = "C:\\Users\\Acer\\Desktop\\Curso Java Server Faces\\8.Projetos\\Projeto-Loja\\src\\main\\webapp\\resources\\imagem-produto";
+		String nomeArquivo = nomeArquivo(imagemUploadProduto);
+		return caminho + "\\" + nomeArquivo;
 	}
-	
+		
 	private String nomeArquivo(Part imagemUploadProduto) {
 		for (String header : imagemUploadProduto.getHeader("content-disposition").split(";")) {
 			if (header.trim().startsWith("filename")) {
@@ -155,9 +163,15 @@ public class ProdutoController implements Serializable{
 		return null;
 	}
 	
+	private String extensaoImagem(Part imagemUpload) {
+		String extensao = imagemUpload.getContentType().split("\\/")[1];
+		return extensao;
+	}
+	
 	public void excluirProduto() {
 		try {
 			Produto produto = produtoService.procurarPorId(produtoSelecionado.getId());			
+			deletarImagemSalva(produto);
 			produtoService.remover(produto);
 			consultarProduto();
 			FacesMessages.adicionarMensagem("consultaProdutosForm:msg", FacesMessage.SEVERITY_INFO, "Removido com sucesso !",
@@ -168,51 +182,19 @@ public class ProdutoController implements Serializable{
 		}
 	}
 	
-	public void carregar() {
-		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-		String id = params.get("codigo");
-		if(id != null) {
-			tituloCadastroProduto = "Atualizar Produto";
-			produto = produtoService.procurarPorId(Integer.parseInt(id));
+	public void deletarImagemSalva(Produto produto) {
+		if(produto.getCaminhoImagem() != null) {
+			File file = new File(produto.getCaminhoImagem());
+			file.delete();
 		}
 	}
 	
-	public String selecionarProdutoAtualizar(Produto produto) {
-		this.produto = produto;
-		return "/produto/cadastro/CadastroProduto?faces-redirect=true&codigo="+this.produto.getId();
-	}
-	
-	public String selecionarProdutoDetalhe(Produto produto) {
-		this.produto = produto;
-		return "/produto/detalhe/DetalheProduto?faces-redirect=true&codigo="+this.produto.getId();
-	}
-	
 	public void limparFormularioProdutoPesquisa() {
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		UIViewRoot uiViewRoot = facesContext.getViewRoot();
-		HtmlInputText htmlInputTextNome = (HtmlInputText) uiViewRoot.findComponent("frmConsulta:nome");
-		HtmlInputText htmlInputTextEstoque = (HtmlInputText) uiViewRoot.findComponent("frmConsulta:estoque");
-		HtmlInputText htmlInputTextData = (HtmlInputText) uiViewRoot.findComponent("frmConsulta:data");
-		htmlInputTextNome.setSubmittedValue("");
-		htmlInputTextData.setSubmittedValue("");
-		htmlInputTextEstoque.setSubmittedValue("");
 		produtoSearch = new ProdutoSearch();
 		consultarProduto();
 	}
 	
 	public void limparFormularioProduto() {
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		UIViewRoot uiViewRoot = facesContext.getViewRoot();
-		HtmlInputText htmlInputTextNome = (HtmlInputText) uiViewRoot.findComponent("cadastroProdutoForm:nome");
-		HtmlInputText htmlInputTextValor = (HtmlInputText) uiViewRoot.findComponent("cadastroProdutoForm:valor");
-		HtmlInputText htmlInputTextEstoque = (HtmlInputText) uiViewRoot.findComponent("cadastroProdutoForm:estoque");
-		HtmlInputText htmlInputTextData = (HtmlInputText) uiViewRoot.findComponent("cadastroProdutoForm:data");
-		HtmlSelectOneMenu htmlSelectOneMenuCategoria = (HtmlSelectOneMenu) uiViewRoot.findComponent("cadastroProdutoForm:categoria");
-		htmlInputTextNome.setSubmittedValue("");
-		htmlInputTextValor.setSubmittedValue("");
-		htmlInputTextEstoque.setSubmittedValue("");
-		htmlInputTextData.setSubmittedValue("");
-		htmlSelectOneMenuCategoria.setSubmittedValue("");
 		produto = new Produto();
 	}
 

@@ -5,71 +5,77 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:o="http://omnifaces.org/ui">
-	
-	<f:metadata>
-		<f:viewParam id="codigo" name="codigo" value="#{produtoController.produto.id}"/>
-		<f:event listener="#{produtoController.carregar}" type="preRenderView"></f:event>
-	</f:metadata>
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
 
-	<ui:composition template="/layout/cadastro/Cadastrar.xhtml" >
-	
+<ui:composition template="/layout/cadastro/Cadastrar.xhtml">
+
 	<ui:define name="titulo">
-			<h1>#{produtoController.tituloCadastroProduto}</h1>
-		
-			<div id="btnVoltar" style="margin-bottom:10px; margin-top: 10px;" >
+		<h:panelGroup rendered="#{loginController.admin or loginController.funcionario}" >
+			<h1>Cadastro de produto</h1>
+
+			<div id="btnVoltar" style="margin-bottom: 10px; margin-top: 10px;">
 				<h:form id="frmBtnConsultaProduto">
 					<p:commandButton value="Ir para consulta de produtos"
-					actionListener="#{navegacaoController.consultaProduto}" ajax="false" />
+						actionListener="#{navegacaoController.consultaProduto}"
+						ajax="false" />
 				</h:form>
 			</div>
-		
-		</ui:define>
-		
-		<ui:define name="conteudo" >
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{loginController.cliente}" >
+			<h1>Você não tem permissão para essa página</h1>
+		</h:panelGroup>
+
+	</ui:define>
+
+	<ui:define name="conteudo">
 
 		<div id="cadastroProduto">
-		
-			<p>Formato da data da produção : DD/MM/YYYY</p>
-		
-			<o:form id="cadastroProdutoForm" includeRequestParams="true"
-			 acceptcharset="UTF-8" enctype="multipart/form-data" >
-			
-			<p:messages id="msg" autoUpdate="true"/>
-			
+
+			<h:form id="cadastroProdutoForm" enctype="multipart/form-data" rendered="#{loginController.admin or loginController.funcionario}" >
+
+				<p:messages id="msg" autoUpdate="true" />
+
 				<div align="center">
 					<h:panelGroup id="pnlCadastroProduto">
-					
+
 						<p:inputText id="codigo" value="#{produtoController.produto.id}"
-								label="Código" type="hidden"></p:inputText>
-					
-						<h:panelGrid columns="2" style="text-align: center">							
+							label="Código" type="hidden"></p:inputText>
+
+						<h:panelGrid columns="2" style="text-align: center">
+
 							<p:outputLabel for="nome" value="Nome: " />
 							<p:inputText value="#{produtoController.produto.nome}"
-								label="Nome" id="nome" required="true" 
+								label="Nome" id="nome" required="true"
 								requiredMessage="Nome é obrigatório" size="15" maxlength="150" />
-							
+
+							<p:outputLabel for="fotoSalva" value="Foto: "
+								rendered="#{produtoController.produto.id != null}" />
+							<h:graphicImage width="80" height="80" id="fotoSalva"
+								style="margin-left:10px;"
+								value="/ServletImagemProduto?idImagem=#{produtoController.produto.id}"
+								rendered="#{produtoController.produto.id != null}" />
+
 							<p:outputLabel for="valor" value="Valor: " />
-						    <p:inputNumber value="#{produtoController.produto.valor}"
-								label="Valor" id="valor" size="15" required="true" requiredMessage="É necessário inserir o valor"
-								maxlength="150" >
+							<p:inputNumber value="#{produtoController.produto.valor}"
+								label="Valor" id="valor" size="15" required="true"
+								requiredMessage="É necessário inserir o valor" maxlength="150">
 								<f:validateDoubleRange minimum="0" />
 							</p:inputNumber>
-							
+
 							<p:outputLabel for="estoque" value="Estoque: " />
-						    <p:inputText value="#{produtoController.produto.estoque}"
-								label="Estoque" id="estoque" size="15" required="true" requiredMessage="É necessário inserir o estoque"
-								maxlength="150" >
-								<f:validateLongRange minimum="0" ></f:validateLongRange>
+							<p:inputText value="#{produtoController.produto.estoque}"
+								label="Estoque" id="estoque" size="15" required="true"
+								requiredMessage="É necessário inserir o estoque" maxlength="150">
+								<f:validateLongRange minimum="0"></f:validateLongRange>
 							</p:inputText>
 
 							<p:outputLabel for="data" value="Data de produção: " />
 							<p:inputMask value="#{produtoController.produto.dataProducao}"
 								label="Data de produção" id="data" required="true"
 								requiredMessage="É obrigatório inserir a data de produção"
-								converter="dataProducaoConverter" validator="#{verificarLocalDate.validate}"
-								mask="99/99/9999">
+								converter="dataProducaoConverter"
+								validator="#{verificarLocalDate.validate}" mask="99/99/9999">
 							</p:inputMask>
 
 							<p:outputLabel for="categoria" value="Categoria: "></p:outputLabel>
@@ -79,36 +85,33 @@
 								requiredMessage="É necessário informar a categoria para completa o cadastro.">
 								<f:selectItem itemLabel="Selecione" />
 								<f:selectItems value="#{categoriaController.listaCategorias}"
-									var="categoria"
-									itemLabel="#{categoria.nome}" itemValue="#{categoria}" />
+									var="categoria" itemLabel="#{categoria.nome}"
+									itemValue="#{categoria}" />
 							</p:selectOneMenu>
-							
-							<p:outputLabel for="foto" value="Foto: " />
-							<h:inputFile label="Foto" id="foto" required="true" 
-							 requiredMessage="É necessário inserir a imagem do produto" 
-							 value="#{produtoController.imagemUploadProduto}"/>
-							
+
+							<p:outputLabel for="imagem" value="Imagem: " />
+							<h:inputFile label="Imagem" id="imagem"
+								required="#{produtoController.produto.id eq null}"
+								requiredMessage="É necessário inserir a imagem do produto"
+								value="#{produtoController.imagemUploadProduto}" />
+
+							<p:commandButton id="btnLimpar" value="Limpar formulário"
+								action="#{produtoController.limparFormularioProduto}"
+								ajax="false" process="@this" update="@form">
+								<o:skipValidators />
+							</p:commandButton>
+
+							<p:commandButton id="btnCadastrar" value="Cadastrar"
+								action="#{produtoController.inserirOuAtualizarProduto}"
+								ajax="false" process="@this" update="@form" style="width:100%;" />
 
 						</h:panelGrid>
-
-						<div align="center" style="padding-top: 10px;">
-							<p:commandButton id="btnCadastrar" value="#{produtoController.tituloCadastroProduto}"
-								action="#{produtoController.inserirOuAtualizarProduto}"
-								ajax="false" process="@this" update="@form"></p:commandButton>
-						</div>
-
-						<div align="center" style="padding-top: 10px;">
-							<p:commandButton id="btnLimpar" value="Limpar formulário"
-								immediate="true" action="#{produtoController.limparFormularioProduto}"
-								ajax="false" process="@this" update="@form"></p:commandButton>
-						</div>
-
 					</h:panelGroup>
 				</div>
-			</o:form>
+			</h:form>
 		</div>
-		
+
 	</ui:define>
-	
-	</ui:composition>
+
+</ui:composition>
 </html>

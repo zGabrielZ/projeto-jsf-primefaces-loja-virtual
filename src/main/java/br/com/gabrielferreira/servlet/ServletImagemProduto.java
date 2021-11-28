@@ -1,5 +1,7 @@
 package br.com.gabrielferreira.servlet;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.inject.Inject;
@@ -35,8 +37,17 @@ public class ServletImagemProduto extends HttpServlet{
 		}
 		
 		Produto produto = produtoService.procurarPorId(Integer.parseInt(idImagem));
-		byte[] arrayImagem = produto.getByteImagem();
-		resp.getOutputStream().write(arrayImagem);
+		
+		if(produto.getCaminhoImagem() != null) {
+			File arquivo = new File(produto.getCaminhoImagem());
+			FileInputStream fileInputStream = new FileInputStream(arquivo);
+			byte[] arrayImagem = new byte[(int) arquivo.length()];
+			fileInputStream.read(arrayImagem);
+			fileInputStream.close();
+			
+			resp.getOutputStream().write(arrayImagem);
+			resp.getOutputStream().flush();
+		}
 		
 	}
 

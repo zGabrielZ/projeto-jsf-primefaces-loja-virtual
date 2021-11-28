@@ -64,8 +64,8 @@ public class Produto implements Serializable{
 	@Column(name = "caminho_imagem")
 	private String caminhoImagem;
 	
-	@Lob
-	private byte[] byteImagem;
+	// EXTENSAO -> JPG,PNG,JPEG
+	private String extensao;
 
 	@OneToMany(mappedBy = "produto", fetch = FetchType.LAZY)
 	private List<Itens> itens = new ArrayList<Itens>();

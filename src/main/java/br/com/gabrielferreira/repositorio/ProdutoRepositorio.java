@@ -28,8 +28,6 @@ public class ProdutoRepositorio extends AbstractConsultaRepositorio<Produto>{
 	@Inject
 	private EntityManager entityManager;
 	
-	public ProdutoRepositorio() {}
-	
 	@Override
 	public TypedQuery<Produto> getListagem(Produto search) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -42,6 +40,7 @@ public class ProdutoRepositorio extends AbstractConsultaRepositorio<Produto>{
 		
 		List<Predicate> predicatesFiltros = criarFiltroProduto(search, criteriaBuilder, root);
 		
+		criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
 		criteriaQuery.where((Predicate[])predicatesFiltros.toArray(new Predicate[0]));
 		
 		TypedQuery<Produto> typedQuery = entityManager.createQuery(criteriaQuery);
@@ -77,34 +76,17 @@ public class ProdutoRepositorio extends AbstractConsultaRepositorio<Produto>{
 			}
 			
 			if(produtoSearch.getDataProducao() != null) {
-				Predicate predicateDataProducao = criteriaBuilder.equal(root.get("dataProducao"), produtoSearch.getDataProducao());
+				Predicate predicateDataProducao = criteriaBuilder.greaterThanOrEqualTo(root.get("dataProducao"), produtoSearch.getDataProducao());
 				predicates.add(predicateDataProducao);
 			}
 			
 			if(produtoSearch.getEstoque() != null) {
-				Predicate predicateEstoque = criteriaBuilder.equal(root.get("estoque"),produtoSearch.getEstoque());
+				Predicate predicateEstoque = criteriaBuilder.greaterThanOrEqualTo(root.get("estoque"),produtoSearch.getEstoque());
 				predicates.add(predicateEstoque);
 			}
 		}
 			
 		return predicates;
-	}
-	
-	public void inserir(Produto produto) {
-		entityManager.persist(produto);
-	}
-	
-	public void remover(Produto produto) {
-		produto = procurarPorId(produto.getId());
-		entityManager.remove(produto);
-	}
-	
-	public void atualizar(Produto produto) {
-		entityManager.merge(produto);
-	}
-	
-	public Produto procurarPorId(Integer id) {
-		return entityManager.find(Produto.class, id);
 	}
 	
 	public List<Produto> getProdutos() {
@@ -131,7 +113,7 @@ public class ProdutoRepositorio extends AbstractConsultaRepositorio<Produto>{
 		
 		List<Produto> produtos = query.getResultList();
 		
-		return !produtos.isEmpty()?true:false;
+		return !produtos.isEmpty() ? true : false;
 	}
 	
 	public boolean verificarNomeProdutoAtualizado(String nome, Integer id) {
@@ -142,7 +124,7 @@ public class ProdutoRepositorio extends AbstractConsultaRepositorio<Produto>{
 		
 		List<Produto> produtos = query.getResultList();
 		
-		return !produtos.isEmpty()?true:false;
+		return !produtos.isEmpty() ? true : false;
 	}
 	
 
