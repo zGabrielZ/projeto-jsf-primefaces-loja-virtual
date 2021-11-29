@@ -12,6 +12,8 @@ import br.com.gabrielferreira.service.SaldoService;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter 
+@Setter
 public class LazyDataTableModelSaldo<T> extends LazyDataModel<Saldo> {
 
 	/**
@@ -21,13 +23,9 @@ public class LazyDataTableModelSaldo<T> extends LazyDataModel<Saldo> {
 	
 	@Inject
 	private SaldoService saldoService;
-	
-	@Getter 
-	@Setter
+
 	private Integer idUsuario;
 	
-	@Getter
-	@Setter
 	private List<Saldo> saldos = new ArrayList<Saldo>();
 	
 	public List<Saldo> load(int first, int pageSize, String sortField, SortOrder sortOrder,

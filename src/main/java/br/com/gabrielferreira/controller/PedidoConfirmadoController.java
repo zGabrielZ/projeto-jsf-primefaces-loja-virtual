@@ -12,12 +12,14 @@ import br.com.gabrielferreira.entidade.Itens;
 import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.entidade.to.PedidoTo;
 import br.com.gabrielferreira.service.PedidoService;
-import br.com.gabrielferreira.utils.SessionUtil;
+import br.com.gabrielferreira.utils.LoginJSF;
 import lombok.Getter;
 import lombok.Setter;
 
 @Named
 @ViewScoped
+@Getter
+@Setter
 public class PedidoConfirmadoController implements Serializable{
 
 	/**
@@ -29,10 +31,8 @@ public class PedidoConfirmadoController implements Serializable{
 	private PedidoService pedidoService;
 	
 	@Inject
-	@Getter
 	private LazyDataTableModelItens<Itens> itens;
 
-	@Setter
 	private List<PedidoTo> pedidos;
 	
 	public void consultarPedidos() {
@@ -40,7 +40,7 @@ public class PedidoConfirmadoController implements Serializable{
 	}
 	
 	public List<PedidoTo> getPedidos() {
-		Usuario usuario = (Usuario)SessionUtil.getParam("usuario");
+		Usuario usuario = LoginJSF.getRecuperarUsuarioLogada();
 		pedidos = pedidoService.getValorTotalDeCadaPedidoCadastrado(usuario.getId());
 		return pedidos;
 	}

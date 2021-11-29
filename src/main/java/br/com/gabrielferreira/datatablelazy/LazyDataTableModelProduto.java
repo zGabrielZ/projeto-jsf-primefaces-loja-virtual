@@ -13,6 +13,8 @@ import br.com.gabrielferreira.service.ProdutoService;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
+@Setter
 public class LazyDataTableModelProduto<T> extends LazyDataModel<Produto> {
 
 	/**
@@ -20,15 +22,11 @@ public class LazyDataTableModelProduto<T> extends LazyDataModel<Produto> {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	@Getter
-	@Setter
-	private ProdutoSearch produtoSearch;
-	
 	@Inject
 	private ProdutoService produtoService;
 	
-	@Getter
-	@Setter
+	private ProdutoSearch produtoSearch;
+	
 	private List<Produto> produtos = new ArrayList<Produto>();
 	
 	public List<Produto> load(int first, int pageSize, String sortField, SortOrder sortOrder,

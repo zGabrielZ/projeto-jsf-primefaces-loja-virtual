@@ -14,6 +14,8 @@ import br.com.gabrielferreira.service.UsuarioService;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
+@Setter
 public class LazyDataTableModelUsuario<T> extends LazyDataModel<Usuario> {
 
 	/**
@@ -21,15 +23,11 @@ public class LazyDataTableModelUsuario<T> extends LazyDataModel<Usuario> {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	@Getter
-	@Setter
-	private UsuarioSearch usuarioSearch;
-	
 	@Inject
 	private UsuarioService usuarioService;
 	
-	@Getter
-	@Setter
+	private UsuarioSearch usuarioSearch;
+	
 	private List<Usuario> usuarios = new ArrayList<Usuario>();
 	
 	public List<Usuario> load(int first, int pageSize, String sortField, SortOrder sortOrder,

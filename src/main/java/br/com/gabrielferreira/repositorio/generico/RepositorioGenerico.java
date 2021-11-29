@@ -59,5 +59,14 @@ public class RepositorioGenerico<T> implements Serializable {
 			return null;
 		}
 	}
+	
+	public List<T> verificarNuloLista(TypedQuery<T> query){
+		try {
+			List<T> entidades = query.getResultList();
+			return entidades;
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 
 }

@@ -22,38 +22,35 @@
 		<h:form id="consultaPedidosForm">
 			<p:messages id="msg" autoUpdate="true" />
 
-			<p:dataTable id="dataTableProdutos"
-				value="#{pedidoController.produtos}" var="produto"
+			<p:dataTable id="dataTableProdutos" value="#{pedidoController.produtos}" var="produto"
 				style="padding-top:20px;" rows="5" paginator="true"
-				paginatorPosition="bottom"
-				emptyMessage="Sua consulta não retornou registros."
-				rowsPerPageTemplate="5, 10, 25, 50, 100"
-				paginatorAlwaysVisible="false" lazy="true">
+				paginatorPosition="bottom" emptyMessage="Sua consulta não retornou registros."
+				rowsPerPageTemplate="5, 10, 25, 50, 100" paginatorAlwaysVisible="false" lazy="true">
 
 				<p:column style="width:150px;">
 					<f:facet name="header">Nome</f:facet>
 					<h:outputText value="#{produto.nome}" />
 				</p:column>
 
-				<p:column style="width:80px;">
+				<p:column style="width:100px;">
 					<f:facet name="header">Valor</f:facet>
 					<h:outputText value="#{produto.valor}">
 						<f:convertNumber currencySymbol="R$" type="currency" />
 					</h:outputText>
 				</p:column>
 
-				<p:column style="width:130px;">
+				<p:column style="width:95px;">
 					<f:facet name="header">Data da produção</f:facet>
 					<h:outputText value="#{produto.dataProducao}"
 						converter="dataProducaoConverter" />
 				</p:column>
 
-				<p:column style="width:150px;">
+				<p:column style="width:125px;">
 					<f:facet name="header">Categoria</f:facet>
 					<h:outputText value="#{produto.categoria.nome}" />
 				</p:column>
 
-				<p:column style="width:150px;">
+				<p:column style="width:40px;">
 					<f:facet name="header">Carrinho</f:facet>
 					<p:commandButton update=":frmCarrinhoPedidos" process="@this"
 						action="#{pedidoController.addCarrinho}" icon="fa fa-edit"
@@ -75,18 +72,17 @@
 			<p:dataTable id="dataTablePedidos"
 				value="#{pedidoController.pedidos}" var="pedido"
 				style="padding-top:20px;" rows="5" paginator="true"
-				paginatorPosition="bottom"
-				emptyMessage="Sua consulta não retornou registros."
-				rowsPerPageTemplate="5, 10, 25, 50, 100"
-				paginatorAlwaysVisible="false" rendered="#{not empty pedidoController.pedidos}">
+				paginatorPosition="bottom" emptyMessage="Sua consulta não retornou registros."
+				rowsPerPageTemplate="5, 10, 25, 50, 100" paginatorAlwaysVisible="false" 
+				rendered="#{not empty pedidoController.pedidos}">
 
-				<p:column style="width:130px;">
+				<p:column style="width:110px;">
 					<f:facet name="header">Data do pedido</f:facet>
 					<h:outputText value="#{pedido.dataCompra}"
 						converter="dataDepositoConverter" />
 				</p:column>
 
-				<p:column style="width:130px;">
+				<p:column style="width:100px;">
 					<f:facet name="header">Quantidade</f:facet>
 					<h:outputText value="#{pedido.quantidadeCompra}" />
 				</p:column>
@@ -103,7 +99,7 @@
 					</h:outputText>
 				</p:column>
 
-				<p:column style="width:130px;">
+				<p:column style="width:110px;">
 					<f:facet name="header">Data da produção</f:facet>
 					<h:outputText value="#{pedido.produto.dataProducao}"
 						converter="dataProducaoConverter" />

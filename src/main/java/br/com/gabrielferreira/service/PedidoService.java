@@ -19,8 +19,7 @@ import br.com.gabrielferreira.entidade.to.PedidoTo;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.repositorio.EnderecoRepositorio;
 import br.com.gabrielferreira.repositorio.PedidoRepositorio;
-import br.com.gabrielferreira.utils.SessionUtil;
-import br.com.gabrielferreira.utils.Transacional;
+import br.com.gabrielferreira.utils.LoginJSF;
 
 public class PedidoService implements Serializable{
 
@@ -44,18 +43,16 @@ public class PedidoService implements Serializable{
 	@Inject
 	private UsuarioService usuarioService;
 	
-	@Transacional
 	public void remover(Pedido pedido) {
-		pedidoRepositorio.remover(pedido);
+		pedidoRepositorio.deletarPorId(Pedido.class, pedido.getId());
 	}
 	
 	public Pedido procurarPorId(Integer id) {
-		return pedidoRepositorio.procurarPorId(id);
+		return pedidoRepositorio.pesquisarPorId(id, Pedido.class);
 	}
 	
-	@Transacional
 	public void inserirPedido(List<Parcela> parcelas,List<Itens> itens) throws RegraDeNegocioException {
-		Usuario usuario = (Usuario) SessionUtil.getParam("usuario");
+		Usuario usuario = LoginJSF.getRecuperarUsuarioLogada();
 		usuario.setPedidos(pedidoRepositorio.getPedidoByUsuarioId(usuario.getId()));
 		verificarEstoqueProduto(itens);
 		verificarSaldoAtualComPrimeiraParcela(usuario.getSaldoTotal(), parcelas);

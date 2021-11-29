@@ -65,12 +65,15 @@
 				
 				<p:column style="width:100px;">
 					<f:facet name="header">Sub total</f:facet>
-					<h:outputText value="#{itens.subTotal}" />
+					<h:outputText value="#{itens.subTotal}">
+						<f:convertNumber currencySymbol="R$" type="currency" />
+					</h:outputText>
 				</p:column>
 
 			</p:dataTable>
 			
 			
+			<br/>
 			<h2>Valor total de cada pedido</h2>
 			
 			<p:dataTable id="dataTableValores"
@@ -81,14 +84,16 @@
 				rowsPerPageTemplate="5, 10, 25, 50, 100"
 				paginatorAlwaysVisible="false">
 
-				<p:column style="width:100px;">
+				<p:column style="width:50px;">
 					<f:facet name="header">Código Pedido</f:facet>
 					<h:outputText value="#{pedido.codigoPedido}" />
 				</p:column>
 				
-				<p:column style="width:100px;">
+				<p:column style="width:80px;">
 					<f:facet name="header">Valor</f:facet>
-					<h:outputText value="#{pedido.valorTotal}" />
+					<h:outputText value="#{pedido.valorTotal}">
+						<f:convertNumber currencySymbol="R$" type="currency" />
+					</h:outputText>
 				</p:column>
 				
 			</p:dataTable>

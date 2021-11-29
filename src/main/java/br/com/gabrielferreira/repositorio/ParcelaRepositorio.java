@@ -1,6 +1,5 @@
 package br.com.gabrielferreira.repositorio;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -8,7 +7,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import br.com.gabrielferreira.entidade.Parcela;
-public class ParcelaRepositorio implements Serializable{
+import br.com.gabrielferreira.repositorio.generico.RepositorioGenerico;
+public class ParcelaRepositorio extends RepositorioGenerico<Parcela>{
 
 	/**
 	 * 
@@ -17,8 +17,6 @@ public class ParcelaRepositorio implements Serializable{
 	
 	@Inject
 	private EntityManager entityManager;
-	
-	public ParcelaRepositorio() {}
 	
 	public TypedQuery<Parcela> getListagem(Integer idUsuario) {
 		String jpql = "SELECT par FROM Parcela par JOIN par.pedido p JOIN p.usuario u where u.id = :idUsuario order by p.codigoPedido asc";
@@ -39,18 +37,10 @@ public class ParcelaRepositorio implements Serializable{
 		return parcelas.size();
 	}
 	
-	public void inserir(Parcela parcela) {
-		entityManager.persist(parcela);
-	}
-	
 	public void inserirParcelas(List<Parcela> parcelas) {
 		for(Parcela parcela : parcelas) {
 			entityManager.persist(parcela);
 		}
-	}
-	
-	public Parcela procurarPorId(Integer id) {
-		return entityManager.find(Parcela.class, id);
 	}
 	
 	public List<Parcela> getParcelas() {

@@ -21,12 +21,14 @@ import br.com.gabrielferreira.service.ItensService;
 import br.com.gabrielferreira.service.ParcelaService;
 import br.com.gabrielferreira.service.PedidoService;
 import br.com.gabrielferreira.utils.FacesMessages;
-import br.com.gabrielferreira.utils.SessionUtil;
+import br.com.gabrielferreira.utils.LoginJSF;
 import lombok.Getter;
 import lombok.Setter;
 
 @Named
 @SessionScoped
+@Getter
+@Setter
 public class PedidoController implements Serializable{
 
 	/**
@@ -44,27 +46,16 @@ public class PedidoController implements Serializable{
 	private ParcelaService parcelaService;
 	
 	@Inject
-	@Getter
 	private LazyDataTableModelProduto<Produto> produtos;
 	
-	@Getter
-	@Setter
 	private Produto produtoSelecionado;
 	
-	@Getter
-	@Setter
 	private Itens itensSelecionado;
 	
-	@Getter
-	@Setter
 	private List<Itens> pedidos;
-	
-	@Getter
-	@Setter
+
 	private List<Parcela> parcelas;
 	
-	@Getter
-	@Setter
 	private int quantidadeParcelas;
 	
 	@PostConstruct
@@ -114,7 +105,7 @@ public class PedidoController implements Serializable{
 	}
 	
 	public BigDecimal getSaldoAtual() {
-		Usuario usuario = (Usuario) SessionUtil.getParam("usuario");
+		Usuario usuario = LoginJSF.getRecuperarUsuarioLogada();
 		return usuario.getSaldoTotal();
 	}
 	

@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import br.com.gabrielferreira.entidade.Parcela;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.repositorio.ParcelaRepositorio;
-import br.com.gabrielferreira.utils.Transacional;
 
 public class ParcelaService implements Serializable{
 
@@ -23,18 +22,16 @@ public class ParcelaService implements Serializable{
 	@Inject
 	private ParcelaRepositorio parcelaRepositorio;
 	
-	@Transacional
 	public void inserir(Parcela parcela) {
 		parcelaRepositorio.inserir(parcela);
 	}
 	
-	@Transacional
 	public void inserir(List<Parcela> parcelas) {
 		parcelaRepositorio.inserirParcelas(parcelas);
 	}
 	
 	public Parcela procurarPorId(Integer id) {
-		return parcelaRepositorio.procurarPorId(id);
+		return parcelaRepositorio.pesquisarPorId(id, Parcela.class);
 	}
 	
 	public List<Parcela> getListagem(){

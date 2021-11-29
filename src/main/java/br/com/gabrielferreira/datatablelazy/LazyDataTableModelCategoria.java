@@ -14,6 +14,8 @@ import br.com.gabrielferreira.service.CategoriaService;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
+@Setter
 public class LazyDataTableModelCategoria<T> extends LazyDataModel<Categoria> {
 
 	/**
@@ -21,15 +23,11 @@ public class LazyDataTableModelCategoria<T> extends LazyDataModel<Categoria> {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	@Getter
-	@Setter
-	private CategoriaSearch categoriaSearch;
-	
 	@Inject
 	private CategoriaService categoriaService;
 	
-	@Getter
-	@Setter
+	private CategoriaSearch categoriaSearch;
+	
 	private List<Categoria> categorias = new ArrayList<Categoria>();
 	
 	public List<Categoria> load(int first, int pageSize, String sortField, SortOrder sortOrder,

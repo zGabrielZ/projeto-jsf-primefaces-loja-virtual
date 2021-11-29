@@ -67,16 +67,13 @@
 					<f:param name="codigoUsuarioEndereco" value="#{loginController.usuario.id}" />		
 				</p:menuitem>
 							
-				<p:submenu label="Pedidos" icon="fa fa-pencil">
-					<p:menuitem value="Carrinho" 
-							action="#{navegacaoController.consultaPedido}"></p:menuitem>
-					<p:menuitem value="Pedidos Confirmados"
-							action="#{navegacaoController.consultaPedidoConfirmados}"></p:menuitem>
-					<p:menuitem value="Parcelas"
-							action="#{navegacaoController.consultaParcelas}"></p:menuitem>
+				<p:submenu label="Pedidos" icon="fa fa-pencil" rendered="#{loginController.admin or loginController.funcionario or loginController.cliente}" >
+					<p:menuitem value="Carrinho" action="#{navegacaoController.consultaPedido}"></p:menuitem>
+					<p:menuitem value="Pedidos Confirmados" action="#{navegacaoController.consultaPedidoConfirmados}"></p:menuitem>
+					<p:menuitem value="Parcelas" action="#{navegacaoController.consultaParcelas}"></p:menuitem>
 				</p:submenu>
 				
-				<p:menuitem icon="fa fa-pencil" value="Deslogar" action="#{loginController.logout}"></p:menuitem>
+				<p:menuitem icon="fa fa-pencil" value="Deslogar" action="#{loginController.logout}" rendered="#{loginController.admin or loginController.funcionario or loginController.cliente}" />
 				
 			</p:menubar>
 		</h:form>

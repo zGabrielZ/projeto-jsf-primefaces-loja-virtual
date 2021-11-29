@@ -12,6 +12,7 @@ import lombok.Getter;
 
 @Named
 @ViewScoped
+@Getter
 public class ParcelaController implements Serializable{
 
 	/**
@@ -20,7 +21,6 @@ public class ParcelaController implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Inject
-	@Getter
 	private LazyDataTableModelParcela<Parcela> parcelas;
 	
 	public void consultarParcelas() {

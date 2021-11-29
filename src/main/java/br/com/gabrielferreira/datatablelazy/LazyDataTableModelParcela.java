@@ -11,10 +11,12 @@ import org.primefaces.model.SortOrder;
 import br.com.gabrielferreira.entidade.Parcela;
 import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.service.ParcelaService;
-import br.com.gabrielferreira.utils.SessionUtil;
+import br.com.gabrielferreira.utils.LoginJSF;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
+@Setter
 public class LazyDataTableModelParcela<T> extends LazyDataModel<Parcela> {
 
 	/**
@@ -25,13 +27,11 @@ public class LazyDataTableModelParcela<T> extends LazyDataModel<Parcela> {
 	@Inject
 	private ParcelaService parcelaService;
 	
-	@Getter
-	@Setter
 	private List<Parcela> parcelas = new ArrayList<Parcela>();
 	
 	public List<Parcela> load(int first, int pageSize, String sortField, SortOrder sortOrder,
 			Map<String, Object> filters) {
-		Usuario usuario = (Usuario) SessionUtil.getParam("usuario");
+		Usuario usuario = LoginJSF.getRecuperarUsuarioLogada();
 		parcelas = parcelaService.getParcelas(usuario.getId(), first, pageSize);
 		setPageSize(pageSize);
 		setRowCount(parcelaService.quantidadeRegistro(usuario.getId()));

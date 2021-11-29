@@ -15,7 +15,6 @@ import br.com.gabrielferreira.entidade.Produto;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.repositorio.ItensRepositorio;
 import br.com.gabrielferreira.utils.FacesMessages;
-import br.com.gabrielferreira.utils.Transacional;
 
 public class ItensService implements Serializable{
 
@@ -35,18 +34,16 @@ public class ItensService implements Serializable{
 	
 	private DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 	
-	@Transacional
 	public void inserir(Itens itens) {
 		itensRepositorio.inserir(itens);
 	}
 	
-	@Transacional
 	public void inserir(List<Itens> itens) {
 		itensRepositorio.inserirItens(itens);
 	}
 	
 	public Itens procurarPorId(Integer id) {
-		return itensRepositorio.procurarPorId(id);
+		return itensRepositorio.pesquisarPorId(id, Itens.class);
 	}
 	
 	public void adicionarCarrinhoItens(Produto produtoSelecionado, List<Itens> pedidos,List<Parcela> parcelas,int quantidadeParcelas,
