@@ -51,12 +51,14 @@
 					</p:submenu>
 				</p:submenu>
 				
-				<p:submenu label="Saldo" icon="fa fa-pencil">
+				<p:submenu label="Saldo" icon="fa fa-pencil" rendered="#{loginController.admin or loginController.funcionario or loginController.cliente}" >
 					<p:submenu label="Novo" icon="fa fa-pencil">
-						<p:menuitem value="Consulta"
-							action="#{navegacaoController.consultaSaldo}"></p:menuitem>
-						<p:menuitem value="Cadastro"
-							action="#{navegacaoController.cadastroSaldo}"></p:menuitem>
+						<p:menuitem value="Consulta" action="/saldo/consulta/ConsultaSaldo">
+							<f:param name="codigoUsuarioConsultarSaldo" value="#{loginController.usuario.id}" />		
+						</p:menuitem>
+						<p:menuitem value="Cadastro" action="/saldo/cadastro/CadastroSaldo">
+							<f:param name="codigoUsuarioAdicionarSaldo" value="#{loginController.usuario.id}" />			
+						</p:menuitem>
 					</p:submenu>
 				</p:submenu>
 				

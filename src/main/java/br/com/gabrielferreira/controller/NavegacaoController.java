@@ -11,7 +11,6 @@ import javax.inject.Named;
 import br.com.gabrielferreira.entidade.Endereco;
 import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.service.EnderecoService;
-import br.com.gabrielferreira.utils.SessionUtil;
 
 @Named
 @ViewScoped
@@ -57,26 +56,6 @@ public class NavegacaoController implements Serializable{
 	    } catch (IOException e) {
 	          e.printStackTrace();
 	    }
-	}
-	
-	public void consultaSaldo() {
-		Usuario usuario = (Usuario) SessionUtil.getParam("usuario");
-		ExternalContext externalContext = getExternalContext();
-		try {
-			externalContext.redirect(externalContext.getRequestContextPath() + "/saldo/consulta/ConsultaSaldo.xhtml?codigo="+usuario.getId());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void cadastroSaldo() {
-		Usuario usuario = (Usuario) SessionUtil.getParam("usuario");
-		ExternalContext externalContext = getExternalContext();
-		try {
-			externalContext.redirect(externalContext.getRequestContextPath() + "/saldo/cadastro/CadastroSaldo.xhtml?codigo="+usuario.getId());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void cadastroEndereco() {

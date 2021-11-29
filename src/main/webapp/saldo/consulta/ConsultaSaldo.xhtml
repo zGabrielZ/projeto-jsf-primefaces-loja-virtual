@@ -10,15 +10,17 @@
 <ui:composition template="/layout/consulta/Consulta.xhtml">
 
 	<ui:define name="titulo">
-		<h1>Consulta de saldos cadastrados</h1>
-		
-		<div id="btnVoltar" style="margin-bottom: 10px; margin-top: 10px;">
-			<h:form>
-				<p:commandButton value="Consulta de usuários" ajax="false"
-					action="#{navegacaoController.consultaUsuario}" />
-			</h:form>
-		</div>
-		
+		<h:panelGroup rendered="#{loginController.admin}" >
+			<h1>Consulta de saldos cadastrados</h1>
+
+			<div id="btnVoltar" style="margin-bottom: 10px; margin-top: 10px;">
+				<h:form>
+					<p:commandButton value="Consulta de usuários" ajax="false"
+						action="#{navegacaoController.consultaUsuario}" />
+				</h:form>
+			</div>
+		</h:panelGroup>
+
 		<div align="center">
 			<h:panelGrid columns="2">
 				<p>

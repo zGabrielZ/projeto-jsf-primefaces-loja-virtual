@@ -18,7 +18,7 @@ public class SaldoRepositorio extends RepositorioGenerico<Saldo>{
 	private EntityManager entityManager;
 	
 	public TypedQuery<Saldo> getListagem(Integer idUsuario){
-		String jpql = "SELECT s FROM Saldo s JOIN FETCH s.usuario u where u.id = :idUsuario";
+		String jpql = "SELECT s FROM Saldo s JOIN FETCH s.usuario u where u.id = :idUsuario order by s.id desc";
 		TypedQuery<Saldo> query = entityManager.createQuery(jpql,Saldo.class);
 		query.setParameter("idUsuario", idUsuario);
 		return query;
