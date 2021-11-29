@@ -16,7 +16,6 @@ import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.repositorio.EnderecoRepositorio;
 import br.com.gabrielferreira.repositorio.UsuarioRepositorio;
-import br.com.gabrielferreira.utils.Transacional;
 
 public class EnderecoService implements Serializable {
 
@@ -31,17 +30,14 @@ public class EnderecoService implements Serializable {
 	@Inject
 	private EnderecoRepositorio enderecoRepositorio;
 	
-	@Transacional
 	public void inserir(Endereco endereco) {
 		enderecoRepositorio.inserir(endereco);
 	}
 	
-	@Transacional
-	public void atualizar(Endereco endereco) {
-		enderecoRepositorio.atualizar(endereco);
+	public Endereco atualizar(Endereco endereco) {
+		return enderecoRepositorio.atualizar(endereco);
 	}
 	
-	@Transacional
 	public void inserirEnderecoAndUsuario(Endereco endereco, Usuario usuario) {
 		endereco.setUsuario(usuario);
 		enderecoRepositorio.inserir(endereco);
@@ -50,13 +46,12 @@ public class EnderecoService implements Serializable {
 		usuarioRepositorio.atualizar(usuario);
 	}
 	
-	@Transacional
 	public void removerEndereco(Endereco endereco) {
-		enderecoRepositorio.remover(endereco);
+		enderecoRepositorio.deletarPorId(Endereco.class, endereco.getId());
 	}
 	
 	public Endereco getDetalhe(Integer id) {
-		return enderecoRepositorio.procurarPorId(id);
+		return enderecoRepositorio.pesquisarPorId(id, Endereco.class);
 	}
 	
 	public Endereco getEnderecoByIdUsuario(Integer idUsuario) {

@@ -7,10 +7,6 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
 
-	<f:metadata>
-		<f:viewParam id="codigo" name="codigoEndereco" value="#{enderecoController.endereco.id}"/>
-		<f:event listener="#{enderecoController.carregarDados}" type="preRenderView"></f:event>
-	</f:metadata> 
 
 <ui:composition template="/layout/cadastro/Cadastrar.xhtml">
 
@@ -22,8 +18,7 @@
 
 		<div id="cadastroEndereco">
 
-			<o:form id="cadastroEnderecoForm" includeRequestParams="true"
-				acceptcharset="UTF-8">
+			<h:form id="cadastroEnderecoForm">
 
 				<p:messages id="msg" />
 
@@ -36,14 +31,16 @@
 						<h:panelGrid columns="2" style="text-align: center">
 							<p:outputLabel for="cep" value="Cep: " />
 							<h:panelGroup>
-								
+
 								<p:inputText value="#{enderecoController.endereco.cep}"
-								label="CEP" id="cep" size="10" maxlength="10"
-								required="true" requiredMessage="CEP é obrigatório"/>
-								
-								<p:commandButton action="#{enderecoController.consultarCep}" style="margin-left:10px;" id="btnConsultarCep" value="Consultar Cep"
-								ajax="false" process="@this" update="@form" ></p:commandButton>
-							
+									label="CEP" id="cep" size="10" maxlength="10" required="true"
+									requiredMessage="CEP é obrigatório" />
+
+								<p:commandButton action="#{enderecoController.consultarCep}"
+									style="margin-left:10px;" id="btnConsultarCep"
+									value="Consultar Cep" ajax="false" process="@this"
+									update="@form"></p:commandButton>
+
 							</h:panelGroup>
 
 							<p:outputLabel for="logradouro" value="Logradouro: " />
@@ -53,7 +50,8 @@
 
 							<p:outputLabel for="complemento" value="Complemento: " />
 							<p:inputText value="#{enderecoController.endereco.complemento}"
-								label="Complemento" id="complemento" size="15" maxlength="150" disabled="#{enderecoController.disabledCampos}" />
+								label="Complemento" id="complemento" size="15" maxlength="150"
+								disabled="#{enderecoController.disabledCampos}" />
 
 							<p:outputLabel for="bairro" value="Bairro: " />
 							<p:inputText value="#{enderecoController.endereco.bairro}"
@@ -62,29 +60,26 @@
 
 							<p:outputLabel for="localidade" value="Localidade: " />
 							<p:inputText value="#{enderecoController.endereco.localidade}"
-								label="Localidade" id="localidade" size="15" maxlength="150" 
+								label="Localidade" id="localidade" size="15" maxlength="150"
 								disabled="true" />
 
 							<p:outputLabel for="numero" value="Número: " />
 							<p:inputText value="#{enderecoController.endereco.numero}"
 								label="Número" id="numero" size="15" maxlength="15"
-								required="true" requiredMessage="Número é obrigatório" disabled="#{enderecoController.disabledCampos}"/>
-								
+								required="true" requiredMessage="Número é obrigatório"
+								disabled="#{enderecoController.disabledCampos}" />
+
 							<p:outputLabel for="uf" value="UF: " />
-							<p:inputText value="#{enderecoController.endereco.uf}"
-								label="UF" id="uf" size="15" maxlength="150" 
-								disabled="true"
-								/>
-								
+							<p:inputText value="#{enderecoController.endereco.uf}" label="UF"
+								id="uf" size="15" maxlength="150" disabled="true" />
+
 							<p:outputLabel for="ibge" value="IBGE: " />
 							<p:inputText value="#{enderecoController.endereco.ibge}"
-								label="IBGE" id="ibge" size="15" maxlength="150" 
-								disabled="true"/>
-								
+								label="IBGE" id="ibge" size="15" maxlength="150" disabled="true" />
+
 							<p:outputLabel for="ddd" value="DDD: " />
 							<p:inputText value="#{enderecoController.endereco.ddd}"
-								label="DDD" id="ddd" size="15" maxlength="150" 
-								disabled="true"/>
+								label="DDD" id="ddd" size="15" maxlength="150" disabled="true" />
 
 						</h:panelGrid>
 
@@ -97,7 +92,7 @@
 
 					</h:panelGroup>
 				</div>
-			</o:form>
+			</h:form>
 		</div>
 
 	</ui:define>

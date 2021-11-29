@@ -16,12 +16,14 @@ import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.service.EnderecoService;
 import br.com.gabrielferreira.utils.FacesMessages;
-import br.com.gabrielferreira.utils.SessionUtil;
+import br.com.gabrielferreira.utils.LoginJSF;
 import lombok.Getter;
 import lombok.Setter;
 
 @Named
 @ViewScoped
+@Getter
+@Setter
 public class EnderecoController implements Serializable{
 
 	/**
@@ -31,17 +33,11 @@ public class EnderecoController implements Serializable{
 	
 	@Inject
 	private EnderecoService enderecoService;
-	
-	@Getter
-	@Setter
+
 	private Endereco endereco;
 	
-	@Getter
-	@Setter
 	private boolean disabledCampos;
 	
-	@Getter
-	@Setter
 	private boolean consultaCep;
 	
 	@PostConstruct
@@ -49,13 +45,27 @@ public class EnderecoController implements Serializable{
 		endereco = new Endereco();
 		disabledCampos = true;
 		consultaCep = false;
+		verificarParametro();
+	}
+	
+	private void verificarParametro() {
+		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		String idCodigoUsuario = params.get("codigoUsuarioEndereco");
+		if(idCodigoUsuario != null) {
+			if(!consultaCep) {
+				Endereco enderecoConsulta = enderecoService.getEnderecoByIdUsuario(Integer.parseInt(idCodigoUsuario));
+				if(enderecoConsulta != null) {
+					this.endereco = enderecoConsulta;
+				}
+			}
+		}
 	}
 	
 	public void consultarCep() {
 		try {
 			String cep = endereco.getCep();
 			Endereco novoEndereco = enderecoService.verificarEndereco(cep);
-			endereco = getEndereco(novoEndereco,endereco.getId());
+			endereco = getEnderecoConsulta(novoEndereco,endereco.getId());
 			disabledCampos = false;
 			consultaCep = true;
 		} catch (RegraDeNegocioException | IOException e) {
@@ -74,31 +84,21 @@ public class EnderecoController implements Serializable{
 	}
 	
 	public void inserirEndereco(Endereco endereco) {
-		Usuario usuario = (Usuario) SessionUtil.getParam("usuario");
+		Usuario usuario = LoginJSF.getRecuperarUsuarioLogada();
 		enderecoService.inserirEnderecoAndUsuario(endereco, usuario);
 		FacesMessages.adicionarMensagem("cadastroEnderecoForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
 				null);
 	}
 	
 	public void atualizarEndereco(Endereco endereco) {
-		Usuario usuario = (Usuario) SessionUtil.getParam("usuario");
+		Usuario usuario = LoginJSF.getRecuperarUsuarioLogada();
 		endereco.setUsuario(usuario);
 		enderecoService.atualizar(endereco);
 		FacesMessages.adicionarMensagem("cadastroEnderecoForm:msg", FacesMessage.SEVERITY_INFO, "Atualizado com sucesso !",
 				null);
 	}
 	
-	public void carregarDados() {
-		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-		String id = params.get("codigoEndereco");
-		if(id != null) {
-			if(!consultaCep) {
-				endereco = enderecoService.getDetalhe(Integer.parseInt(id));
-			}
-		}
-	}
-	
-	private Endereco getEndereco(Endereco novoEndereco, Integer id) {
+	private Endereco getEnderecoConsulta(Endereco novoEndereco, Integer id) {
 		Endereco endereco = new Endereco();
 		endereco.setBairro(novoEndereco.getBairro());
 		endereco.setComplemento(novoEndereco.getComplemento());

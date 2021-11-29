@@ -5,12 +5,7 @@ import java.io.Serializable;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
-
-import br.com.gabrielferreira.entidade.Endereco;
-import br.com.gabrielferreira.entidade.Usuario;
-import br.com.gabrielferreira.service.EnderecoService;
 
 @Named
 @ViewScoped
@@ -20,9 +15,6 @@ public class NavegacaoController implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	@Inject
-	private EnderecoService enderecoService;
 		
 	public ExternalContext getExternalContext() {
 		return FacesContext.getCurrentInstance().getExternalContext();
@@ -56,22 +48,6 @@ public class NavegacaoController implements Serializable{
 	    } catch (IOException e) {
 	          e.printStackTrace();
 	    }
-	}
-	
-	public void cadastroEndereco() {
-		Usuario usuario = (Usuario) SessionUtil.getParam("usuario");
-		Endereco endereco = enderecoService.getEnderecoByIdUsuario(usuario.getId());
-		usuario.setEndereco(endereco);
-		ExternalContext externalContext = getExternalContext();
-		try {
-			if(usuario.getEndereco() != null) {
-				externalContext.redirect(externalContext.getRequestContextPath() + "/endereco/cadastro/CadastroEndereco.xhtml?codigo="+usuario.getId()+"&codigoEndereco="+usuario.getEndereco().getId());
-			} else {
-				externalContext.redirect(externalContext.getRequestContextPath() + "/endereco/cadastro/CadastroEndereco.xhtml?codigo="+usuario.getId());
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void login() {

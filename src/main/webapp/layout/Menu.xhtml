@@ -62,8 +62,10 @@
 					</p:submenu>
 				</p:submenu>
 				
-				<p:menuitem value="Endereço" icon="fa fa-pencil"
-							action="#{navegacaoController.cadastroEndereco}"></p:menuitem>
+				<p:menuitem value="Endereço" icon="fa fa-pencil" rendered="#{loginController.admin or loginController.funcionario or loginController.cliente}"
+							action="/endereco/cadastro/CadastroEndereco">
+					<f:param name="codigoUsuarioEndereco" value="#{loginController.usuario.id}" />		
+				</p:menuitem>
 							
 				<p:submenu label="Pedidos" icon="fa fa-pencil">
 					<p:menuitem value="Carrinho" 
