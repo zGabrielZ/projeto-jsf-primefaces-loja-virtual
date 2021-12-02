@@ -5,138 +5,174 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:o="http://omnifaces.org/ui">
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
 
 <ui:composition template="/layout/cadastro/Cadastrar.xhtml">
 
 	<ui:define name="titulo">
-		<h1>Cadastro de usuário em lote Excel</h1>
-		<h2>Perfil do usuário</h2>
-		<p>1 -> Adminstrador</p>
-		<p>2 -> Funcionário</p>
-		<p>3 -> Cliente</p>
+		<h:panelGroup rendered="#{loginController.admin}">
+			<h1>Cadastro de usuário em lote em Excel</h1>
+			<h2>Perfil do usuário</h2>
+			<p>1 -> Adminstrador</p>
+			<p>2 -> Funcionário</p>
+			<p>3 -> Cliente</p>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{loginController.cliente or loginController.funcionario}">
+			<h1>Você não tem permissão para essa página</h1>
+		</h:panelGroup>
 	</ui:define>
 
 	<ui:define name="conteudo">
 
 		<div id="cadastroUsuario">
-		
-			<h:form id="downloadModeloUsuario" >
+
+			<h:form id="downloadModeloUsuario"
+				rendered="#{loginController.admin}">
 				<div align="center">
-					<p:commandButton id="btnCadastrar" value="Download modelo" 
+					<p:commandButton id="btnCadastrar" value="Download modelo"
 						ajax="false" process="@this" update="@form">
-						<p:fileDownload value="#{usuarioLoteController.modeloArquivoExcel}"></p:fileDownload>	
+						<p:fileDownload
+							value="#{usuarioLoteExcelController.modeloArquivoDados}" />
 					</p:commandButton>
 				</div>
 			</h:form>
-			
+
 			<div id="errosLote" style="margin-top: 10px;">
-				<h:form id="msg" >
-					<p:commandButton id="btnDownloadErro" value="Download erros" rendered="#{not empty usuarioLoteController.mensagens}" 
-							ajax="false" process="@this" update="@form">
-						<p:fileDownload value="#{usuarioLoteController.erros}"></p:fileDownload>	
-					</p:commandButton>
+				<h:form id="msg" rendered="#{loginController.admin}">
+
+					<h:panelGroup
+						rendered="#{not empty usuarioLoteExcelController.usuarioLoteIncorretos}">
+						<h2 style="color: red;">Alguns registros foram encontrados
+							incorretos, porfavor verifique os erros</h2>
+
+						<p:commandButton id="btnDownloadErro" value="Download erros"
+							ajax="false" process="@this" update="@form"
+							action="#{usuarioLoteExcelController.gerarRelatorioUsuario}">
+						</p:commandButton>
+
+					</h:panelGroup>
+
 				</h:form>
 			</div>
-		
 
-			<h:form id="cadastroUsuarioLoteForm" enctype="multipart/form-data" >
+
+			<h:form id="cadastroUsuarioLoteForm" enctype="multipart/form-data"
+				rendered="#{loginController.admin}">
 
 				<p:messages id="msg" autoUpdate="true" />
 
 				<div align="center">
-					<h:panelGroup id="pnlCadastroUsuario">
-						<h:panelGrid columns="3" style="text-align: center; padding-top:10px;">
+					<h:panelGroup id="pnlCadastroCliente">
+
+						<h:panelGrid columns="2"
+							style="text-align: center; padding-top:10px;">
+
 							<p:outputLabel for="arquivo" value="Arquivo: " />
-							<h:inputFile label="Arquivo" id="arquivo" required="true" 
-							 requiredMessage="É necessário inserir o documento" 
-							 value="#{usuarioLoteController.arquivoUploadExcelTxt}"/>
-							<p:message for="arquivo" />
-						
+							<h:inputFile label="Arquivo" id="arquivo" required="true"
+								requiredMessage="É necessário inserir o documento"
+								value="#{usuarioLoteExcelController.arquivoUploadDados}" />
+
 						</h:panelGrid>
-						
+
 						<div align="center" style="padding-top: 10px;">
 							<p:commandButton id="btnCadastrar" value="Inserir usuários"
-								action="#{usuarioLoteController.uploadArquivoExcel}"
+								rendered="#{empty usuarioLoteExcelController.usuarios}"
+								action="#{usuarioLoteExcelController.uploadArquivo}"
 								ajax="false" process="@this" update="@form"></p:commandButton>
+
+							<p:commandButton style="margin-left:5px;" id="btnLimpar"
+								value="Limpar"
+								rendered="#{not empty usuarioLoteExcelController.usuarios}"
+								action="#{usuarioLoteExcelController.limpar}" ajax="false"
+								process="@this" update="@form">
+								<o:skipValidators />
+							</p:commandButton>
+
 						</div>
-						
+
 					</h:panelGroup>
 				</div>
 			</h:form>
-			
-			
-			<h:form id="formDataTableUsuarios" >
 
-				<p:dataTable id="dataTableUsuarios" value="#{usuarioLoteController.usuarios}" rendered="#{not empty usuarioLoteController.usuarios}"
-				var="usuario" style="padding-top:20px;" rows="5" paginator="true" paginatorPosition="bottom"
-				rowsPerPageTemplate="5, 10, 25, 50, 100" paginatorAlwaysVisible="false" 
-				emptyMessage="Nenhum registro"
-				>
-				
-				<p:column style="width:50px;" >
-					<f:facet name="header">Código</f:facet>
-					<h:outputText value="#{usuario.codigoUsuario}" />
-				</p:column>
-								
-				<p:column style="width:150px;" >
-					<f:facet name="header">Nome</f:facet>
-					<h:outputText value="#{usuario.nome}" rendered="#{usuario.nome != null}"/>
-					<h:outputText value="Inexistente" rendered="#{usuario.nome == null}"/>
-				</p:column>
 
-				<p:column style="width:130px;" >
-					<f:facet name="header">CPF</f:facet>
-					<h:outputText value="#{usuario.cpf}" rendered="#{usuario.cpf != null}" />
-					<h:outputText value="Inexistente" rendered="#{usuario.cpf == null}" />
-				</p:column>
+			<h:form id="formDataTableUsuarios">
 
-				<p:column style="width:200px;" >
-					<f:facet name="header">E-mail</f:facet>
-					<h:outputText value="#{usuario.email}" rendered="#{usuario.email != null}" />
-					<h:outputText value="Inexistente" rendered="#{usuario.email == null}" />
-				</p:column>
-				
-				<p:column style="width:130px;">
-					<f:facet name="header">Data de nascimento</f:facet>
-					<h:outputText value="#{usuario.dataNascimento}" converter="dataNascimentoConverter" rendered="#{usuario.dataNascimento != null}" />
-					<h:outputText value="Inexistente" rendered="#{usuario.dataNascimento == null}" />
-				</p:column>
-				
-				<p:column style="width:200px;" >
-					<f:facet name="header">Perfil</f:facet>
-					<h:outputText value="Adminstrador" rendered="#{usuario.perfil.id eq '1'}" />
-					<h:outputText value="Funcionário" rendered="#{usuario.perfil.id eq '2'}" />
-					<h:outputText value="Cliente" rendered="#{usuario.perfil.id eq '3'}" />
-					<h:outputText value="Inexistente" rendered="#{usuario.perfil.id ne '1' and usuario.perfil.id ne '2' and usuario.perfil.id ne '3'}" />
-				</p:column>
-				
-			</p:dataTable>
-			
-			
-			<div align="center" style="padding-top: 30px;">
-				
+				<p:dataTable id="dataTableUsuarios"
+					value="#{usuarioLoteExcelController.usuarios}"
+					rendered="#{not empty usuarioLoteExcelController.usuarios}"
+					var="usuario" style="padding-top:20px;" rows="5" paginator="true"
+					paginatorPosition="bottom" rowsPerPageTemplate="5, 10, 25, 50, 100"
+					paginatorAlwaysVisible="false" emptyMessage="Nenhum registro">
+
+
+					<p:column style="width:100px;">
+						<f:facet name="header">Código Usuário</f:facet>
+						<h:outputText value="#{usuario.codigoUsuario}" />
+					</p:column>
+
+					<p:column style="width:150px;">
+						<f:facet name="header">Nome</f:facet>
+						<h:outputText value="#{usuario.nome}" />
+					</p:column>
+
+					<p:column style="width:130px;">
+						<f:facet name="header">CPF</f:facet>
+						<h:outputText value="#{usuario.cpf}" />
+					</p:column>
+
+					<p:column style="width:200px;">
+						<f:facet name="header">E-mail</f:facet>
+						<h:outputText value="#{usuario.email}" />
+					</p:column>
+
+					<p:column style="width:130px;">
+						<f:facet name="header">Data de nascimento</f:facet>
+						<h:outputText value="#{usuario.dataNascimento}"
+							converter="dataNascimentoConverter" />
+					</p:column>
+
+					<p:column style="width:200px;">
+						<f:facet name="header">Perfil</f:facet>
+						<h:outputText value="Adminstrador"
+							rendered="#{usuario.perfil.id eq '1'}" />
+						<h:outputText value="Funcionário"
+							rendered="#{usuario.perfil.id eq '2'}" />
+						<h:outputText value="Cliente"
+							rendered="#{usuario.perfil.id eq '3'}" />
+					</p:column>
+
+				</p:dataTable>
+
+
+				<div align="center" style="padding-top: 30px;">
+
 					<h:panelGrid columns="2">
-						<p:outputLabel style="margin-right:100px;" for="descricao" value="Descrição: "
-							rendered="#{not empty usuarioLoteController.usuarios}" />
+
+						<p:outputLabel style="margin-right:100px;" for="descricao"
+							value="Descrição: "
+							rendered="#{not empty usuarioLoteExcelController.usuarios}" />
+
 						<p:inputText style="margin-left:-70px;"
-							rendered="#{not empty usuarioLoteController.usuarios}"
-							value="#{usuarioLoteController.arquivoUpload.descricao}"
+							rendered="#{not empty usuarioLoteExcelController.usuarios}"
+							value="#{usuarioLoteExcelController.arquivoUpload.descricao}"
 							label="Descrição" id="descricao" required="true"
 							requiredMessage="Informe a descrição">
 						</p:inputText>
+
 					</h:panelGrid>
 
-					<p:commandButton style="margin-top:20px;" id="btnCadastrar" value="Cadastrar Usuários" rendered="#{not empty usuarioLoteController.usuarios}"
-					action="#{usuarioLoteController.cadastrarUsuarios}"
-					ajax="false" process="@this" update="@form"></p:commandButton>
-				
+					<p:commandButton style="margin-top:20px;" id="btnCadastrar"
+						value="Cadastrar Usuários"
+						rendered="#{not empty usuarioLoteExcelController.usuarios}"
+						action="#{usuarioLoteExcelController.cadastrarUsuarios}"
+						ajax="false" process="@this" update="@form"></p:commandButton>
+
 				</div>
-				
-				
+
+
 			</h:form>
-			
+
 		</div>
 
 	</ui:define>

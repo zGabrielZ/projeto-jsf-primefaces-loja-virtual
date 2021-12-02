@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Erros" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8a811678-3f5e-467a-8bb0-7004e8a190c7">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="nome" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="cpf" class="java.lang.String"/>
+	<field name="dataNascimento" class="java.time.LocalDate"/>
+	<field name="perfil" class="java.lang.String"/>
+	<field name="usuarioLoteErrosTos" class="java.util.List"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="60" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="-20" y="30" width="162" height="30" uuid="d0ce13d6-2901-4bf9-8190-55129439348e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6fbfce56-56da-44ba-ab58-3778bbd1cfae"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[Nome]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="142" y="30" width="180" height="30" uuid="bb8de027-7caa-45c9-a39a-4b3996b75c47">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bdb27192-a81d-4bee-bdec-a0391fb029c2"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[E-mail]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="322" y="30" width="160" height="30" uuid="1ea5dcd1-1d81-44bb-94e7-9fe42c62fff6">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2d6bb757-9c7e-4c1a-973f-c1439cfec383"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[CPF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="482" y="30" width="160" height="30" uuid="7eeefe9b-4449-4780-aede-48e4b011f9e9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6e2836d8-afc7-4b08-b509-e9d9a2e0a177"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[Data nascimento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="642" y="30" width="180" height="30" uuid="2229ce48-f217-421e-bea7-937428dcd218">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="56c013e3-ef00-4c09-8bbf-51eff14c559d"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<text><![CDATA[Perfil]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-20" y="0" width="842" height="30" uuid="4cc09da1-edb8-44a4-a53e-4b7f0d819f21">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14"/>
+				</textElement>
+				<text><![CDATA[Erros encontrados]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="153" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="-20" y="0" width="162" height="30" uuid="7820bb15-cea2-4ced-a021-cd7ae787b3c9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6fbfce56-56da-44ba-ab58-3778bbd1cfae"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome} != null ? $F{nome}  : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="142" y="0" width="180" height="30" uuid="0e891439-2439-4e3a-889f-521cf0276e94">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bdb27192-a81d-4bee-bdec-a0391fb029c2"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{email} != null ? $F{email} : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="322" y="0" width="160" height="30" uuid="3ddb6096-b98f-412f-aace-338a8e2333c4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2d6bb757-9c7e-4c1a-973f-c1439cfec383"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cpf} != null ? $F{cpf} : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="482" y="0" width="160" height="30" uuid="5dbe4a03-80ba-4be2-821b-f590e58376ef">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6e2836d8-afc7-4b08-b509-e9d9a2e0a177"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dataNascimento} != null ? $F{dataNascimento} : ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="642" y="0" width="180" height="30" uuid="9bf8fa1c-9836-43c4-8101-f17081ff5fae">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="56c013e3-ef00-4c09-8bbf-51eff14c559d"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{perfil} != null ? $F{perfil} : ""]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="-20" y="70" width="842" height="50" uuid="ca4d5d31-a388-47b6-98a6-136b6aa064b9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{usuarioLoteErrosTos})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

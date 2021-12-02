@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import br.com.gabrielferreira.entidade.ArquivoUpload;
 import br.com.gabrielferreira.repositorio.ArquivoUploadRepositorio;
-import br.com.gabrielferreira.utils.Transacional;
 
 public class ArquivoUploadService implements Serializable {
 
@@ -18,7 +17,6 @@ public class ArquivoUploadService implements Serializable {
 	@Inject
 	private ArquivoUploadRepositorio arquivoUploadRepositorio;
 	
-	@Transacional
 	public void inserir(ArquivoUpload arquivoUpload) {
 		arquivoUploadRepositorio.inserir(arquivoUpload);
 	}

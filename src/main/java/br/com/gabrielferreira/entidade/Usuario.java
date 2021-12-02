@@ -79,9 +79,6 @@ public class Usuario implements Serializable{
 	private Integer codigoUsuario;
 	
 	@Transient
-	private boolean codigoErro;
-	
-	@Transient
 	private Integer codigoSenhaGerado;
 	
 	public BigDecimal getSaldoTotal() {

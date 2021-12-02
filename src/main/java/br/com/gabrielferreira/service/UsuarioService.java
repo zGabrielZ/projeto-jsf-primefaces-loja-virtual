@@ -1,15 +1,17 @@
 package br.com.gabrielferreira.service;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.text.ParseException;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import org.apache.commons.lang3.StringUtils;
@@ -17,15 +19,22 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import br.com.gabrielferreira.entidade.Perfil;
 import br.com.gabrielferreira.entidade.Saldo;
 import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.entidade.search.UsuarioSearch;
+import br.com.gabrielferreira.entidade.to.UsuarioLoteTo;
 import br.com.gabrielferreira.exceptions.RegraDeNegocioException;
 import br.com.gabrielferreira.repositorio.UsuarioRepositorio;
 import br.com.gabrielferreira.utils.LoginJSF;
-import br.com.gabrielferreira.utils.validation.UsuarioLoteValidacao;
 import br.com.gabrielferreira.utils.validation.UsuarioValidacaoArquivo;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 public class UsuarioService implements Serializable {
 
@@ -52,15 +61,6 @@ public class UsuarioService implements Serializable {
 		}
 		usuarioRepositorio.inserir(usuario);
 		verificarSaldo(usuario,saldos);
-	}
-	
-	public List<UsuarioLoteValidacao> validacaoUsuariosLote(List<Usuario> usuarios, 
-			List<UsuarioLoteValidacao> usuarioLoteValidacaos) throws ParseException{
-		List<UsuarioLoteValidacao> validacaos = new ArrayList<UsuarioLoteValidacao>();
-		for(Usuario usuario : usuarios) {
-			validacaos = usuarioValidacaoArquivo.validarUsuarioEmLote(usuario, usuarioLoteValidacaos);
-		}
-		return validacaos;
 	}
 	
 	public void inserirUsuarioLote(List<Usuario> usuarios) {
@@ -122,67 +122,118 @@ public class UsuarioService implements Serializable {
 		}
 	}
 	
-	public void verificarArquivoTxt(Part arquivoUploadExcelTxt, List<Usuario> usuarios, DateTimeFormatter dtf) throws IOException {
-		Scanner scanner = new Scanner(arquivoUploadExcelTxt.getInputStream());
-		Integer codigoUsuario = 1;
-		while (scanner.hasNext()) {
-			String linha = scanner.nextLine();
-			
-			if(linha != null && !linha.isEmpty()) {
-				String[] delimitador = linha.split("\\;");
-				Usuario usuario = new Usuario();
-				usuario.setCodigoUsuario(codigoUsuario++);
-				usuarioValidacaoArquivo.verificarLinhaArquivo(delimitador, usuario, dtf);
-				usuarios.add(usuario);
+	public List<UsuarioLoteTo> verificarArquivoTxtUpload(Part arquivoUpload){
+		List<UsuarioLoteTo> usuarioLoteTxtTos = new ArrayList<>();
+		Scanner scanner = null;
+		try {
+			scanner = new Scanner(arquivoUpload.getInputStream());
+			while (scanner.hasNext()) {
+				String linha = scanner.nextLine();
+				if(linha != null && !linha.isEmpty()) {
+					if(linha.contains(";")) {
+						String[] delimitador = linha.split("\\;");
+						UsuarioLoteTo usuarioLoteTxtTo = new UsuarioLoteTo();
+						usuarioValidacaoArquivo.verificarLinhaArquivo(delimitador, usuarioLoteTxtTo);
+						usuarioLoteTxtTos.add(usuarioLoteTxtTo);
+					}
+				}
 			}
+			
+			// Após verificar linha por linha, vai ser necessário validar os dados 
+			usuarioValidacaoArquivo.validarDadosUsuario(usuarioLoteTxtTos);
+			
+		} catch (Exception e) {
+			throw new EmptyStackException();
 		}
 		
-		scanner.close();
+		
+		scanner.close();		
+		return usuarioLoteTxtTos;
 	}
 	
-	public void verificarArquivoExcel(Part arquivoUploadExcelTxt, List<Usuario> usuarios) throws IOException, ParseException {
-		XSSFWorkbook xssfWorkbook = new XSSFWorkbook(arquivoUploadExcelTxt.getInputStream()); // Preparando para ler o excel
-		XSSFSheet planilha = xssfWorkbook.getSheetAt(0); // Pegar a primeira planilha do excel
-		Iterator<Row> linhasIterator = planilha.iterator(); // Percorrendo nas linhas
-		Integer codigoUsuario = 1;
-		
-		while (linhasIterator.hasNext()) { // Enquanto tiver linha no arquivo do excel
-			Row linha = linhasIterator.next(); // Dados na linha
+	public void gerarRelatorioErrosUsuario(List<UsuarioLoteTo> usuarios) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+		try {
 			
-			if(linha.getRowNum() == 0) {
-				continue;
-			}
-			Iterator<Cell> celulaIterator = linha.iterator(); // Enquanto tiver linhas, vai pecorrer as celulas
-		
-			Usuario usuario = new Usuario();
-			Perfil perfil = new Perfil();
-			usuario.setCodigoUsuario(codigoUsuario++);
-			while (celulaIterator.hasNext()) {
-				Cell celula = celulaIterator.next();
-				switch (celula.getColumnIndex()) {
-				case 0:
-					usuarioValidacaoArquivo.verificarCelulaNome(celula,usuario);
-					break;
-				case 1:
-					usuarioValidacaoArquivo.verificarCelulaEmail(celula, usuario);
-					break;
-				case 2:
-					usuarioValidacaoArquivo.verificarCelulaCpf(celula, usuario);
-					break;
-				case 3:
-					usuarioValidacaoArquivo.verificarCelulaDataNascimento(celula, usuario);
-					break;
-				case 4:
-					usuarioValidacaoArquivo.verificarCelulaPerfil(celula, usuario, perfil);
-					break;
-				default:
-					break;
-				}
-				
-			} // Fim das celula 
-			usuarios.add(usuario);
+			Map<String, Object> parametros = new LinkedHashMap<>();
+			
+			String caminho = context.getExternalContext().getRealPath("/resources/relatorio/Erros.jrxml");
+			JasperReport compilarRelatorio = JasperCompileManager.compileReport(caminho);
+			
+			String caminhoErrosJasper = context.getExternalContext().getRealPath("/resources/subrelatorio/ErrosUpload.jasper");
+			parametros.put("SUBREPORT_DIR", caminhoErrosJasper);
+			
+			JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(usuarios);
+			JasperPrint jasperPrint = JasperFillManager.fillReport(compilarRelatorio,parametros,dataSource);
+			
+			byte [] bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+			String nomeRelatorio = "Erros Encontrados.pdf";
+			response.setHeader("Content-disposition","attachment; filename="+nomeRelatorio);
+			response.setContentType("application/pdf"); 
+			response.setContentLength(bytes.length);
+			
+			response.getOutputStream().write(bytes);
+			response.getOutputStream().flush();
+			FacesContext.getCurrentInstance().responseComplete();
+			
+		} catch (Exception e) {
+			throw new EmptyStackException();
 		}
-		xssfWorkbook.close();
+	}
+	
+	public List<UsuarioLoteTo> verificarArquivoExcel(Part arquivoUploadExcel) {
+		List<UsuarioLoteTo> usuarios = new ArrayList<>();
+		try {
+			XSSFWorkbook xssfWorkbook = new XSSFWorkbook(arquivoUploadExcel.getInputStream()); // Preparando para ler o excel
+			XSSFSheet planilha = xssfWorkbook.getSheetAt(0); // Pegar a primeira planilha do excel
+			Iterator<Row> linhasIterator = planilha.iterator(); // Percorrendo nas linhas
+			Integer codigoUsuario = 1;
+			
+			while (linhasIterator.hasNext()) { // Enquanto tiver linha no arquivo do excel
+				Row linha = linhasIterator.next(); // Dados na linha
+				
+				if(linha.getRowNum() == 0) {
+					continue;
+				}
+				Iterator<Cell> celulaIterator = linha.iterator(); // Enquanto tiver linhas, vai pecorrer as celulas
+			
+				UsuarioLoteTo usuario = new UsuarioLoteTo();
+				usuario.setCodigoUsuario(codigoUsuario++);
+				while (celulaIterator.hasNext()) {
+					Cell celula = celulaIterator.next();
+					switch (celula.getColumnIndex()) {
+					case 0:
+						usuarioValidacaoArquivo.verificarCelulaNome(celula,usuario);
+						break;
+					case 1:
+						usuarioValidacaoArquivo.verificarCelulaEmail(celula, usuario);
+						break;
+					case 2:
+						usuarioValidacaoArquivo.verificarCelulaCpf(celula, usuario);
+						break;
+					case 3:
+						usuarioValidacaoArquivo.verificarCelulaDataNascimento(celula, usuario);
+						break;
+					case 4:
+						usuarioValidacaoArquivo.verificarCelulaPerfil(celula, usuario);
+						break;
+					default:
+						break;
+					}
+					
+				} // Fim das celula 
+				usuarios.add(usuario);
+			}
+			
+			// Após verificar linha por linha, vai ser necessário validar os dados 
+			usuarioValidacaoArquivo.validarDadosUsuario(usuarios);
+			
+			xssfWorkbook.close();
+		} catch (Exception e) {
+			throw new EmptyStackException();
+		}
+		return usuarios;
 	}
 	
 	public boolean verificarEmailLogin(String email) {

@@ -1,4 +1,4 @@
-package br.com.gabrielferreira.utils.validation;
+package br.com.gabrielferreira.entidade.to;
 
 import java.io.Serializable;
 
@@ -7,16 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class UsuarioLoteValidacao implements Serializable{
+@NoArgsConstructor
+public class UsuarioLoteErrosTo implements Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private Integer codigoUsuario;
 	private String erros;
 
 }

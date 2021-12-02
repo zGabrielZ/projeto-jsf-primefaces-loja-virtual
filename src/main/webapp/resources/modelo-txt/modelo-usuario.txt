@@ -1,5 +1,5 @@
-José da Silva;jose@gmail.com;30696828049;28/10/2000;1
-Mariana Souza Martins;mari890@gmail.com;62958740021;17/04/2001;2
-Maria Silva;maria1278@gmail.com;63591284033;13/07/1998;2
-Eduardo Pereira;dudu07@gmail.com;70989072002;14/08/1992;2
-Gustavo Gomes;gomesgustavo@gmail.com;92570986054;12/04/1994;3
+José da Silva;jose@gmail.com;30696828049;28/10/2000;1;
+Mariana Souza Martins;mari890@gmail.com;62958740021;17/04/2001;2;
+Maria Silva;maria1278@gmail.com;63591284033;13/07/1998;2;
+Eduardo Pereira;dudu07@gmail.com;70989072002;14/08/1992;2;
+Gustavo Gomes;gomesgustavo@gmail.com;92570986054;12/04/1994;3;
